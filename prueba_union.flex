@@ -11,4 +11,5 @@ extern YYSTYPE yylval;
 \*	return POR;
 \/	return DIV;
 [0-9]+          {yylval.intVal = atoi(yytext); return ENT;}
+[0-9]+"."[0-9]+ {yylval.floatVal = atof(yytext); return REAL;}
 %%

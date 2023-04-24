@@ -42,7 +42,8 @@
      MENOS = 259,
      POR = 260,
      DIV = 261,
-     ENT = 262
+     ENT = 262,
+     REAL = 263
    };
 #endif
 
@@ -68,7 +69,7 @@ typedef union YYSTYPE
 
 
 /* Line 1685 of yacc.c  */
-#line 72 "prueba_union.tab.h"
+#line 73 "prueba_union.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
