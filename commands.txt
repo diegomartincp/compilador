@@ -1,0 +1,7 @@
+bison -d -v prueba.y
+flex -o prueba.lex.c prueba.flex
+gcc -o analiza prueba.tab.c prueba.lex.c
+
+bison -d -v prueba_union.y
+flex -o prueba_union.lex.c prueba_union.flex
+gcc -o analiza prueba_union.tab.c prueba_union.lex.c

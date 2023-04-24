@@ -1,0 +1,218 @@
+Grammar
+
+    0 $accept: command $end
+
+    1 command: exp
+
+    2 exp: exp MAS term
+    3    | exp MENOS term
+    4    | term
+
+    5 term: term POR factor
+    6     | term DIV factor
+    7     | factor
+
+    8 factor: NUMERO
+    9       | '(' exp ')'
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'(' (40) 9
+')' (41) 9
+error (256)
+NUMERO (258) 8
+MAS (259) 2
+MENOS (260) 3
+POR (261) 5
+DIV (262) 6
+
+
+Nonterminals, with rules where they appear
+
+$accept (10)
+    on left: 0
+command (11)
+    on left: 1, on right: 0
+exp (12)
+    on left: 2 3 4, on right: 1 2 3 9
+term (13)
+    on left: 5 6 7, on right: 2 3 4 5 6
+factor (14)
+    on left: 8 9, on right: 5 6 7
+
+
+state 0
+
+    0 $accept: . command $end
+
+    NUMERO  shift, and go to state 1
+    '('     shift, and go to state 2
+
+    command  go to state 3
+    exp      go to state 4
+    term     go to state 5
+    factor   go to state 6
+
+
+state 1
+
+    8 factor: NUMERO .
+
+    $default  reduce using rule 8 (factor)
+
+
+state 2
+
+    9 factor: '(' . exp ')'
+
+    NUMERO  shift, and go to state 1
+    '('     shift, and go to state 2
+
+    exp     go to state 7
+    term    go to state 5
+    factor  go to state 6
+
+
+state 3
+
+    0 $accept: command . $end
+
+    $end  shift, and go to state 8
+
+
+state 4
+
+    1 command: exp .
+    2 exp: exp . MAS term
+    3    | exp . MENOS term
+
+    MAS    shift, and go to state 9
+    MENOS  shift, and go to state 10
+
+    $default  reduce using rule 1 (command)
+
+
+state 5
+
+    4 exp: term .
+    5 term: term . POR factor
+    6     | term . DIV factor
+
+    POR  shift, and go to state 11
+    DIV  shift, and go to state 12
+
+    $default  reduce using rule 4 (exp)
+
+
+state 6
+
+    7 term: factor .
+
+    $default  reduce using rule 7 (term)
+
+
+state 7
+
+    2 exp: exp . MAS term
+    3    | exp . MENOS term
+    9 factor: '(' exp . ')'
+
+    MAS    shift, and go to state 9
+    MENOS  shift, and go to state 10
+    ')'    shift, and go to state 13
+
+
+state 8
+
+    0 $accept: command $end .
+
+    $default  accept
+
+
+state 9
+
+    2 exp: exp MAS . term
+
+    NUMERO  shift, and go to state 1
+    '('     shift, and go to state 2
+
+    term    go to state 14
+    factor  go to state 6
+
+
+state 10
+
+    3 exp: exp MENOS . term
+
+    NUMERO  shift, and go to state 1
+    '('     shift, and go to state 2
+
+    term    go to state 15
+    factor  go to state 6
+
+
+state 11
+
+    5 term: term POR . factor
+
+    NUMERO  shift, and go to state 1
+    '('     shift, and go to state 2
+
+    factor  go to state 16
+
+
+state 12
+
+    6 term: term DIV . factor
+
+    NUMERO  shift, and go to state 1
+    '('     shift, and go to state 2
+
+    factor  go to state 17
+
+
+state 13
+
+    9 factor: '(' exp ')' .
+
+    $default  reduce using rule 9 (factor)
+
+
+state 14
+
+    2 exp: exp MAS term .
+    5 term: term . POR factor
+    6     | term . DIV factor
+
+    POR  shift, and go to state 11
+    DIV  shift, and go to state 12
+
+    $default  reduce using rule 2 (exp)
+
+
+state 15
+
+    3 exp: exp MENOS term .
+    5 term: term . POR factor
+    6     | term . DIV factor
+
+    POR  shift, and go to state 11
+    DIV  shift, and go to state 12
+
+    $default  reduce using rule 3 (exp)
+
+
+state 16
+
+    5 term: term POR factor .
+
+    $default  reduce using rule 5 (term)
+
+
+state 17
+
+    6 term: term DIV factor .
+
+    $default  reduce using rule 6 (term)
