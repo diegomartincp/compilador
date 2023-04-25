@@ -1,3 +1,12 @@
+State 0 conflicts: 2 shift/reduce
+State 3 conflicts: 2 shift/reduce
+State 18 conflicts: 2 shift/reduce
+State 19 conflicts: 2 shift/reduce
+State 20 conflicts: 2 shift/reduce
+State 21 conflicts: 2 shift/reduce
+State 22 conflicts: 2 shift/reduce
+
+
 Grammar
 
     0 $accept: command $end
@@ -21,6 +30,7 @@ Grammar
    14       | MENOS REAL
    15       | PAR_OP exp PAR_CL
    16       | COMILLA TEXT COMILLA
+   17       | /* empty */
 
 
 Terminals, with rules where they appear
@@ -51,7 +61,7 @@ exp (16)
 term (17)
     on left: 6 7 8, on right: 2 3 4 5 6 7
 factor (18)
-    on left: 9 10 11 12 13 14 15 16, on right: 6 7 8
+    on left: 9 10 11 12 13 14 15 16 17, on right: 6 7 8
 
 
 state 0
@@ -64,6 +74,10 @@ state 0
     COMILLA  shift, and go to state 4
     ENT      shift, and go to state 5
     REAL     shift, and go to state 6
+
+    MAS       [reduce using rule 17 (factor)]
+    MENOS     [reduce using rule 17 (factor)]
+    $default  reduce using rule 17 (factor)
 
     command  go to state 7
     exp      go to state 8
@@ -99,6 +113,10 @@ state 3
     COMILLA  shift, and go to state 4
     ENT      shift, and go to state 5
     REAL     shift, and go to state 6
+
+    MAS       [reduce using rule 17 (factor)]
+    MENOS     [reduce using rule 17 (factor)]
+    $default  reduce using rule 17 (factor)
 
     exp     go to state 15
     term    go to state 9
@@ -232,6 +250,10 @@ state 18
     ENT      shift, and go to state 5
     REAL     shift, and go to state 6
 
+    MAS       [reduce using rule 17 (factor)]
+    MENOS     [reduce using rule 17 (factor)]
+    $default  reduce using rule 17 (factor)
+
     term    go to state 25
     factor  go to state 10
 
@@ -246,6 +268,10 @@ state 19
     COMILLA  shift, and go to state 4
     ENT      shift, and go to state 5
     REAL     shift, and go to state 6
+
+    MAS       [reduce using rule 17 (factor)]
+    MENOS     [reduce using rule 17 (factor)]
+    $default  reduce using rule 17 (factor)
 
     term    go to state 26
     factor  go to state 10
@@ -262,6 +288,10 @@ state 20
     ENT      shift, and go to state 5
     REAL     shift, and go to state 6
 
+    MAS       [reduce using rule 17 (factor)]
+    MENOS     [reduce using rule 17 (factor)]
+    $default  reduce using rule 17 (factor)
+
     term    go to state 27
     factor  go to state 10
 
@@ -277,6 +307,10 @@ state 21
     ENT      shift, and go to state 5
     REAL     shift, and go to state 6
 
+    MAS       [reduce using rule 17 (factor)]
+    MENOS     [reduce using rule 17 (factor)]
+    $default  reduce using rule 17 (factor)
+
     factor  go to state 28
 
 
@@ -290,6 +324,10 @@ state 22
     COMILLA  shift, and go to state 4
     ENT      shift, and go to state 5
     REAL     shift, and go to state 6
+
+    MAS       [reduce using rule 17 (factor)]
+    MENOS     [reduce using rule 17 (factor)]
+    $default  reduce using rule 17 (factor)
 
     factor  go to state 29
 

@@ -207,9 +207,13 @@ factor: ENT {$$.entero = $1; //Asignar el valor a .entero
 
     | PAR_OP exp PAR_CL {$$ = $2;//Se hace una copia
                         printf( "PARENTESIS \n");}
+//Texto
     | COMILLA TEXT COMILLA {$$.texto = $2;
             $$.tipo="texto";
             printf(" TEXTO %s\n", $$.texto);}
+    ;
+//Cadena vacía
+    |
     ;
 
 %%

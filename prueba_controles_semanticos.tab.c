@@ -377,7 +377,7 @@ union yyalloc
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  5
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  17
+#define YYNRULES  18
 /* YYNRULES -- Number of states.  */
 #define YYNSTATES  30
 
@@ -426,7 +426,7 @@ static const yytype_uint8 yytranslate[] =
 static const yytype_uint8 yyprhs[] =
 {
        0,     0,     3,     5,     9,    13,    17,    19,    23,    27,
-      29,    31,    34,    37,    39,    42,    45,    49
+      29,    31,    34,    37,    39,    42,    45,    49,    53
 };
 
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
@@ -437,14 +437,14 @@ static const yytype_int8 yyrhs[] =
        5,    18,    -1,    17,     6,    18,    -1,    18,    -1,    11,
       -1,     3,    11,    -1,     4,    11,    -1,    12,    -1,     3,
       12,    -1,     4,    12,    -1,     7,    16,     8,    -1,    10,
-      13,    10,    -1
+      13,    10,    -1,    -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
        0,    43,    43,    61,    87,   113,   124,   131,   157,   183,
-     187,   190,   193,   198,   201,   204,   208,   210
+     187,   190,   193,   198,   201,   204,   208,   211,   216
 };
 #endif
 
@@ -473,14 +473,14 @@ static const yytype_uint16 yytoknum[] =
 static const yytype_uint8 yyr1[] =
 {
        0,    14,    15,    16,    16,    16,    16,    17,    17,    17,
-      18,    18,    18,    18,    18,    18,    18,    18
+      18,    18,    18,    18,    18,    18,    18,    18,    18
 };
 
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
        0,     2,     1,     3,     3,     3,     1,     3,     3,     1,
-       1,     2,     2,     1,     2,     2,     3,     3
+       1,     2,     2,     1,     2,     2,     3,     3,     0
 };
 
 /* YYDEFACT[STATE-NAME] -- Default rule to reduce with in state
@@ -488,9 +488,9 @@ static const yytype_uint8 yyr2[] =
    means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       0,     0,     0,     0,     0,    10,    13,     0,     2,     6,
-       9,    11,    14,    12,    15,     0,     0,     1,     0,     0,
-       0,     0,     0,    16,    17,     3,     4,     5,     7,     8
+      18,     0,     0,    18,     0,    10,    13,     0,     2,     6,
+       9,    11,    14,    12,    15,     0,     0,     1,    18,    18,
+      18,    18,    18,    16,    17,     3,     4,     5,     7,     8
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
@@ -1600,7 +1600,7 @@ yyreduce:
   case 17:
 
 /* Line 1464 of yacc.c  */
-#line 210 "prueba_controles_semanticos.y"
+#line 211 "prueba_controles_semanticos.y"
     {(yyval.st).texto = (yyvsp[(2) - (3)].stringVal);
             (yyval.st).tipo="texto";
             printf(" TEXTO %s\n", (yyval.st).texto);;}
@@ -1821,7 +1821,7 @@ yyreturn:
 
 
 /* Line 1684 of yacc.c  */
-#line 215 "prueba_controles_semanticos.y"
+#line 219 "prueba_controles_semanticos.y"
 
 
 main()
