@@ -6,47 +6,54 @@ Grammar
 
     2 exp: exp MAS term
     3    | exp MENOS term
-    4    | term
+    4    | text CONCAT text
+    5    | term
 
-    5 term: term POR factor
-    6     | term DIV factor
-    7     | factor
+    6 term: term POR factor
+    7     | term DIV factor
+    8     | factor
 
-    8 factor: ENT
-    9       | MAS ENT
-   10       | MENOS ENT
-   11       | REAL
-   12       | MAS REAL
-   13       | MENOS REAL
-   14       | PAR_OP exp PAR_CL
+    9 factor: ENT
+   10       | MAS ENT
+   11       | MENOS ENT
+   12       | REAL
+   13       | MAS REAL
+   14       | MENOS REAL
+   15       | PAR_OP exp PAR_CL
+
+   16 text: TEXT
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
 error (256)
-MAS (258) 2 9 12
-MENOS (259) 3 10 13
-POR (260) 5
-DIV (261) 6
-PAR_OP (262) 14
-PAR_CL (263) 14
-ENT (264) 8 9 10
-REAL (265) 11 12 13
+MAS (258) 2 10 13
+MENOS (259) 3 11 14
+POR (260) 6
+DIV (261) 7
+PAR_OP (262) 15
+PAR_CL (263) 15
+CONCAT (264) 4
+ENT (265) 9 10 11
+REAL (266) 12 13 14
+TEXT (267) 16
 
 
 Nonterminals, with rules where they appear
 
-$accept (11)
+$accept (13)
     on left: 0
-command (12)
+command (14)
     on left: 1, on right: 0
-exp (13)
-    on left: 2 3 4, on right: 1 2 3 14
-term (14)
-    on left: 5 6 7, on right: 2 3 4 5 6
-factor (15)
-    on left: 8 9 10 11 12 13 14, on right: 5 6 7
+exp (15)
+    on left: 2 3 4 5, on right: 1 2 3 15
+term (16)
+    on left: 6 7 8, on right: 2 3 5 6 7
+factor (17)
+    on left: 9 10 11 12 13 14 15, on right: 6 7 8
+text (18)
+    on left: 16, on right: 4
 
 
 state 0
@@ -58,145 +65,163 @@ state 0
     PAR_OP  shift, and go to state 3
     ENT     shift, and go to state 4
     REAL    shift, and go to state 5
+    TEXT    shift, and go to state 6
 
-    command  go to state 6
-    exp      go to state 7
-    term     go to state 8
-    factor   go to state 9
+    command  go to state 7
+    exp      go to state 8
+    term     go to state 9
+    factor   go to state 10
+    text     go to state 11
 
 
 state 1
 
-    9 factor: MAS . ENT
-   12       | MAS . REAL
-
-    ENT   shift, and go to state 10
-    REAL  shift, and go to state 11
-
-
-state 2
-
-   10 factor: MENOS . ENT
-   13       | MENOS . REAL
+   10 factor: MAS . ENT
+   13       | MAS . REAL
 
     ENT   shift, and go to state 12
     REAL  shift, and go to state 13
 
 
+state 2
+
+   11 factor: MENOS . ENT
+   14       | MENOS . REAL
+
+    ENT   shift, and go to state 14
+    REAL  shift, and go to state 15
+
+
 state 3
 
-   14 factor: PAR_OP . exp PAR_CL
+   15 factor: PAR_OP . exp PAR_CL
 
     MAS     shift, and go to state 1
     MENOS   shift, and go to state 2
     PAR_OP  shift, and go to state 3
     ENT     shift, and go to state 4
     REAL    shift, and go to state 5
+    TEXT    shift, and go to state 6
 
-    exp     go to state 14
-    term    go to state 8
-    factor  go to state 9
+    exp     go to state 16
+    term    go to state 9
+    factor  go to state 10
+    text    go to state 11
 
 
 state 4
 
-    8 factor: ENT .
+    9 factor: ENT .
 
-    $default  reduce using rule 8 (factor)
+    $default  reduce using rule 9 (factor)
 
 
 state 5
 
-   11 factor: REAL .
+   12 factor: REAL .
 
-    $default  reduce using rule 11 (factor)
+    $default  reduce using rule 12 (factor)
 
 
 state 6
 
-    0 $accept: command . $end
+   16 text: TEXT .
 
-    $end  shift, and go to state 15
+    $default  reduce using rule 16 (text)
 
 
 state 7
+
+    0 $accept: command . $end
+
+    $end  shift, and go to state 17
+
+
+state 8
 
     1 command: exp .
     2 exp: exp . MAS term
     3    | exp . MENOS term
 
-    MAS    shift, and go to state 16
-    MENOS  shift, and go to state 17
+    MAS    shift, and go to state 18
+    MENOS  shift, and go to state 19
 
     $default  reduce using rule 1 (command)
 
 
-state 8
-
-    4 exp: term .
-    5 term: term . POR factor
-    6     | term . DIV factor
-
-    POR  shift, and go to state 18
-    DIV  shift, and go to state 19
-
-    $default  reduce using rule 4 (exp)
-
-
 state 9
 
-    7 term: factor .
+    5 exp: term .
+    6 term: term . POR factor
+    7     | term . DIV factor
 
-    $default  reduce using rule 7 (term)
+    POR  shift, and go to state 20
+    DIV  shift, and go to state 21
+
+    $default  reduce using rule 5 (exp)
 
 
 state 10
 
-    9 factor: MAS ENT .
+    8 term: factor .
 
-    $default  reduce using rule 9 (factor)
+    $default  reduce using rule 8 (term)
 
 
 state 11
 
-   12 factor: MAS REAL .
+    4 exp: text . CONCAT text
 
-    $default  reduce using rule 12 (factor)
+    CONCAT  shift, and go to state 22
 
 
 state 12
 
-   10 factor: MENOS ENT .
+   10 factor: MAS ENT .
 
     $default  reduce using rule 10 (factor)
 
 
 state 13
 
-   13 factor: MENOS REAL .
+   13 factor: MAS REAL .
 
     $default  reduce using rule 13 (factor)
 
 
 state 14
 
-    2 exp: exp . MAS term
-    3    | exp . MENOS term
-   14 factor: PAR_OP exp . PAR_CL
+   11 factor: MENOS ENT .
 
-    MAS     shift, and go to state 16
-    MENOS   shift, and go to state 17
-    PAR_CL  shift, and go to state 20
+    $default  reduce using rule 11 (factor)
 
 
 state 15
+
+   14 factor: MENOS REAL .
+
+    $default  reduce using rule 14 (factor)
+
+
+state 16
+
+    2 exp: exp . MAS term
+    3    | exp . MENOS term
+   15 factor: PAR_OP exp . PAR_CL
+
+    MAS     shift, and go to state 18
+    MENOS   shift, and go to state 19
+    PAR_CL  shift, and go to state 23
+
+
+state 17
 
     0 $accept: command $end .
 
     $default  accept
 
 
-state 16
+state 18
 
     2 exp: exp MAS . term
 
@@ -206,11 +231,11 @@ state 16
     ENT     shift, and go to state 4
     REAL    shift, and go to state 5
 
-    term    go to state 21
-    factor  go to state 9
+    term    go to state 24
+    factor  go to state 10
 
 
-state 17
+state 19
 
     3 exp: exp MENOS . term
 
@@ -220,76 +245,92 @@ state 17
     ENT     shift, and go to state 4
     REAL    shift, and go to state 5
 
-    term    go to state 22
-    factor  go to state 9
-
-
-state 18
-
-    5 term: term POR . factor
-
-    MAS     shift, and go to state 1
-    MENOS   shift, and go to state 2
-    PAR_OP  shift, and go to state 3
-    ENT     shift, and go to state 4
-    REAL    shift, and go to state 5
-
-    factor  go to state 23
-
-
-state 19
-
-    6 term: term DIV . factor
-
-    MAS     shift, and go to state 1
-    MENOS   shift, and go to state 2
-    PAR_OP  shift, and go to state 3
-    ENT     shift, and go to state 4
-    REAL    shift, and go to state 5
-
-    factor  go to state 24
+    term    go to state 25
+    factor  go to state 10
 
 
 state 20
 
-   14 factor: PAR_OP exp PAR_CL .
+    6 term: term POR . factor
 
-    $default  reduce using rule 14 (factor)
+    MAS     shift, and go to state 1
+    MENOS   shift, and go to state 2
+    PAR_OP  shift, and go to state 3
+    ENT     shift, and go to state 4
+    REAL    shift, and go to state 5
+
+    factor  go to state 26
 
 
 state 21
 
-    2 exp: exp MAS term .
-    5 term: term . POR factor
-    6     | term . DIV factor
+    7 term: term DIV . factor
 
-    POR  shift, and go to state 18
-    DIV  shift, and go to state 19
+    MAS     shift, and go to state 1
+    MENOS   shift, and go to state 2
+    PAR_OP  shift, and go to state 3
+    ENT     shift, and go to state 4
+    REAL    shift, and go to state 5
 
-    $default  reduce using rule 2 (exp)
+    factor  go to state 27
 
 
 state 22
 
-    3 exp: exp MENOS term .
-    5 term: term . POR factor
-    6     | term . DIV factor
+    4 exp: text CONCAT . text
 
-    POR  shift, and go to state 18
-    DIV  shift, and go to state 19
+    TEXT  shift, and go to state 6
 
-    $default  reduce using rule 3 (exp)
+    text  go to state 28
 
 
 state 23
 
-    5 term: term POR factor .
+   15 factor: PAR_OP exp PAR_CL .
 
-    $default  reduce using rule 5 (term)
+    $default  reduce using rule 15 (factor)
 
 
 state 24
 
-    6 term: term DIV factor .
+    2 exp: exp MAS term .
+    6 term: term . POR factor
+    7     | term . DIV factor
+
+    POR  shift, and go to state 20
+    DIV  shift, and go to state 21
+
+    $default  reduce using rule 2 (exp)
+
+
+state 25
+
+    3 exp: exp MENOS term .
+    6 term: term . POR factor
+    7     | term . DIV factor
+
+    POR  shift, and go to state 20
+    DIV  shift, and go to state 21
+
+    $default  reduce using rule 3 (exp)
+
+
+state 26
+
+    6 term: term POR factor .
 
     $default  reduce using rule 6 (term)
+
+
+state 27
+
+    7 term: term DIV factor .
+
+    $default  reduce using rule 7 (term)
+
+
+state 28
+
+    4 exp: text CONCAT text .
+
+    $default  reduce using rule 4 (exp)

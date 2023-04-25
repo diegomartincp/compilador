@@ -13,21 +13,21 @@
   struct atributos{
     float real;
     int entero;
-    char* string;
-    char* tipo; //Cadena de caracteres
+    char* texto;
+    char* tipo; //Cadena de caracteres que almacena textualmente el tipo del elemento para poder ofrecer controles semánticos sobre el mismo
   }st;
 }
 
 /* Los no terminales hacen uso de la estructura */
-%type <st> exp term factor
+%type <st> exp term factor text
 
 /* Declarar tokens recogidos de FLEX*/
-%token MAS MENOS POR DIV PAR_OP PAR_CL
+%token MAS MENOS POR DIV PAR_OP PAR_CL CONCAT 
 
 /*Los que son números hay que definir su tipo */
 %token <intVal> ENT
 %token <floatVal> REAL
-
+%token <stringVal> TEXT
 //Definir la asociatividad. POR y DIV tienen mayor precedencia que MAS y MENOS
 %left MAS MENOS
 %left  POR DIV  
@@ -39,6 +39,10 @@ command: exp {  if(strcmp($1.tipo, "entero")==0){printf(" El resultado entero es
             }
    ;
 
+/*
+exp: exp MAS term
+    |exp MENOS term
+*/
 exp: exp MAS term {
         if (strcmp($1.tipo, "entero")==0 && strcmp($3.tipo, "entero")==0) { //Si ambos son enteros
         $$.entero = $1.entero + $3.entero;
@@ -64,7 +68,7 @@ exp: exp MAS term {
              printf( "ERROR: No se puede operar");
         }
     }
-   | exp MENOS term {
+    | exp MENOS term {
         if (strcmp($1.tipo, "entero")==0 && strcmp($3.tipo, "entero")==0) { //Si ambos son enteros
         $$.entero = $1.entero - $3.entero;
         $$.tipo="entero";
@@ -86,12 +90,26 @@ exp: exp MAS term {
             printf( "real-entero = %f\n", $$.real);
         }
         else{
-             printf( "ERROR: No se puede operar");
+                printf( "ERROR: No se puede operar");
         }
     }
-   | term {$$ = $1; }   //Se hace una copia
-   ;
+    | text CONCAT text {
+        if (strcmp($1.tipo, "texto")==0 && strcmp($3.tipo, "texto")==0){
+            $$.texto = strcat($1.texto, $3.texto);
+            $$.tipo="texto";
+            printf( "Concatenado -> %n\n",$$.texto);
+        }
+        else{
+            printf( "ERROR: No se puede concatenar algo que no sean cadenas de texto");
+        }
+    }
+    | term {$$ = $1; }   //Se hace una copia
+    ;
 
+/*
+term: term POR factor
+    | term DIV factor
+*/
 term: term POR factor {
         if (strcmp($1.tipo, "entero")==0 && strcmp($3.tipo, "entero")==0) { //Si ambos son enteros
             $$.entero = $1.entero * $3.entero;
@@ -170,6 +188,10 @@ factor: ENT {$$.entero = $1; //Asignar el valor a .entero
     | PAR_OP exp PAR_CL {$$ = $2;//Se hace una copia
                         printf( "PARENTESIS \n");}
     ;
+
+text: TEXT {$$.texto = $1;
+            $$.tipo="texto";
+            printf( "TEXTO  %s\n", $$);}
 %%
 
 main()

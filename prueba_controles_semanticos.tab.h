@@ -44,8 +44,10 @@
      DIV = 261,
      PAR_OP = 262,
      PAR_CL = 263,
-     ENT = 264,
-     REAL = 265
+     CONCAT = 264,
+     ENT = 265,
+     REAL = 266,
+     TEXT = 267
    };
 #endif
 
@@ -64,14 +66,14 @@ typedef union YYSTYPE
   struct atributos{
     float real;
     int entero;
-    char* string;
-    char* tipo; //Cadena de caracteres
+    char* texto;
+    char* tipo; //Cadena de caracteres que almacena textualmente el tipo del elemento para poder ofrecer controles semánticos sobre el mismo
   }st;
 
 
 
 /* Line 1685 of yacc.c  */
-#line 75 "prueba_controles_semanticos.tab.h"
+#line 77 "prueba_controles_semanticos.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
