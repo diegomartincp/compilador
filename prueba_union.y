@@ -1,3 +1,4 @@
+//ESTE EJEMPLO SOLO FUNCIONA CON ENTEROS, SE HAN INTRODUCIDO LOS REALES SOLO PARA VER QUE LOS RECONOCE
 %{
 #include <ctype.h>
 #include <stdio.h>
@@ -12,21 +13,23 @@
     float real;
     int entero;
     char* string;
-    char* type;
+    char* tipo; //Cadena de caracteres
   }st;
 }
 
-/* declare non-terminals */
+/* Los no terminales hacen uso de la estructura */
 %type <st> exp term factor
 
 /* Declarar tokens recogidos de FLEX*/
-%token MAS MENOS POR DIV
+%token MAS MENOS POR DIV PAR_OP PAR_CL
+
 /*Los que son números hay que definir su tipo */
 %token <intVal> ENT
 %token <floatVal> REAL
 
-/*Left*/
-%left MAS MENOS POR DIV
+//Definir la asociatividad. POR y DIV tienen mayor precedencia que MAS y MENOS
+%left MAS MENOS
+%left  POR DIV  
 
 %start command
 %%
@@ -38,21 +41,35 @@ exp: exp MAS term {$$.entero = $1.entero + $3.entero; }
    | term {$$.entero = $1.entero; }
    ;
 
-term: term POR factor {$$.entero = $1.entero * $3.entero; }
-    | term DIV factor {$$.entero = $1.entero / $3.entero; }
+term: term POR factor {$$.entero = $1.entero * $3.entero; printf( "Multiplicacion con resultado = %ld\n", $$.entero);}
+    | term DIV factor {$$.entero = $1.entero / $3.entero; printf( "Division con resultado = %ld\n", $$.entero);}
     | factor {$$.entero = $1.entero; }
     ;
     
-//$1 es el número tal cual, que se asigna a $$.entero
-factor: ENT {$$.entero = $1; printf( "ENTERO %ld\n", $$.entero);}  
-    | MAS ENT {$$.entero = $2; printf( "ENTERO POSITIVO %ld\n", $$.entero);}
-    | MENOS ENT {$$.entero = -$2; printf( "ENTERO NEGATIVO %ld\n", $$.entero);}
+//Definir los números enteros y reales y sus tipos
+factor: ENT {$$.entero = $1; //Asignar el valor a .entero
+            $$.tipo="entero"; //Definir el tipo a "entero"
+            printf( "ENTERO %ld\n", $$.entero);}   //Imprimir por pantalla lo que se acaba de hacer
+    | MAS ENT {$$.entero = $2;
+              $$.tipo="entero";
+              printf( "ENTERO POSITIVO %ld\n", $$.entero);}
+    | MENOS ENT {$$.entero = -$2;
+              $$.tipo="entero";
+              printf( "ENTERO NEGATIVO %ld\n", $$.entero);}
 
-    | REAL {$$.real = $1; printf( "REAL  %f\n", $$.real);}
-    | MAS REAL {$$.real = $2; printf( "REAL POSITIVO %f\n", $$.real);}
-    | MENOS REAL {$$.real = -$2; printf( "REAL NEGATIVO %f\n", $$.real);}
+//Reales
+    | REAL {$$.real = $1;
+            $$.tipo="real";
+            printf( "REAL  %f\n", $$.real);}
+    | MAS REAL {$$.real = $2;
+                $$.tipo="real";
+                printf( "REAL POSITIVO %f\n", $$.real);}
+    | MENOS REAL {$$.real = -$2;
+                  $$.tipo="real";
+                  printf( "REAL NEGATIVO %f\n", $$.real);}
 
-    | '(' exp ')' {$$.entero = $2.entero; }
+    | PAR_OP exp PAR_CL {$$.entero = $2.entero;
+                  printf( "PARENTESIS CON VALOR %ld\n", $$.entero);}
     ;
 %%
 

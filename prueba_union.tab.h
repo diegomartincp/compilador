@@ -42,8 +42,10 @@
      MENOS = 259,
      POR = 260,
      DIV = 261,
-     ENT = 262,
-     REAL = 263
+     PAR_OP = 262,
+     PAR_CL = 263,
+     ENT = 264,
+     REAL = 265
    };
 #endif
 
@@ -63,13 +65,13 @@ typedef union YYSTYPE
     float real;
     int entero;
     char* string;
-    char* type;
+    char* tipo; //Cadena de caracteres
   }st;
 
 
 
 /* Line 1685 of yacc.c  */
-#line 73 "prueba_union.tab.h"
+#line 75 "prueba_union.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
