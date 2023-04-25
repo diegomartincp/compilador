@@ -1,7 +1,17 @@
+//PRUEBA CON CALCULADORA BÁSICA
+
 bison -d -v prueba.y
 flex -o prueba.lex.c prueba.flex
 gcc -o analiza prueba.tab.c prueba.lex.c
 
+//PRUEBA CON CALCULADORA QUE USA UNION PARA OPERAR SOLO CON ENTEROS
+
 bison -d -v prueba_union.y
 flex -o prueba_union.lex.c prueba_union.flex
 gcc -o analiza prueba_union.tab.c prueba_union.lex.c
+
+//PRUEBA CON CALCULADORA CON CONTROLES SEMÁNTICOS
+
+bison -d -v prueba_controles_semanticos.y
+flex -o prueba_controles_semanticos.lex.c prueba_controles_semanticos.flex
+gcc -o controles_semanticos prueba_controles_semanticos.tab.c prueba_controles_semanticos.lex.c
