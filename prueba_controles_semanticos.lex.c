@@ -372,8 +372,8 @@ static void yy_fatal_error (yyconst char msg[]  );
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
 
-#define YY_NUM_RULES 12
-#define YY_END_OF_BUFFER 13
+#define YY_NUM_RULES 13
+#define YY_END_OF_BUFFER 14
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -383,8 +383,8 @@ struct yy_trans_info
 	};
 static yyconst flex_int16_t yy_accept[22] =
     {   0,
-        0,    0,   13,   12,   11,   12,    5,    6,    3,    1,
-        2,   12,    4,    8,    0,   10,    7,    0,    8,    9,
+        0,    0,   14,   13,    1,    8,    6,    7,    4,    2,
+        3,   13,    5,   10,   12,    9,    0,   10,   12,   11,
         0
     } ;
 
@@ -396,14 +396,14 @@ static yyconst flex_int32_t yy_ec[256] =
         1,    1,    1,    3,    1,    1,    1,    1,    1,    4,
         5,    6,    7,    1,    8,    9,   10,   11,   11,   11,
        11,   11,   11,   11,   11,   11,   11,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,    1,    1,   12,   12,   12,   12,   12,   12,
+       12,   12,   12,   12,   12,   12,   12,   12,   12,   12,
+       12,   12,   12,   12,   12,   12,   12,   12,   12,   12,
+        1,    1,    1,    1,    1,    1,   12,   12,   12,   12,
 
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+       12,   12,   12,   12,   12,   12,   12,   12,   12,   12,
+       12,   12,   12,   12,   12,   12,   12,   12,   12,   12,
+       12,   12,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -420,40 +420,40 @@ static yyconst flex_int32_t yy_ec[256] =
         1,    1,    1,    1,    1
     } ;
 
-static yyconst flex_int32_t yy_meta[12] =
+static yyconst flex_int32_t yy_meta[13] =
     {   0,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1
+        1,    1
     } ;
 
-static yyconst flex_int16_t yy_base[23] =
+static yyconst flex_int16_t yy_base[22] =
     {   0,
-        0,    0,   20,   21,   21,   16,   21,   21,   21,   21,
-       21,    9,   21,    3,   14,   21,   21,    5,    0,    4,
-       21,   12
+        0,    0,   20,   21,   21,   21,   21,   21,   21,   21,
+       21,   10,   21,    4,    6,   21,    6,    0,    4,    3,
+       21
     } ;
 
-static yyconst flex_int16_t yy_def[23] =
+static yyconst flex_int16_t yy_def[22] =
     {   0,
-       21,    1,   21,   21,   21,   22,   21,   21,   21,   21,
-       21,   21,   21,   21,   22,   21,   21,   21,   14,   21,
-        0,   21
+       21,    1,   21,   21,   21,   21,   21,   21,   21,   21,
+       21,   21,   21,   21,   21,   21,   21,   14,   21,   21,
+        0
     } ;
 
-static yyconst flex_int16_t yy_nxt[33] =
+static yyconst flex_int16_t yy_nxt[34] =
     {   0,
         4,    5,    6,    7,    8,    9,   10,   11,   12,   13,
-       14,   18,   15,   19,   20,   20,   16,   17,   16,   21,
+       14,   15,   17,   20,   18,   19,   20,   19,   16,   21,
         3,   21,   21,   21,   21,   21,   21,   21,   21,   21,
-       21,   21
+       21,   21,   21
     } ;
 
-static yyconst flex_int16_t yy_chk[33] =
+static yyconst flex_int16_t yy_chk[34] =
     {   0,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,   14,   22,   14,   20,   18,   15,   12,    6,    3,
+        1,    1,   14,   20,   14,   19,   17,   15,   12,    3,
        21,   21,   21,   21,   21,   21,   21,   21,   21,   21,
-       21,   21
+       21,   21,   21
     } ;
 
 static yy_state_type yy_last_accepting_state;
@@ -747,68 +747,72 @@ do_action:	/* This label is used only to access EOF actions. */
 			goto yy_find_action;
 
 case 1:
+/* rule 1 can match eol */
 YY_RULE_SETUP
 #line 8 "prueba_controles_semanticos.flex"
-return MAS;
+return(0);
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
 #line 9 "prueba_controles_semanticos.flex"
-return MENOS;
+return MAS;
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
 #line 10 "prueba_controles_semanticos.flex"
-return POR;
+return MENOS;
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
 #line 11 "prueba_controles_semanticos.flex"
-return DIV;
+return POR;
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
 #line 12 "prueba_controles_semanticos.flex"
-return PAR_OP;
+return DIV;
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
 #line 13 "prueba_controles_semanticos.flex"
-return PAR_CL;
+return PAR_OP;
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
 #line 14 "prueba_controles_semanticos.flex"
-return CONCAT;
+return PAR_CL;
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
 #line 15 "prueba_controles_semanticos.flex"
-{yylval.intVal = atoi(yytext); return ENT;}
+return COMILLA;
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
 #line 16 "prueba_controles_semanticos.flex"
-{yylval.floatVal = atof(yytext); return REAL;}
+return CONCAT;
 	YY_BREAK
 case 10:
-/* rule 10 can match eol */
 YY_RULE_SETUP
 #line 17 "prueba_controles_semanticos.flex"
-{yylval.stringVal=strdup(yytext); printf( yytext);return TEXT ;}
+{yylval.intVal = atoi(yytext); return ENT;}
 	YY_BREAK
 case 11:
-/* rule 11 can match eol */
 YY_RULE_SETUP
 #line 18 "prueba_controles_semanticos.flex"
-{line_num=yylineno; return ENDLINE ;}//
+{yylval.floatVal = atof(yytext); return REAL;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
 #line 19 "prueba_controles_semanticos.flex"
+{yylval.stringVal=strdup(yytext); printf( yytext);return TEXT ;}
+	YY_BREAK
+case 13:
+YY_RULE_SETUP
+#line 20 "prueba_controles_semanticos.flex"
 ECHO;
 	YY_BREAK
-#line 812 "prueba_controles_semanticos.lex.c"
+#line 816 "prueba_controles_semanticos.lex.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1806,7 +1810,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 19 "prueba_controles_semanticos.flex"
+#line 20 "prueba_controles_semanticos.flex"
 
 
 

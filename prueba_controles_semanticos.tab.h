@@ -45,7 +45,7 @@
      PAR_OP = 262,
      PAR_CL = 263,
      CONCAT = 264,
-     ENDLINE = 265,
+     COMILLA = 265,
      ENT = 266,
      REAL = 267,
      TEXT = 268

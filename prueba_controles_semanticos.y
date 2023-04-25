@@ -28,7 +28,7 @@ int linea=1;
 %type <st> exp term factor 
 
 /* Declarar tokens recogidos de FLEX*/
-%token MAS MENOS POR DIV PAR_OP PAR_CL CONCAT 
+%token MAS MENOS POR DIV PAR_OP PAR_CL CONCAT COMILLA
 
 /*Los que son números hay que definir su tipo */
 %token <intVal> ENT
@@ -55,6 +55,7 @@ command: exp {  if(error_compilacion>=1){
 /*
 exp: exp MAS term
     |exp MENOS term
+    |exp CONCAT term 
     |term
 */
 exp: exp MAS term {
@@ -206,9 +207,9 @@ factor: ENT {$$.entero = $1; //Asignar el valor a .entero
 
     | PAR_OP exp PAR_CL {$$ = $2;//Se hace una copia
                         printf( "PARENTESIS \n");}
-    | TEXT {$$.texto = $1;
+    | COMILLA TEXT COMILLA {$$.texto = $2;
             $$.tipo="texto";
-            printf( "TEXTO  %s\n", $$);}
+            printf( "TEXTO  %s\n", $$.texto);}
     ;
 
 %%
