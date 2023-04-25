@@ -1603,7 +1603,7 @@ yyreduce:
 #line 210 "prueba_controles_semanticos.y"
     {(yyval.st).texto = (yyvsp[(2) - (3)].stringVal);
             (yyval.st).tipo="texto";
-            printf( "TEXTO  %s\n", (yyval.st).texto);;}
+            printf(" TEXTO %s\n", (yyval.st).texto);;}
     break;
 
 

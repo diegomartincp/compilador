@@ -209,7 +209,7 @@ factor: ENT {$$.entero = $1; //Asignar el valor a .entero
                         printf( "PARENTESIS \n");}
     | COMILLA TEXT COMILLA {$$.texto = $2;
             $$.tipo="texto";
-            printf( "TEXTO  %s\n", $$.texto);}
+            printf(" TEXTO %s\n", $$.texto);}
     ;
 
 %%
