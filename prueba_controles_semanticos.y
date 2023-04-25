@@ -212,9 +212,6 @@ factor: ENT {$$.entero = $1; //Asignar el valor a .entero
             $$.tipo="texto";
             printf(" TEXTO %s\n", $$.texto);}
     ;
-//Cadena vacía
-    |
-    ;
 
 %%
 
