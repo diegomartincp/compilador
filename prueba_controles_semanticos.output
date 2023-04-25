@@ -1,3 +1,8 @@
+Terminals unused in grammar
+
+   ENDLINE
+
+
 Grammar
 
     0 $accept: command $end
@@ -6,7 +11,7 @@ Grammar
 
     2 exp: exp MAS term
     3    | exp MENOS term
-    4    | text CONCAT text
+    4    | exp CONCAT term
     5    | term
 
     6 term: term POR factor
@@ -20,8 +25,7 @@ Grammar
    13       | MAS REAL
    14       | MENOS REAL
    15       | PAR_OP exp PAR_CL
-
-   16 text: TEXT
+   16       | TEXT
 
 
 Terminals, with rules where they appear
@@ -35,25 +39,24 @@ DIV (261) 7
 PAR_OP (262) 15
 PAR_CL (263) 15
 CONCAT (264) 4
-ENT (265) 9 10 11
-REAL (266) 12 13 14
-TEXT (267) 16
+ENDLINE (265)
+ENT (266) 9 10 11
+REAL (267) 12 13 14
+TEXT (268) 16
 
 
 Nonterminals, with rules where they appear
 
-$accept (13)
+$accept (14)
     on left: 0
-command (14)
+command (15)
     on left: 1, on right: 0
-exp (15)
-    on left: 2 3 4 5, on right: 1 2 3 15
-term (16)
-    on left: 6 7 8, on right: 2 3 5 6 7
-factor (17)
-    on left: 9 10 11 12 13 14 15, on right: 6 7 8
-text (18)
-    on left: 16, on right: 4
+exp (16)
+    on left: 2 3 4 5, on right: 1 2 3 4 15
+term (17)
+    on left: 6 7 8, on right: 2 3 4 5 6 7
+factor (18)
+    on left: 9 10 11 12 13 14 15 16, on right: 6 7 8
 
 
 state 0
@@ -71,7 +74,6 @@ state 0
     exp      go to state 8
     term     go to state 9
     factor   go to state 10
-    text     go to state 11
 
 
 state 1
@@ -79,8 +81,8 @@ state 1
    10 factor: MAS . ENT
    13       | MAS . REAL
 
-    ENT   shift, and go to state 12
-    REAL  shift, and go to state 13
+    ENT   shift, and go to state 11
+    REAL  shift, and go to state 12
 
 
 state 2
@@ -88,8 +90,8 @@ state 2
    11 factor: MENOS . ENT
    14       | MENOS . REAL
 
-    ENT   shift, and go to state 14
-    REAL  shift, and go to state 15
+    ENT   shift, and go to state 13
+    REAL  shift, and go to state 14
 
 
 state 3
@@ -103,10 +105,9 @@ state 3
     REAL    shift, and go to state 5
     TEXT    shift, and go to state 6
 
-    exp     go to state 16
+    exp     go to state 15
     term    go to state 9
     factor  go to state 10
-    text    go to state 11
 
 
 state 4
@@ -125,16 +126,16 @@ state 5
 
 state 6
 
-   16 text: TEXT .
+   16 factor: TEXT .
 
-    $default  reduce using rule 16 (text)
+    $default  reduce using rule 16 (factor)
 
 
 state 7
 
     0 $accept: command . $end
 
-    $end  shift, and go to state 17
+    $end  shift, and go to state 16
 
 
 state 8
@@ -142,9 +143,11 @@ state 8
     1 command: exp .
     2 exp: exp . MAS term
     3    | exp . MENOS term
+    4    | exp . CONCAT term
 
-    MAS    shift, and go to state 18
-    MENOS  shift, and go to state 19
+    MAS     shift, and go to state 17
+    MENOS   shift, and go to state 18
+    CONCAT  shift, and go to state 19
 
     $default  reduce using rule 1 (command)
 
@@ -170,58 +173,53 @@ state 10
 
 state 11
 
-    4 exp: text . CONCAT text
-
-    CONCAT  shift, and go to state 22
-
-
-state 12
-
    10 factor: MAS ENT .
 
     $default  reduce using rule 10 (factor)
 
 
-state 13
+state 12
 
    13 factor: MAS REAL .
 
     $default  reduce using rule 13 (factor)
 
 
-state 14
+state 13
 
    11 factor: MENOS ENT .
 
     $default  reduce using rule 11 (factor)
 
 
-state 15
+state 14
 
    14 factor: MENOS REAL .
 
     $default  reduce using rule 14 (factor)
 
 
-state 16
+state 15
 
     2 exp: exp . MAS term
     3    | exp . MENOS term
+    4    | exp . CONCAT term
    15 factor: PAR_OP exp . PAR_CL
 
-    MAS     shift, and go to state 18
-    MENOS   shift, and go to state 19
-    PAR_CL  shift, and go to state 23
+    MAS     shift, and go to state 17
+    MENOS   shift, and go to state 18
+    PAR_CL  shift, and go to state 22
+    CONCAT  shift, and go to state 19
 
 
-state 17
+state 16
 
     0 $accept: command $end .
 
     $default  accept
 
 
-state 18
+state 17
 
     2 exp: exp MAS . term
 
@@ -230,12 +228,13 @@ state 18
     PAR_OP  shift, and go to state 3
     ENT     shift, and go to state 4
     REAL    shift, and go to state 5
+    TEXT    shift, and go to state 6
 
-    term    go to state 24
+    term    go to state 23
     factor  go to state 10
 
 
-state 19
+state 18
 
     3 exp: exp MENOS . term
 
@@ -244,6 +243,22 @@ state 19
     PAR_OP  shift, and go to state 3
     ENT     shift, and go to state 4
     REAL    shift, and go to state 5
+    TEXT    shift, and go to state 6
+
+    term    go to state 24
+    factor  go to state 10
+
+
+state 19
+
+    4 exp: exp CONCAT . term
+
+    MAS     shift, and go to state 1
+    MENOS   shift, and go to state 2
+    PAR_OP  shift, and go to state 3
+    ENT     shift, and go to state 4
+    REAL    shift, and go to state 5
+    TEXT    shift, and go to state 6
 
     term    go to state 25
     factor  go to state 10
@@ -258,6 +273,7 @@ state 20
     PAR_OP  shift, and go to state 3
     ENT     shift, and go to state 4
     REAL    shift, and go to state 5
+    TEXT    shift, and go to state 6
 
     factor  go to state 26
 
@@ -271,27 +287,19 @@ state 21
     PAR_OP  shift, and go to state 3
     ENT     shift, and go to state 4
     REAL    shift, and go to state 5
+    TEXT    shift, and go to state 6
 
     factor  go to state 27
 
 
 state 22
 
-    4 exp: text CONCAT . text
-
-    TEXT  shift, and go to state 6
-
-    text  go to state 28
-
-
-state 23
-
    15 factor: PAR_OP exp PAR_CL .
 
     $default  reduce using rule 15 (factor)
 
 
-state 24
+state 23
 
     2 exp: exp MAS term .
     6 term: term . POR factor
@@ -303,7 +311,7 @@ state 24
     $default  reduce using rule 2 (exp)
 
 
-state 25
+state 24
 
     3 exp: exp MENOS term .
     6 term: term . POR factor
@@ -313,6 +321,18 @@ state 25
     DIV  shift, and go to state 21
 
     $default  reduce using rule 3 (exp)
+
+
+state 25
+
+    4 exp: exp CONCAT term .
+    6 term: term . POR factor
+    7     | term . DIV factor
+
+    POR  shift, and go to state 20
+    DIV  shift, and go to state 21
+
+    $default  reduce using rule 4 (exp)
 
 
 state 26
@@ -327,10 +347,3 @@ state 27
     7 term: term DIV factor .
 
     $default  reduce using rule 7 (term)
-
-
-state 28
-
-    4 exp: text CONCAT text .
-
-    $default  reduce using rule 4 (exp)

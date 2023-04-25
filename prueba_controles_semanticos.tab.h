@@ -45,9 +45,10 @@
      PAR_OP = 262,
      PAR_CL = 263,
      CONCAT = 264,
-     ENT = 265,
-     REAL = 266,
-     TEXT = 267
+     ENDLINE = 265,
+     ENT = 266,
+     REAL = 267,
+     TEXT = 268
    };
 #endif
 
@@ -58,7 +59,7 @@ typedef union YYSTYPE
 {
 
 /* Line 1685 of yacc.c  */
-#line 9 "prueba_controles_semanticos.y"
+#line 15 "prueba_controles_semanticos.y"
 
   int intVal;
   float floatVal;
@@ -73,7 +74,7 @@ typedef union YYSTYPE
 
 
 /* Line 1685 of yacc.c  */
-#line 77 "prueba_controles_semanticos.tab.h"
+#line 78 "prueba_controles_semanticos.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

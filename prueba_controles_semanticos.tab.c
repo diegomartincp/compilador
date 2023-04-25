@@ -73,9 +73,14 @@
 #include <stdio.h>
 #include <string.h> //Esta librería de C nos permite comparar los tipos con la funcion strcmp()
 
+//Variables
+int error_compilacion=0;
+int linea=1;
+
+
 
 /* Line 189 of yacc.c  */
-#line 79 "prueba_controles_semanticos.tab.c"
+#line 84 "prueba_controles_semanticos.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -109,9 +114,10 @@
      PAR_OP = 262,
      PAR_CL = 263,
      CONCAT = 264,
-     ENT = 265,
-     REAL = 266,
-     TEXT = 267
+     ENDLINE = 265,
+     ENT = 266,
+     REAL = 267,
+     TEXT = 268
    };
 #endif
 
@@ -122,7 +128,7 @@ typedef union YYSTYPE
 {
 
 /* Line 214 of yacc.c  */
-#line 9 "prueba_controles_semanticos.y"
+#line 15 "prueba_controles_semanticos.y"
 
   int intVal;
   float floatVal;
@@ -137,7 +143,7 @@ typedef union YYSTYPE
 
 
 /* Line 214 of yacc.c  */
-#line 141 "prueba_controles_semanticos.tab.c"
+#line 147 "prueba_controles_semanticos.tab.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -149,7 +155,7 @@ typedef union YYSTYPE
 
 
 /* Line 264 of yacc.c  */
-#line 153 "prueba_controles_semanticos.tab.c"
+#line 159 "prueba_controles_semanticos.tab.c"
 
 #ifdef short
 # undef short
@@ -362,22 +368,22 @@ union yyalloc
 #endif
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  17
+#define YYFINAL  16
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   30
+#define YYLAST   25
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  13
+#define YYNTOKENS  14
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  6
+#define YYNNTS  5
 /* YYNRULES -- Number of rules.  */
 #define YYNRULES  17
 /* YYNRULES -- Number of states.  */
-#define YYNSTATES  29
+#define YYNSTATES  28
 
 /* YYTRANSLATE(YYLEX) -- Bison symbol number corresponding to YYLEX.  */
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   267
+#define YYMAXUTOK   268
 
 #define YYTRANSLATE(YYX)						\
   ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
@@ -411,7 +417,7 @@ static const yytype_uint8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
-       5,     6,     7,     8,     9,    10,    11,    12
+       5,     6,     7,     8,     9,    10,    11,    12,    13
 };
 
 #if YYDEBUG
@@ -426,19 +432,19 @@ static const yytype_uint8 yyprhs[] =
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
 static const yytype_int8 yyrhs[] =
 {
-      14,     0,    -1,    15,    -1,    15,     3,    16,    -1,    15,
-       4,    16,    -1,    18,     9,    18,    -1,    16,    -1,    16,
-       5,    17,    -1,    16,     6,    17,    -1,    17,    -1,    10,
-      -1,     3,    10,    -1,     4,    10,    -1,    11,    -1,     3,
-      11,    -1,     4,    11,    -1,     7,    15,     8,    -1,    12,
+      15,     0,    -1,    16,    -1,    16,     3,    17,    -1,    16,
+       4,    17,    -1,    16,     9,    17,    -1,    17,    -1,    17,
+       5,    18,    -1,    17,     6,    18,    -1,    18,    -1,    11,
+      -1,     3,    11,    -1,     4,    11,    -1,    12,    -1,     3,
+      12,    -1,     4,    12,    -1,     7,    16,     8,    -1,    13,
       -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    37,    37,    46,    71,    96,   106,   113,   138,   163,
-     167,   170,   173,   178,   181,   184,   188,   192
+       0,    43,    43,    61,    87,   113,   124,   131,   157,   183,
+     187,   190,   193,   198,   201,   204,   208,   210
 };
 #endif
 
@@ -448,8 +454,8 @@ static const yytype_uint8 yyrline[] =
 static const char *const yytname[] =
 {
   "$end", "error", "$undefined", "MAS", "MENOS", "POR", "DIV", "PAR_OP",
-  "PAR_CL", "CONCAT", "ENT", "REAL", "TEXT", "$accept", "command", "exp",
-  "term", "factor", "text", 0
+  "PAR_CL", "CONCAT", "ENDLINE", "ENT", "REAL", "TEXT", "$accept",
+  "command", "exp", "term", "factor", 0
 };
 #endif
 
@@ -459,15 +465,15 @@ static const char *const yytname[] =
 static const yytype_uint16 yytoknum[] =
 {
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
-     265,   266,   267
+     265,   266,   267,   268
 };
 # endif
 
 /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
-       0,    13,    14,    15,    15,    15,    15,    16,    16,    16,
-      17,    17,    17,    17,    17,    17,    17,    18
+       0,    14,    15,    16,    16,    16,    16,    17,    17,    17,
+      18,    18,    18,    18,    18,    18,    18,    18
 };
 
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
@@ -483,30 +489,30 @@ static const yytype_uint8 yyr2[] =
 static const yytype_uint8 yydefact[] =
 {
        0,     0,     0,     0,    10,    13,    17,     0,     2,     6,
-       9,     0,    11,    14,    12,    15,     0,     1,     0,     0,
-       0,     0,     0,    16,     3,     4,     7,     8,     5
+       9,    11,    14,    12,    15,     0,     1,     0,     0,     0,
+       0,     0,    16,     3,     4,     5,     7,     8
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     7,     8,     9,    10,    11
+      -1,     7,     8,     9,    10
 };
 
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
    STATE-NUM.  */
-#define YYPACT_NINF -9
+#define YYPACT_NINF -10
 static const yytype_int8 yypact[] =
 {
-      -3,    -8,    -5,    -3,    -9,    -9,    -9,    19,     9,    16,
-      -9,    20,    -9,    -9,    -9,    -9,    12,    -9,     7,     7,
-       7,     7,    13,    -9,    16,    16,    -9,    -9,    -9
+      -3,    -9,     9,    -3,   -10,   -10,   -10,     5,    10,    17,
+     -10,   -10,   -10,   -10,   -10,     3,   -10,    -3,    -3,    -3,
+      -3,    -3,   -10,    17,    17,    17,   -10,   -10
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-      -9,    -9,    25,     5,     6,     8
+     -10,   -10,    15,    -2,     4
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
@@ -516,27 +522,25 @@ static const yytype_int8 yypgoto[] =
 #define YYTABLE_NINF -1
 static const yytype_uint8 yytable[] =
 {
-       1,     2,    12,    13,     3,    14,    15,     4,     5,     6,
-       1,     2,    18,    19,     3,    18,    19,     4,     5,    17,
-      23,    20,    21,    24,    25,     6,    26,    27,    16,    22,
-      28
+       1,     2,    11,    12,     3,    16,    17,    18,     4,     5,
+       6,    22,    19,    17,    18,    23,    24,    25,    15,    19,
+      13,    14,    20,    21,    26,    27
 };
 
 static const yytype_uint8 yycheck[] =
 {
-       3,     4,    10,    11,     7,    10,    11,    10,    11,    12,
-       3,     4,     3,     4,     7,     3,     4,    10,    11,     0,
-       8,     5,     6,    18,    19,    12,    20,    21,     3,     9,
-      22
+       3,     4,    11,    12,     7,     0,     3,     4,    11,    12,
+      13,     8,     9,     3,     4,    17,    18,    19,     3,     9,
+      11,    12,     5,     6,    20,    21
 };
 
 /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
    symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,     3,     4,     7,    10,    11,    12,    14,    15,    16,
-      17,    18,    10,    11,    10,    11,    15,     0,     3,     4,
-       5,     6,     9,     8,    16,    16,    17,    17,    18
+       0,     3,     4,     7,    11,    12,    13,    15,    16,    17,
+      18,    11,    12,    11,    12,    16,     0,     3,     4,     9,
+       5,     6,     8,    17,    17,    17,    18,    18
 };
 
 #define yyerrok		(yyerrstatus = 0)
@@ -1359,16 +1363,24 @@ yyreduce:
         case 2:
 
 /* Line 1464 of yacc.c  */
-#line 37 "prueba_controles_semanticos.y"
-    {  if(strcmp((yyvsp[(1) - (1)].st).tipo, "entero")==0){printf(" El resultado entero es %d\n", (yyvsp[(1) - (1)].st).entero); }
-                else{printf(" El resultado real es %f\n", (yyvsp[(1) - (1)].st).real); }
+#line 43 "prueba_controles_semanticos.y"
+    {  if(error_compilacion>=1){
+                    printf("\nHa habido %d error(es) de compilacion",error_compilacion);
+                }else{
+                    printf(error_compilacion);
+                    if(strcmp((yyvsp[(1) - (1)].st).tipo, "entero")==0){printf(" El resultado entero es %d\n", (yyvsp[(1) - (1)].st).entero); }
+                    else if (strcmp((yyvsp[(1) - (1)].st).tipo, "real")==0){printf(" El resultado real es %f\n", (yyvsp[(1) - (1)].st).real); }
+                    else if (strcmp((yyvsp[(1) - (1)].st).tipo, "texto")==0){printf(" El resultado texto es %s\n", (yyvsp[(1) - (1)].st).texto); }     
+                    else {printf(" ERROR: LA variable no tiene tipo");}  
+                }
+         
             ;}
     break;
 
   case 3:
 
 /* Line 1464 of yacc.c  */
-#line 46 "prueba_controles_semanticos.y"
+#line 61 "prueba_controles_semanticos.y"
     {
         if (strcmp((yyvsp[(1) - (3)].st).tipo, "entero")==0 && strcmp((yyvsp[(3) - (3)].st).tipo, "entero")==0) { //Si ambos son enteros
         (yyval.st).entero = (yyvsp[(1) - (3)].st).entero + (yyvsp[(3) - (3)].st).entero;
@@ -1391,7 +1403,8 @@ yyreduce:
             printf( "real+entero = %f\n", (yyval.st).real);
         }
         else{
-             printf( "ERROR: No se puede operar");
+            error_compilacion++;
+            printf( "ERROR: No se puede operar en línea %d",linea);
         }
     ;}
     break;
@@ -1399,7 +1412,7 @@ yyreduce:
   case 4:
 
 /* Line 1464 of yacc.c  */
-#line 71 "prueba_controles_semanticos.y"
+#line 87 "prueba_controles_semanticos.y"
     {
         if (strcmp((yyvsp[(1) - (3)].st).tipo, "entero")==0 && strcmp((yyvsp[(3) - (3)].st).tipo, "entero")==0) { //Si ambos son enteros
         (yyval.st).entero = (yyvsp[(1) - (3)].st).entero - (yyvsp[(3) - (3)].st).entero;
@@ -1422,6 +1435,7 @@ yyreduce:
             printf( "real-entero = %f\n", (yyval.st).real);
         }
         else{
+                error_compilacion++;
                 printf( "ERROR: No se puede operar");
         }
     ;}
@@ -1430,14 +1444,15 @@ yyreduce:
   case 5:
 
 /* Line 1464 of yacc.c  */
-#line 96 "prueba_controles_semanticos.y"
+#line 113 "prueba_controles_semanticos.y"
     {
         if (strcmp((yyvsp[(1) - (3)].st).tipo, "texto")==0 && strcmp((yyvsp[(3) - (3)].st).tipo, "texto")==0){
             (yyval.st).texto = strcat((yyvsp[(1) - (3)].st).texto, (yyvsp[(3) - (3)].st).texto);
             (yyval.st).tipo="texto";
-            printf( "Concatenado -> %n\n",(yyval.st).texto);
+            printf( "Concatenado -> %s\n",(yyval.st).texto);
         }
         else{
+            error_compilacion++;
             printf( "ERROR: No se puede concatenar algo que no sean cadenas de texto");
         }
     ;}
@@ -1446,14 +1461,14 @@ yyreduce:
   case 6:
 
 /* Line 1464 of yacc.c  */
-#line 106 "prueba_controles_semanticos.y"
+#line 124 "prueba_controles_semanticos.y"
     {(yyval.st) = (yyvsp[(1) - (1)].st); ;}
     break;
 
   case 7:
 
 /* Line 1464 of yacc.c  */
-#line 113 "prueba_controles_semanticos.y"
+#line 131 "prueba_controles_semanticos.y"
     {
         if (strcmp((yyvsp[(1) - (3)].st).tipo, "entero")==0 && strcmp((yyvsp[(3) - (3)].st).tipo, "entero")==0) { //Si ambos son enteros
             (yyval.st).entero = (yyvsp[(1) - (3)].st).entero * (yyvsp[(3) - (3)].st).entero;
@@ -1476,6 +1491,7 @@ yyreduce:
             printf( "real*entero = %f\n", (yyval.st).real);
         }
         else{
+             error_compilacion++;
              printf( "ERROR: No se puede operar");
         }
     ;}
@@ -1484,7 +1500,7 @@ yyreduce:
   case 8:
 
 /* Line 1464 of yacc.c  */
-#line 138 "prueba_controles_semanticos.y"
+#line 157 "prueba_controles_semanticos.y"
     {
         if (strcmp((yyvsp[(1) - (3)].st).tipo, "entero")==0 && strcmp((yyvsp[(3) - (3)].st).tipo, "entero")==0) { //Si ambos son enteros
             (yyval.st).entero = (yyvsp[(1) - (3)].st).entero / (yyvsp[(3) - (3)].st).entero;
@@ -1507,6 +1523,7 @@ yyreduce:
             printf( "real/entero = %f\n", (yyval.st).real);
         }
         else{
+             error_compilacion++;
              printf( "ERROR: No se puede operar");
         }
     ;}
@@ -1515,14 +1532,14 @@ yyreduce:
   case 9:
 
 /* Line 1464 of yacc.c  */
-#line 163 "prueba_controles_semanticos.y"
+#line 183 "prueba_controles_semanticos.y"
     {(yyval.st) = (yyvsp[(1) - (1)].st);;}
     break;
 
   case 10:
 
 /* Line 1464 of yacc.c  */
-#line 167 "prueba_controles_semanticos.y"
+#line 187 "prueba_controles_semanticos.y"
     {(yyval.st).entero = (yyvsp[(1) - (1)].intVal); //Asignar el valor a .entero
             (yyval.st).tipo="entero"; //Definir el tipo a "entero"
             printf( "ENTERO %ld\n", (yyval.st).entero);;}
@@ -1531,7 +1548,7 @@ yyreduce:
   case 11:
 
 /* Line 1464 of yacc.c  */
-#line 170 "prueba_controles_semanticos.y"
+#line 190 "prueba_controles_semanticos.y"
     {(yyval.st).entero = (yyvsp[(2) - (2)].intVal);
               (yyval.st).tipo="entero";
               printf( "ENTERO POSITIVO %ld\n", (yyval.st).entero);;}
@@ -1540,7 +1557,7 @@ yyreduce:
   case 12:
 
 /* Line 1464 of yacc.c  */
-#line 173 "prueba_controles_semanticos.y"
+#line 193 "prueba_controles_semanticos.y"
     {(yyval.st).entero = -(yyvsp[(2) - (2)].intVal);
               (yyval.st).tipo="entero";
               printf( "ENTERO NEGATIVO %ld\n", (yyval.st).entero);;}
@@ -1549,7 +1566,7 @@ yyreduce:
   case 13:
 
 /* Line 1464 of yacc.c  */
-#line 178 "prueba_controles_semanticos.y"
+#line 198 "prueba_controles_semanticos.y"
     {(yyval.st).real = (yyvsp[(1) - (1)].floatVal);
             (yyval.st).tipo="real";
             printf( "REAL  %f\n", (yyval.st).real);;}
@@ -1558,7 +1575,7 @@ yyreduce:
   case 14:
 
 /* Line 1464 of yacc.c  */
-#line 181 "prueba_controles_semanticos.y"
+#line 201 "prueba_controles_semanticos.y"
     {(yyval.st).real = (yyvsp[(2) - (2)].floatVal);
                 (yyval.st).tipo="real";
                 printf( "REAL POSITIVO %f\n", (yyval.st).real);;}
@@ -1567,7 +1584,7 @@ yyreduce:
   case 15:
 
 /* Line 1464 of yacc.c  */
-#line 184 "prueba_controles_semanticos.y"
+#line 204 "prueba_controles_semanticos.y"
     {(yyval.st).real = -(yyvsp[(2) - (2)].floatVal);
                   (yyval.st).tipo="real";
                   printf( "REAL NEGATIVO %f\n", (yyval.st).real);;}
@@ -1576,7 +1593,7 @@ yyreduce:
   case 16:
 
 /* Line 1464 of yacc.c  */
-#line 188 "prueba_controles_semanticos.y"
+#line 208 "prueba_controles_semanticos.y"
     {(yyval.st) = (yyvsp[(2) - (3)].st);//Se hace una copia
                         printf( "PARENTESIS \n");;}
     break;
@@ -1584,7 +1601,7 @@ yyreduce:
   case 17:
 
 /* Line 1464 of yacc.c  */
-#line 192 "prueba_controles_semanticos.y"
+#line 210 "prueba_controles_semanticos.y"
     {(yyval.st).texto = (yyvsp[(1) - (1)].stringVal);
             (yyval.st).tipo="texto";
             printf( "TEXTO  %s\n", (yyval.st));;}
@@ -1593,7 +1610,7 @@ yyreduce:
 
 
 /* Line 1464 of yacc.c  */
-#line 1597 "prueba_controles_semanticos.tab.c"
+#line 1614 "prueba_controles_semanticos.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1805,7 +1822,7 @@ yyreturn:
 
 
 /* Line 1684 of yacc.c  */
-#line 195 "prueba_controles_semanticos.y"
+#line 215 "prueba_controles_semanticos.y"
 
 
 main()

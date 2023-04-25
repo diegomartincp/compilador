@@ -383,8 +383,8 @@ struct yy_trans_info
 	};
 static yyconst flex_int16_t yy_accept[22] =
     {   0,
-        0,    0,   13,   12,    1,   12,    6,    7,    4,    2,
-        3,   12,    5,    9,    0,   11,    8,    0,    9,   10,
+        0,    0,   13,   12,   11,   12,    5,    6,    3,    1,
+        2,   12,    4,    8,    0,   10,    7,    0,    8,    9,
         0
     } ;
 
@@ -747,61 +747,61 @@ do_action:	/* This label is used only to access EOF actions. */
 			goto yy_find_action;
 
 case 1:
-/* rule 1 can match eol */
 YY_RULE_SETUP
 #line 8 "prueba_controles_semanticos.flex"
-return(0);
+return MAS;
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
 #line 9 "prueba_controles_semanticos.flex"
-return MAS;
+return MENOS;
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
 #line 10 "prueba_controles_semanticos.flex"
-return MENOS;
+return POR;
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
 #line 11 "prueba_controles_semanticos.flex"
-return POR;
+return DIV;
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
 #line 12 "prueba_controles_semanticos.flex"
-return DIV;
+return PAR_OP;
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
 #line 13 "prueba_controles_semanticos.flex"
-return PAR_OP;
+return PAR_CL;
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
 #line 14 "prueba_controles_semanticos.flex"
-return PAR_CL;
+return CONCAT;
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
 #line 15 "prueba_controles_semanticos.flex"
-return CONCAT;
+{yylval.intVal = atoi(yytext); return ENT;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
 #line 16 "prueba_controles_semanticos.flex"
-{yylval.intVal = atoi(yytext); return ENT;}
+{yylval.floatVal = atof(yytext); return REAL;}
 	YY_BREAK
 case 10:
+/* rule 10 can match eol */
 YY_RULE_SETUP
 #line 17 "prueba_controles_semanticos.flex"
-{yylval.floatVal = atof(yytext); return REAL;}
+{yylval.stringVal=strdup(yytext); printf( yytext);return TEXT ;}
 	YY_BREAK
 case 11:
 /* rule 11 can match eol */
 YY_RULE_SETUP
 #line 18 "prueba_controles_semanticos.flex"
-{yylval.stringVal=strdup(yytext); printf( yytext);return TEXT ;}
+{line_num=yylineno; return ENDLINE ;}//
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
