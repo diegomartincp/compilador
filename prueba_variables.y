@@ -68,6 +68,7 @@ int lookup(char *name) {
 %token <stringVal> ID
 //Definir la asociatividad. POR y DIV tienen mayor precedencia que MAS y MENOS
 %left MAS MENOS
+%left PUNTOCOMA
 
 
 %start command

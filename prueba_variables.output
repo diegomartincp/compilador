@@ -1,6 +1,3 @@
-State 13 conflicts: 1 shift/reduce
-
-
 Grammar
 
     0 $accept: command $end
@@ -162,10 +159,7 @@ state 13
     2 exp: exp . PUNTOCOMA exp
     2    | exp PUNTOCOMA exp .
 
-    PUNTOCOMA  shift, and go to state 6
-
-    PUNTOCOMA  [reduce using rule 2 (exp)]
-    $default   reduce using rule 2 (exp)
+    $default  reduce using rule 2 (exp)
 
 
 state 14

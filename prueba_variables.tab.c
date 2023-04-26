@@ -73,7 +73,7 @@
 #include <stdio.h>
 #include <string.h> //Esta librería de C nos permite comparar los tipos con la funcion strcmp()
 #include <stdlib.h> //Se usa en la tabla de símbolos
-#include "simbol_table.h"
+#include "simbol_table.h" //Mi librería con las funciones para la tabla de símbolos
 
 //Variables
 int error_compilacion=0;
@@ -471,8 +471,8 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    75,    75,    89,    93,   116,   119,   122,   127,   130,
-     133,   137
+       0,    76,    76,    90,    94,   117,   120,   123,   128,   131,
+     134,   138
 };
 #endif
 
@@ -532,7 +532,7 @@ static const yytype_int8 yydefgoto[] =
 static const yytype_int8 yypact[] =
 {
       -7,     9,    15,     8,    -3,    -8,    -7,    -1,     1,    -7,
-      -8,    -8,    -8,     8,    -8,    -8,    -8,    -8,     5,    -8
+      -8,    -8,    -8,    -8,    -8,    -8,    -8,    -8,     5,    -8
 };
 
 /* YYPGOTO[NTERM-NUM].  */
@@ -1386,7 +1386,7 @@ yyreduce:
         case 2:
 
 /* Line 1464 of yacc.c  */
-#line 75 "prueba_variables.y"
+#line 76 "prueba_variables.y"
     {   printf("Compilacion terminada\n");
                   //Vamos a ver si existe en la tabla "Ejemplo"
                   int lugar = lookup("Ejemplo");
@@ -1403,7 +1403,7 @@ yyreduce:
   case 3:
 
 /* Line 1464 of yacc.c  */
-#line 89 "prueba_variables.y"
+#line 90 "prueba_variables.y"
     {
      printf("exp PUNTOCOMA exp\n");
 
@@ -1413,7 +1413,7 @@ yyreduce:
   case 4:
 
 /* Line 1464 of yacc.c  */
-#line 93 "prueba_variables.y"
+#line 94 "prueba_variables.y"
     {
         printf("ID IGUAL factor\n");
         int i = lookup((yyvsp[(1) - (3)].stringVal));
@@ -1433,7 +1433,7 @@ yyreduce:
   case 5:
 
 /* Line 1464 of yacc.c  */
-#line 116 "prueba_variables.y"
+#line 117 "prueba_variables.y"
     {(yyval.st).entero = (yyvsp[(1) - (1)].intVal); //Asignar el valor a .entero
             (yyval.st).tipo="entero"; //Definir el tipo a "entero"
             printf( "ENTERO %ld\n", (yyval.st).entero);;}
@@ -1442,7 +1442,7 @@ yyreduce:
   case 6:
 
 /* Line 1464 of yacc.c  */
-#line 119 "prueba_variables.y"
+#line 120 "prueba_variables.y"
     {(yyval.st).entero = (yyvsp[(2) - (2)].intVal);
               (yyval.st).tipo="entero";
               printf( "ENTERO POSITIVO %ld\n", (yyval.st).entero);;}
@@ -1451,7 +1451,7 @@ yyreduce:
   case 7:
 
 /* Line 1464 of yacc.c  */
-#line 122 "prueba_variables.y"
+#line 123 "prueba_variables.y"
     {(yyval.st).entero = -(yyvsp[(2) - (2)].intVal);
               (yyval.st).tipo="entero";
               printf( "ENTERO NEGATIVO %ld\n", (yyval.st).entero);;}
@@ -1460,7 +1460,7 @@ yyreduce:
   case 8:
 
 /* Line 1464 of yacc.c  */
-#line 127 "prueba_variables.y"
+#line 128 "prueba_variables.y"
     {(yyval.st).real = (yyvsp[(1) - (1)].floatVal);
             (yyval.st).tipo="real";
             printf( "REAL  %f\n", (yyval.st).real);;}
@@ -1469,7 +1469,7 @@ yyreduce:
   case 9:
 
 /* Line 1464 of yacc.c  */
-#line 130 "prueba_variables.y"
+#line 131 "prueba_variables.y"
     {(yyval.st).real = (yyvsp[(2) - (2)].floatVal);
                 (yyval.st).tipo="real";
                 printf( "REAL POSITIVO %f\n", (yyval.st).real);;}
@@ -1478,7 +1478,7 @@ yyreduce:
   case 10:
 
 /* Line 1464 of yacc.c  */
-#line 133 "prueba_variables.y"
+#line 134 "prueba_variables.y"
     {(yyval.st).real = -(yyvsp[(2) - (2)].floatVal);
                   (yyval.st).tipo="real";
                   printf( "REAL NEGATIVO %f\n", (yyval.st).real);;}
@@ -1487,7 +1487,7 @@ yyreduce:
   case 11:
 
 /* Line 1464 of yacc.c  */
-#line 137 "prueba_variables.y"
+#line 138 "prueba_variables.y"
     {(yyval.st) = (yyvsp[(2) - (3)].st);//Se hace una copia
                         printf( "PARENTESIS \n");;}
     break;
@@ -1707,7 +1707,7 @@ yyreturn:
 
 
 /* Line 1684 of yacc.c  */
-#line 142 "prueba_variables.y"
+#line 143 "prueba_variables.y"
 
 
 main()
