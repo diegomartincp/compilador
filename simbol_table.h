@@ -16,7 +16,7 @@ int table_size = 0;//Se usa para conocer el índice del array disponible para in
 */
 
 // Función para buscar un símbolo en la tabla
-int lookup(char *name) {
+int lookup(char *name, int table_size, symbol table[]) {
     for (int i = 0; i < table_size; i++) {
         if (strcmp(table[i].name, name) == 0) {
             return i; //Devuelve la posición de la lista
