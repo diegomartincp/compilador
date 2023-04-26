@@ -36,14 +36,15 @@ int linea=1;
 %token <stringVal> TEXT
 //Definir la asociatividad. POR y DIV tienen mayor precedencia que MAS y MENOS
 %left MAS MENOS
-%left  POR DIV  
+%left POR DIV  
+%left MODULO EXPON
 
 %start command
 %%
 command: exp {  if(error_compilacion>=1){
                     printf("\nHa habido %d error(es) de compilacion",error_compilacion);
                 }else{
-                    printf(error_compilacion);
+                    printf("%d",error_compilacion);
                     if(strcmp($1.tipo, "entero")==0){printf(" El resultado entero es %d\n", $1.entero); }
                     else if (strcmp($1.tipo, "real")==0){printf(" El resultado real es %f\n", $1.real); }
                     else if (strcmp($1.tipo, "texto")==0){printf(" El resultado texto es %s\n", $1.texto); }     
@@ -176,6 +177,26 @@ term: term POR factor {
             printf( "real/entero = %f\n", $$.real);
         }
         else{
+             error_compilacion++;
+             printf( "ERROR: No se puede operar");
+        }
+    }
+    | factor MODULO factor {
+        if (strcmp($1.tipo, "entero")==0 && strcmp($3.tipo, "entero")==0) { //Si ambos son enteros
+            $$.entero = $1.entero % $3.entero;
+            $$.tipo="entero";
+            printf( "entero %% entero = %ld\n", $$.entero);
+        } else{
+             error_compilacion++;
+             printf( "ERROR: No se puede operar");
+        }   
+    }
+    | factor EXPON factor {
+        if (strcmp($1.tipo, "entero")==0 && strcmp($3.tipo, "entero")==0) { //Si ambos son enteros
+            $$.entero = pow($1.entero, $3.entero);
+            $$.tipo="entero";
+            printf( "entero^entero = %ld\n", $$.entero);
+        } else{
              error_compilacion++;
              printf( "ERROR: No se puede operar");
         }

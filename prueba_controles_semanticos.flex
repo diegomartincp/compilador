@@ -13,6 +13,8 @@ extern YYSTYPE yylval;
 \(	return PAR_OP;
 \)	return PAR_CL;
 \"	return COMILLA;
+\%  return MODULO;
+\^  return EXPON;
 \.\.	return CONCAT;
 [0-9]+          {yylval.intVal = atoi(yytext); return ENT;}
 [0-9]+"."[0-9]+ {yylval.floatVal = atof(yytext); return REAL;}

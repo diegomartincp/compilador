@@ -11,47 +11,51 @@ Grammar
 
     6 term: term POR factor
     7     | term DIV factor
-    8     | factor
+    8     | factor MODULO factor
+    9     | factor EXPON factor
+   10     | factor
 
-    9 factor: ENT
-   10       | MAS ENT
-   11       | MENOS ENT
-   12       | REAL
-   13       | MAS REAL
-   14       | MENOS REAL
-   15       | PAR_OP exp PAR_CL
-   16       | COMILLA TEXT COMILLA
+   11 factor: ENT
+   12       | MAS ENT
+   13       | MENOS ENT
+   14       | REAL
+   15       | MAS REAL
+   16       | MENOS REAL
+   17       | PAR_OP exp PAR_CL
+   18       | COMILLA TEXT COMILLA
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
 error (256)
-MAS (258) 2 10 13
-MENOS (259) 3 11 14
+MAS (258) 2 12 15
+MENOS (259) 3 13 16
 POR (260) 6
 DIV (261) 7
-PAR_OP (262) 15
-PAR_CL (263) 15
+PAR_OP (262) 17
+PAR_CL (263) 17
 CONCAT (264) 4
-COMILLA (265) 16
-ENT (266) 9 10 11
-REAL (267) 12 13 14
-TEXT (268) 16
+COMILLA (265) 18
+ENT (266) 11 12 13
+REAL (267) 14 15 16
+TEXT (268) 18
+EXPON (269) 9
+MODULO (270) 8
 
 
 Nonterminals, with rules where they appear
 
-$accept (14)
+$accept (16)
     on left: 0
-command (15)
+command (17)
     on left: 1, on right: 0
-exp (16)
-    on left: 2 3 4 5, on right: 1 2 3 4 15
-term (17)
-    on left: 6 7 8, on right: 2 3 4 5 6 7
-factor (18)
-    on left: 9 10 11 12 13 14 15 16, on right: 6 7 8
+exp (18)
+    on left: 2 3 4 5, on right: 1 2 3 4 17
+term (19)
+    on left: 6 7 8 9 10, on right: 2 3 4 5 6 7
+factor (20)
+    on left: 11 12 13 14 15 16 17 18, on right: 6 7 8 9 10
 
 
 state 0
@@ -73,8 +77,8 @@ state 0
 
 state 1
 
-   10 factor: MAS . ENT
-   13       | MAS . REAL
+   12 factor: MAS . ENT
+   15       | MAS . REAL
 
     ENT   shift, and go to state 11
     REAL  shift, and go to state 12
@@ -82,8 +86,8 @@ state 1
 
 state 2
 
-   11 factor: MENOS . ENT
-   14       | MENOS . REAL
+   13 factor: MENOS . ENT
+   16       | MENOS . REAL
 
     ENT   shift, and go to state 13
     REAL  shift, and go to state 14
@@ -91,7 +95,7 @@ state 2
 
 state 3
 
-   15 factor: PAR_OP . exp PAR_CL
+   17 factor: PAR_OP . exp PAR_CL
 
     MAS      shift, and go to state 1
     MENOS    shift, and go to state 2
@@ -107,23 +111,23 @@ state 3
 
 state 4
 
-   16 factor: COMILLA . TEXT COMILLA
+   18 factor: COMILLA . TEXT COMILLA
 
     TEXT  shift, and go to state 16
 
 
 state 5
 
-    9 factor: ENT .
+   11 factor: ENT .
 
-    $default  reduce using rule 9 (factor)
+    $default  reduce using rule 11 (factor)
 
 
 state 6
 
-   12 factor: REAL .
+   14 factor: REAL .
 
-    $default  reduce using rule 12 (factor)
+    $default  reduce using rule 14 (factor)
 
 
 state 7
@@ -161,37 +165,42 @@ state 9
 
 state 10
 
-    8 term: factor .
+    8 term: factor . MODULO factor
+    9     | factor . EXPON factor
+   10     | factor .
 
-    $default  reduce using rule 8 (term)
+    EXPON   shift, and go to state 23
+    MODULO  shift, and go to state 24
+
+    $default  reduce using rule 10 (term)
 
 
 state 11
 
-   10 factor: MAS ENT .
+   12 factor: MAS ENT .
 
-    $default  reduce using rule 10 (factor)
+    $default  reduce using rule 12 (factor)
 
 
 state 12
 
-   13 factor: MAS REAL .
+   15 factor: MAS REAL .
 
-    $default  reduce using rule 13 (factor)
+    $default  reduce using rule 15 (factor)
 
 
 state 13
 
-   11 factor: MENOS ENT .
+   13 factor: MENOS ENT .
 
-    $default  reduce using rule 11 (factor)
+    $default  reduce using rule 13 (factor)
 
 
 state 14
 
-   14 factor: MENOS REAL .
+   16 factor: MENOS REAL .
 
-    $default  reduce using rule 14 (factor)
+    $default  reduce using rule 16 (factor)
 
 
 state 15
@@ -199,19 +208,19 @@ state 15
     2 exp: exp . MAS term
     3    | exp . MENOS term
     4    | exp . CONCAT term
-   15 factor: PAR_OP exp . PAR_CL
+   17 factor: PAR_OP exp . PAR_CL
 
     MAS     shift, and go to state 18
     MENOS   shift, and go to state 19
-    PAR_CL  shift, and go to state 23
+    PAR_CL  shift, and go to state 25
     CONCAT  shift, and go to state 20
 
 
 state 16
 
-   16 factor: COMILLA TEXT . COMILLA
+   18 factor: COMILLA TEXT . COMILLA
 
-    COMILLA  shift, and go to state 24
+    COMILLA  shift, and go to state 26
 
 
 state 17
@@ -232,7 +241,7 @@ state 18
     ENT      shift, and go to state 5
     REAL     shift, and go to state 6
 
-    term    go to state 25
+    term    go to state 27
     factor  go to state 10
 
 
@@ -247,7 +256,7 @@ state 19
     ENT      shift, and go to state 5
     REAL     shift, and go to state 6
 
-    term    go to state 26
+    term    go to state 28
     factor  go to state 10
 
 
@@ -262,7 +271,7 @@ state 20
     ENT      shift, and go to state 5
     REAL     shift, and go to state 6
 
-    term    go to state 27
+    term    go to state 29
     factor  go to state 10
 
 
@@ -277,7 +286,7 @@ state 21
     ENT      shift, and go to state 5
     REAL     shift, and go to state 6
 
-    factor  go to state 28
+    factor  go to state 30
 
 
 state 22
@@ -291,24 +300,52 @@ state 22
     ENT      shift, and go to state 5
     REAL     shift, and go to state 6
 
-    factor  go to state 29
+    factor  go to state 31
 
 
 state 23
 
-   15 factor: PAR_OP exp PAR_CL .
+    9 term: factor EXPON . factor
 
-    $default  reduce using rule 15 (factor)
+    MAS      shift, and go to state 1
+    MENOS    shift, and go to state 2
+    PAR_OP   shift, and go to state 3
+    COMILLA  shift, and go to state 4
+    ENT      shift, and go to state 5
+    REAL     shift, and go to state 6
+
+    factor  go to state 32
 
 
 state 24
 
-   16 factor: COMILLA TEXT COMILLA .
+    8 term: factor MODULO . factor
 
-    $default  reduce using rule 16 (factor)
+    MAS      shift, and go to state 1
+    MENOS    shift, and go to state 2
+    PAR_OP   shift, and go to state 3
+    COMILLA  shift, and go to state 4
+    ENT      shift, and go to state 5
+    REAL     shift, and go to state 6
+
+    factor  go to state 33
 
 
 state 25
+
+   17 factor: PAR_OP exp PAR_CL .
+
+    $default  reduce using rule 17 (factor)
+
+
+state 26
+
+   18 factor: COMILLA TEXT COMILLA .
+
+    $default  reduce using rule 18 (factor)
+
+
+state 27
 
     2 exp: exp MAS term .
     6 term: term . POR factor
@@ -320,7 +357,7 @@ state 25
     $default  reduce using rule 2 (exp)
 
 
-state 26
+state 28
 
     3 exp: exp MENOS term .
     6 term: term . POR factor
@@ -332,7 +369,7 @@ state 26
     $default  reduce using rule 3 (exp)
 
 
-state 27
+state 29
 
     4 exp: exp CONCAT term .
     6 term: term . POR factor
@@ -344,15 +381,29 @@ state 27
     $default  reduce using rule 4 (exp)
 
 
-state 28
+state 30
 
     6 term: term POR factor .
 
     $default  reduce using rule 6 (term)
 
 
-state 29
+state 31
 
     7 term: term DIV factor .
 
     $default  reduce using rule 7 (term)
+
+
+state 32
+
+    9 term: factor EXPON factor .
+
+    $default  reduce using rule 9 (term)
+
+
+state 33
+
+    8 term: factor MODULO factor .
+
+    $default  reduce using rule 8 (term)

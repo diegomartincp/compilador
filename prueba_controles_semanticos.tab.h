@@ -48,7 +48,9 @@
      COMILLA = 265,
      ENT = 266,
      REAL = 267,
-     TEXT = 268
+     TEXT = 268,
+     EXPON = 269,
+     MODULO = 270
    };
 #endif
 
@@ -74,7 +76,7 @@ typedef union YYSTYPE
 
 
 /* Line 1685 of yacc.c  */
-#line 78 "prueba_controles_semanticos.tab.h"
+#line 80 "prueba_controles_semanticos.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
