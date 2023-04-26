@@ -1,0 +1,212 @@
+State 13 conflicts: 1 shift/reduce
+
+
+Grammar
+
+    0 $accept: command $end
+
+    1 command: exp
+
+    2 exp: exp PUNTOCOMA exp
+    3    | ID IGUAL factor
+
+    4 factor: ENT
+    5       | MAS ENT
+    6       | MENOS ENT
+    7       | REAL
+    8       | MAS REAL
+    9       | MENOS REAL
+   10       | PAR_OP exp PAR_CL
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+MAS (258) 5 8
+MENOS (259) 6 9
+IGUAL (260) 3
+PAR_OP (261) 10
+PAR_CL (262) 10
+PUNTOCOMA (263) 2
+ENT (264) 4 5 6
+REAL (265) 7 8 9
+ID (266) 3
+
+
+Nonterminals, with rules where they appear
+
+$accept (12)
+    on left: 0
+command (13)
+    on left: 1, on right: 0
+exp (14)
+    on left: 2 3, on right: 1 2 10
+factor (15)
+    on left: 4 5 6 7 8 9 10, on right: 3
+
+
+state 0
+
+    0 $accept: . command $end
+
+    ID  shift, and go to state 1
+
+    command  go to state 2
+    exp      go to state 3
+
+
+state 1
+
+    3 exp: ID . IGUAL factor
+
+    IGUAL  shift, and go to state 4
+
+
+state 2
+
+    0 $accept: command . $end
+
+    $end  shift, and go to state 5
+
+
+state 3
+
+    1 command: exp .
+    2 exp: exp . PUNTOCOMA exp
+
+    PUNTOCOMA  shift, and go to state 6
+
+    $default  reduce using rule 1 (command)
+
+
+state 4
+
+    3 exp: ID IGUAL . factor
+
+    MAS     shift, and go to state 7
+    MENOS   shift, and go to state 8
+    PAR_OP  shift, and go to state 9
+    ENT     shift, and go to state 10
+    REAL    shift, and go to state 11
+
+    factor  go to state 12
+
+
+state 5
+
+    0 $accept: command $end .
+
+    $default  accept
+
+
+state 6
+
+    2 exp: exp PUNTOCOMA . exp
+
+    ID  shift, and go to state 1
+
+    exp  go to state 13
+
+
+state 7
+
+    5 factor: MAS . ENT
+    8       | MAS . REAL
+
+    ENT   shift, and go to state 14
+    REAL  shift, and go to state 15
+
+
+state 8
+
+    6 factor: MENOS . ENT
+    9       | MENOS . REAL
+
+    ENT   shift, and go to state 16
+    REAL  shift, and go to state 17
+
+
+state 9
+
+   10 factor: PAR_OP . exp PAR_CL
+
+    ID  shift, and go to state 1
+
+    exp  go to state 18
+
+
+state 10
+
+    4 factor: ENT .
+
+    $default  reduce using rule 4 (factor)
+
+
+state 11
+
+    7 factor: REAL .
+
+    $default  reduce using rule 7 (factor)
+
+
+state 12
+
+    3 exp: ID IGUAL factor .
+
+    $default  reduce using rule 3 (exp)
+
+
+state 13
+
+    2 exp: exp . PUNTOCOMA exp
+    2    | exp PUNTOCOMA exp .
+
+    PUNTOCOMA  shift, and go to state 6
+
+    PUNTOCOMA  [reduce using rule 2 (exp)]
+    $default   reduce using rule 2 (exp)
+
+
+state 14
+
+    5 factor: MAS ENT .
+
+    $default  reduce using rule 5 (factor)
+
+
+state 15
+
+    8 factor: MAS REAL .
+
+    $default  reduce using rule 8 (factor)
+
+
+state 16
+
+    6 factor: MENOS ENT .
+
+    $default  reduce using rule 6 (factor)
+
+
+state 17
+
+    9 factor: MENOS REAL .
+
+    $default  reduce using rule 9 (factor)
+
+
+state 18
+
+    2 exp: exp . PUNTOCOMA exp
+   10 factor: PAR_OP exp . PAR_CL
+
+    PAR_CL     shift, and go to state 19
+    PUNTOCOMA  shift, and go to state 6
+
+
+state 19
+
+   10 factor: PAR_OP exp PAR_CL .
+
+    $default  reduce using rule 10 (factor)

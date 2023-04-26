@@ -15,3 +15,9 @@ gcc -o analiza prueba_union.tab.c prueba_union.lex.c
 bison -d -v prueba_controles_semanticos.y
 flex -o prueba_controles_semanticos.lex.c prueba_controles_semanticos.flex
 gcc -o controles_semanticos prueba_controles_semanticos.tab.c prueba_controles_semanticos.lex.c
+
+//PRUEBA prueba_variables
+
+bison -d -v prueba_variables.y
+flex -o  prueba_variables.lex.c  prueba_variables.flex
+gcc -o variables  prueba_variables.tab.c  prueba_variables.lex.c
