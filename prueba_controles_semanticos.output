@@ -11,8 +11,8 @@ Grammar
 
     6 term: term POR factor
     7     | term DIV factor
-    8     | factor MODULO factor
-    9     | factor EXPON factor
+    8     | term MODULO factor
+    9     | term EXPON factor
    10     | factor
 
    11 factor: ENT
@@ -53,7 +53,7 @@ command (17)
 exp (18)
     on left: 2 3 4 5, on right: 1 2 3 4 17
 term (19)
-    on left: 6 7 8 9 10, on right: 2 3 4 5 6 7
+    on left: 6 7 8 9 10, on right: 2 3 4 5 6 7 8 9
 factor (20)
     on left: 11 12 13 14 15 16 17 18, on right: 6 7 8 9 10
 
@@ -156,21 +156,20 @@ state 9
     5 exp: term .
     6 term: term . POR factor
     7     | term . DIV factor
+    8     | term . MODULO factor
+    9     | term . EXPON factor
 
-    POR  shift, and go to state 21
-    DIV  shift, and go to state 22
+    POR     shift, and go to state 21
+    DIV     shift, and go to state 22
+    EXPON   shift, and go to state 23
+    MODULO  shift, and go to state 24
 
     $default  reduce using rule 5 (exp)
 
 
 state 10
 
-    8 term: factor . MODULO factor
-    9     | factor . EXPON factor
-   10     | factor .
-
-    EXPON   shift, and go to state 23
-    MODULO  shift, and go to state 24
+   10 term: factor .
 
     $default  reduce using rule 10 (term)
 
@@ -305,7 +304,7 @@ state 22
 
 state 23
 
-    9 term: factor EXPON . factor
+    9 term: term EXPON . factor
 
     MAS      shift, and go to state 1
     MENOS    shift, and go to state 2
@@ -319,7 +318,7 @@ state 23
 
 state 24
 
-    8 term: factor MODULO . factor
+    8 term: term MODULO . factor
 
     MAS      shift, and go to state 1
     MENOS    shift, and go to state 2
@@ -350,9 +349,13 @@ state 27
     2 exp: exp MAS term .
     6 term: term . POR factor
     7     | term . DIV factor
+    8     | term . MODULO factor
+    9     | term . EXPON factor
 
-    POR  shift, and go to state 21
-    DIV  shift, and go to state 22
+    POR     shift, and go to state 21
+    DIV     shift, and go to state 22
+    EXPON   shift, and go to state 23
+    MODULO  shift, and go to state 24
 
     $default  reduce using rule 2 (exp)
 
@@ -362,9 +365,13 @@ state 28
     3 exp: exp MENOS term .
     6 term: term . POR factor
     7     | term . DIV factor
+    8     | term . MODULO factor
+    9     | term . EXPON factor
 
-    POR  shift, and go to state 21
-    DIV  shift, and go to state 22
+    POR     shift, and go to state 21
+    DIV     shift, and go to state 22
+    EXPON   shift, and go to state 23
+    MODULO  shift, and go to state 24
 
     $default  reduce using rule 3 (exp)
 
@@ -374,9 +381,13 @@ state 29
     4 exp: exp CONCAT term .
     6 term: term . POR factor
     7     | term . DIV factor
+    8     | term . MODULO factor
+    9     | term . EXPON factor
 
-    POR  shift, and go to state 21
-    DIV  shift, and go to state 22
+    POR     shift, and go to state 21
+    DIV     shift, and go to state 22
+    EXPON   shift, and go to state 23
+    MODULO  shift, and go to state 24
 
     $default  reduce using rule 4 (exp)
 
@@ -397,13 +408,13 @@ state 31
 
 state 32
 
-    9 term: factor EXPON factor .
+    9 term: term EXPON factor .
 
     $default  reduce using rule 9 (term)
 
 
 state 33
 
-    8 term: factor MODULO factor .
+    8 term: term MODULO factor .
 
     $default  reduce using rule 8 (term)

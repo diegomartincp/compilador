@@ -181,7 +181,7 @@ term: term POR factor {
              printf( "ERROR: No se puede operar");
         }
     }
-    | factor MODULO factor {
+    | term MODULO factor {
         if (strcmp($1.tipo, "entero")==0 && strcmp($3.tipo, "entero")==0) { //Si ambos son enteros
             $$.entero = $1.entero % $3.entero;
             $$.tipo="entero";
@@ -191,7 +191,7 @@ term: term POR factor {
              printf( "ERROR: No se puede operar");
         }   
     }
-    | factor EXPON factor {
+    | term EXPON factor {
         if (strcmp($1.tipo, "entero")==0 && strcmp($3.tipo, "entero")==0) { //Si ambos son enteros
             $$.entero = pow($1.entero, $3.entero);
             $$.tipo="entero";
