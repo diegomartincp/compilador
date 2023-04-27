@@ -46,6 +46,7 @@ int table_size = 0;//Se usa para conocer el índice del array disponible para in
 //Definir la asociatividad. POR y DIV tienen mayor precedencia que MAS y MENOS
 %left MAS MENOS
 %left  POR DIV  
+%left MODULO EXPON
 %left IGUAL PUNTOCOMA
 
 %start command
