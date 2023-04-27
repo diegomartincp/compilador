@@ -10,6 +10,8 @@ extern YYSTYPE yylval;
 \-	return MENOS;
 \*	return POR;
 \/	return DIV;
+\%  return MODULO;
+\^  return EXPON; 
 \(	return PAR_OP;
 \)	return PAR_CL;
 \"	return COMILLA;
