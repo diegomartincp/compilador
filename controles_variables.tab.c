@@ -71,6 +71,7 @@
 
 #include <ctype.h>
 #include <stdio.h>
+#include <math.h> //Para el pow, funcion para hacer el exponente EXPON
 #include <string.h> //Esta librería de C nos permite comparar los tipos con la funcion strcmp()
 #include "simbol_table.h"
 
@@ -84,7 +85,7 @@ int table_size = 0;//Se usa para conocer el índice del array disponible para in
 
 
 /* Line 189 of yacc.c  */
-#line 88 "controles_variables.tab.c"
+#line 89 "controles_variables.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -115,15 +116,17 @@ int table_size = 0;//Se usa para conocer el índice del array disponible para in
      MENOS = 259,
      POR = 260,
      DIV = 261,
-     PAR_OP = 262,
-     PAR_CL = 263,
-     CONCAT = 264,
-     COMILLA = 265,
-     IGUAL = 266,
-     PUNTOCOMA = 267,
-     ENT = 268,
-     REAL = 269,
-     TEXT = 270
+     MODULO = 262,
+     EXPON = 263,
+     PAR_OP = 264,
+     PAR_CL = 265,
+     CONCAT = 266,
+     COMILLA = 267,
+     IGUAL = 268,
+     PUNTOCOMA = 269,
+     ENT = 270,
+     REAL = 271,
+     TEXT = 272
    };
 #endif
 
@@ -134,7 +137,7 @@ typedef union YYSTYPE
 {
 
 /* Line 214 of yacc.c  */
-#line 23 "controles_variables.y"
+#line 24 "controles_variables.y"
 
   int intVal;
   float floatVal;
@@ -149,7 +152,7 @@ typedef union YYSTYPE
 
 
 /* Line 214 of yacc.c  */
-#line 153 "controles_variables.tab.c"
+#line 156 "controles_variables.tab.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -161,7 +164,7 @@ typedef union YYSTYPE
 
 
 /* Line 264 of yacc.c  */
-#line 165 "controles_variables.tab.c"
+#line 168 "controles_variables.tab.c"
 
 #ifdef short
 # undef short
@@ -376,20 +379,20 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  21
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   45
+#define YYLAST   50
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  16
+#define YYNTOKENS  18
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  6
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  20
+#define YYNRULES  22
 /* YYNRULES -- Number of states.  */
-#define YYNSTATES  37
+#define YYNSTATES  41
 
 /* YYTRANSLATE(YYLEX) -- Bison symbol number corresponding to YYLEX.  */
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   270
+#define YYMAXUTOK   272
 
 #define YYTRANSLATE(YYX)						\
   ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
@@ -424,7 +427,7 @@ static const yytype_uint8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
-      15
+      15,    16,    17
 };
 
 #if YYDEBUG
@@ -433,28 +436,29 @@ static const yytype_uint8 yytranslate[] =
 static const yytype_uint8 yyprhs[] =
 {
        0,     0,     3,     5,     9,    13,    17,    21,    25,    27,
-      31,    35,    37,    39,    41,    44,    47,    49,    52,    55,
-      59
+      31,    35,    39,    43,    45,    47,    49,    52,    55,    57,
+      60,    63,    67
 };
 
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
 static const yytype_int8 yyrhs[] =
 {
-      17,     0,    -1,    19,    -1,    18,    12,    19,    -1,    15,
-      11,    19,    -1,    19,     3,    20,    -1,    19,     4,    20,
-      -1,    19,     9,    20,    -1,    20,    -1,    20,     5,    21,
-      -1,    20,     6,    21,    -1,    21,    -1,    15,    -1,    13,
-      -1,     3,    13,    -1,     4,    13,    -1,    14,    -1,     3,
-      14,    -1,     4,    14,    -1,     7,    19,     8,    -1,    10,
-      15,    10,    -1
+      19,     0,    -1,    21,    -1,    20,    14,    21,    -1,    17,
+      13,    21,    -1,    21,     3,    22,    -1,    21,     4,    22,
+      -1,    21,    11,    22,    -1,    22,    -1,    22,     5,    23,
+      -1,    22,     6,    23,    -1,    22,     7,    23,    -1,    22,
+       8,    23,    -1,    23,    -1,    17,    -1,    15,    -1,     3,
+      15,    -1,     4,    15,    -1,    16,    -1,     3,    16,    -1,
+       4,    16,    -1,     9,    21,    10,    -1,    12,    17,    12,
+      -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    52,    52,    62,    73,   113,   139,   165,   176,   183,
-     209,   235,   236,   264,   267,   270,   275,   278,   281,   285,
-     288
+       0,    53,    53,    63,    74,   114,   140,   166,   177,   184,
+     210,   236,   246,   256,   257,   285,   288,   291,   296,   299,
+     302,   306,   309
 };
 #endif
 
@@ -463,9 +467,10 @@ static const yytype_uint16 yyrline[] =
    First, the terminals, then, starting at YYNTOKENS, nonterminals.  */
 static const char *const yytname[] =
 {
-  "$end", "error", "$undefined", "MAS", "MENOS", "POR", "DIV", "PAR_OP",
-  "PAR_CL", "CONCAT", "COMILLA", "IGUAL", "PUNTOCOMA", "ENT", "REAL",
-  "TEXT", "$accept", "command", "asignacion", "exp", "term", "factor", 0
+  "$end", "error", "$undefined", "MAS", "MENOS", "POR", "DIV", "MODULO",
+  "EXPON", "PAR_OP", "PAR_CL", "CONCAT", "COMILLA", "IGUAL", "PUNTOCOMA",
+  "ENT", "REAL", "TEXT", "$accept", "command", "asignacion", "exp", "term",
+  "factor", 0
 };
 #endif
 
@@ -475,24 +480,24 @@ static const char *const yytname[] =
 static const yytype_uint16 yytoknum[] =
 {
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
-     265,   266,   267,   268,   269,   270
+     265,   266,   267,   268,   269,   270,   271,   272
 };
 # endif
 
 /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
-       0,    16,    17,    17,    18,    19,    19,    19,    19,    20,
-      20,    20,    20,    21,    21,    21,    21,    21,    21,    21,
-      21
+       0,    18,    19,    19,    20,    21,    21,    21,    21,    22,
+      22,    22,    22,    22,    22,    23,    23,    23,    23,    23,
+      23,    23,    23
 };
 
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
        0,     2,     1,     3,     3,     3,     3,     3,     1,     3,
-       3,     1,     1,     1,     2,     2,     1,     2,     2,     3,
-       3
+       3,     3,     3,     1,     1,     1,     2,     2,     1,     2,
+       2,     3,     3
 };
 
 /* YYDEFACT[STATE-NAME] -- Default rule to reduce with in state
@@ -500,10 +505,11 @@ static const yytype_uint8 yyr2[] =
    means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       0,     0,     0,     0,     0,    13,    16,    12,     0,     0,
-       2,     8,    11,    14,    17,    15,    18,    12,     0,     0,
-       0,     1,     0,     0,     0,     0,     0,     0,    19,    20,
-       4,     3,     5,     6,     7,     9,    10
+       0,     0,     0,     0,     0,    15,    18,    14,     0,     0,
+       2,     8,    13,    16,    19,    17,    20,    14,     0,     0,
+       0,     1,     0,     0,     0,     0,     0,     0,     0,     0,
+      21,    22,     4,     3,     5,     6,     7,     9,    10,    11,
+      12
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
@@ -514,19 +520,20 @@ static const yytype_int8 yydefgoto[] =
 
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
    STATE-NUM.  */
-#define YYPACT_NINF -8
+#define YYPACT_NINF -15
 static const yytype_int8 yypact[] =
 {
-      -2,    -7,     9,    11,    -5,    -8,    -8,     5,    20,    33,
-       0,    27,    -8,    -8,    -8,    -8,    -8,    -8,    32,    29,
-      11,    -8,    11,    11,    11,    11,    24,    24,    -8,    -8,
-       0,     0,    27,    27,    27,    -8,    -8
+      -2,    12,    22,    17,   -14,   -15,   -15,    -7,    18,    21,
+       5,    39,   -15,   -15,   -15,   -15,   -15,   -15,     1,    28,
+      17,   -15,    17,    17,    17,    17,    27,    27,    27,    27,
+     -15,   -15,     5,     5,    39,    39,    39,   -15,   -15,   -15,
+     -15
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-      -8,    -8,    -8,    -3,    19,     3
+     -15,   -15,   -15,    -3,    25,    -4
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
@@ -536,30 +543,33 @@ static const yytype_int8 yypgoto[] =
 #define YYTABLE_NINF -1
 static const yytype_uint8 yytable[] =
 {
-      18,     1,     2,    23,    24,     3,    13,    14,     4,    25,
-      19,     5,     6,     7,     1,     2,    20,    30,     3,    31,
-      21,     4,    15,    16,     5,     6,    17,     1,     2,    35,
-      36,     3,    26,    27,     4,    23,    24,     5,     6,    29,
-      28,    25,    32,    33,    34,    22
+      18,     1,     2,    19,    23,    24,    20,     3,    23,    24,
+       4,    30,    25,     5,     6,     7,    25,    32,    21,    33,
+       1,     2,    37,    38,    39,    40,     3,    13,    14,     4,
+       1,     2,     5,     6,    17,    22,     3,    15,    16,     4,
+      31,     0,     5,     6,    26,    27,    28,    29,    34,    35,
+      36
 };
 
-static const yytype_uint8 yycheck[] =
+static const yytype_int8 yycheck[] =
 {
-       3,     3,     4,     3,     4,     7,    13,    14,    10,     9,
-      15,    13,    14,    15,     3,     4,    11,    20,     7,    22,
-       0,    10,    13,    14,    13,    14,    15,     3,     4,    26,
-      27,     7,     5,     6,    10,     3,     4,    13,    14,    10,
-       8,     9,    23,    24,    25,    12
+       3,     3,     4,    17,     3,     4,    13,     9,     3,     4,
+      12,    10,    11,    15,    16,    17,    11,    20,     0,    22,
+       3,     4,    26,    27,    28,    29,     9,    15,    16,    12,
+       3,     4,    15,    16,    17,    14,     9,    15,    16,    12,
+      12,    -1,    15,    16,     5,     6,     7,     8,    23,    24,
+      25
 };
 
 /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
    symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,     3,     4,     7,    10,    13,    14,    15,    17,    18,
-      19,    20,    21,    13,    14,    13,    14,    15,    19,    15,
-      11,     0,    12,     3,     4,     9,     5,     6,     8,    10,
-      19,    19,    20,    20,    20,    21,    21
+       0,     3,     4,     9,    12,    15,    16,    17,    19,    20,
+      21,    22,    23,    15,    16,    15,    16,    17,    21,    17,
+      13,     0,    14,     3,     4,    11,     5,     6,     7,     8,
+      10,    12,    21,    21,    22,    22,    22,    23,    23,    23,
+      23
 };
 
 #define yyerrok		(yyerrstatus = 0)
@@ -1382,11 +1392,11 @@ yyreduce:
         case 2:
 
 /* Line 1464 of yacc.c  */
-#line 52 "controles_variables.y"
+#line 53 "controles_variables.y"
     {  if(error_compilacion>=1){
                     printf("\nHa habido %d error(es) de compilacion",error_compilacion);
                 }else{
-                    printf(error_compilacion);
+                    printf("%d",error_compilacion);
                     if(strcmp((yyvsp[(1) - (1)].st).tipo, "entero")==0){printf(" El resultado entero es %d\n", (yyvsp[(1) - (1)].st).entero); }
                     else if (strcmp((yyvsp[(1) - (1)].st).tipo, "real")==0){printf(" El resultado real es %f\n", (yyvsp[(1) - (1)].st).real); }
                     else if (strcmp((yyvsp[(1) - (1)].st).tipo, "texto")==0){printf(" El resultado texto es %s\n", (yyvsp[(1) - (1)].st).texto); }     
@@ -1398,11 +1408,11 @@ yyreduce:
   case 3:
 
 /* Line 1464 of yacc.c  */
-#line 62 "controles_variables.y"
+#line 63 "controles_variables.y"
     {  if(error_compilacion>=1){
                     printf("\nHa habido %d error(es) de compilacion",error_compilacion);
                 }else{
-                    printf(error_compilacion);
+                    printf("%d",error_compilacion);
                     if(strcmp((yyvsp[(3) - (3)].st).tipo, "entero")==0){printf(" El resultado entero es %d\n", (yyvsp[(3) - (3)].st).entero); }
                     else if (strcmp((yyvsp[(3) - (3)].st).tipo, "real")==0){printf(" El resultado real es %f\n", (yyvsp[(3) - (3)].st).real); }
                     else if (strcmp((yyvsp[(3) - (3)].st).tipo, "texto")==0){printf(" El resultado texto es %s\n", (yyvsp[(3) - (3)].st).texto); }     
@@ -1414,7 +1424,7 @@ yyreduce:
   case 4:
 
 /* Line 1464 of yacc.c  */
-#line 73 "controles_variables.y"
+#line 74 "controles_variables.y"
     {
     printf("Asignacion\n");
         int i = lookup((yyvsp[(1) - (3)].stringVal),table_size,table);
@@ -1452,7 +1462,7 @@ yyreduce:
   case 5:
 
 /* Line 1464 of yacc.c  */
-#line 113 "controles_variables.y"
+#line 114 "controles_variables.y"
     {
         if (strcmp((yyvsp[(1) - (3)].st).tipo, "entero")==0 && strcmp((yyvsp[(3) - (3)].st).tipo, "entero")==0) { //Si ambos son enteros
         (yyval.st).entero = (yyvsp[(1) - (3)].st).entero + (yyvsp[(3) - (3)].st).entero;
@@ -1484,7 +1494,7 @@ yyreduce:
   case 6:
 
 /* Line 1464 of yacc.c  */
-#line 139 "controles_variables.y"
+#line 140 "controles_variables.y"
     {
         if (strcmp((yyvsp[(1) - (3)].st).tipo, "entero")==0 && strcmp((yyvsp[(3) - (3)].st).tipo, "entero")==0) { //Si ambos son enteros
         (yyval.st).entero = (yyvsp[(1) - (3)].st).entero - (yyvsp[(3) - (3)].st).entero;
@@ -1516,7 +1526,7 @@ yyreduce:
   case 7:
 
 /* Line 1464 of yacc.c  */
-#line 165 "controles_variables.y"
+#line 166 "controles_variables.y"
     {
         if (strcmp((yyvsp[(1) - (3)].st).tipo, "texto")==0 && strcmp((yyvsp[(3) - (3)].st).tipo, "texto")==0){
             (yyval.st).texto = strcat((yyvsp[(1) - (3)].st).texto, (yyvsp[(3) - (3)].st).texto);
@@ -1533,14 +1543,14 @@ yyreduce:
   case 8:
 
 /* Line 1464 of yacc.c  */
-#line 176 "controles_variables.y"
+#line 177 "controles_variables.y"
     {(yyval.st) = (yyvsp[(1) - (1)].st); ;}
     break;
 
   case 9:
 
 /* Line 1464 of yacc.c  */
-#line 183 "controles_variables.y"
+#line 184 "controles_variables.y"
     {
         if (strcmp((yyvsp[(1) - (3)].st).tipo, "entero")==0 && strcmp((yyvsp[(3) - (3)].st).tipo, "entero")==0) { //Si ambos son enteros
             (yyval.st).entero = (yyvsp[(1) - (3)].st).entero * (yyvsp[(3) - (3)].st).entero;
@@ -1572,7 +1582,7 @@ yyreduce:
   case 10:
 
 /* Line 1464 of yacc.c  */
-#line 209 "controles_variables.y"
+#line 210 "controles_variables.y"
     {
         if (strcmp((yyvsp[(1) - (3)].st).tipo, "entero")==0 && strcmp((yyvsp[(3) - (3)].st).tipo, "entero")==0) { //Si ambos son enteros
             (yyval.st).real = (yyvsp[(1) - (3)].st).entero / (yyvsp[(3) - (3)].st).entero;
@@ -1604,14 +1614,46 @@ yyreduce:
   case 11:
 
 /* Line 1464 of yacc.c  */
-#line 235 "controles_variables.y"
-    {(yyval.st) = (yyvsp[(1) - (1)].st);;}
+#line 236 "controles_variables.y"
+    {
+        if (strcmp((yyvsp[(1) - (3)].st).tipo, "entero")==0 && strcmp((yyvsp[(3) - (3)].st).tipo, "entero")==0) { //Si ambos son enteros
+            (yyval.st).entero = (yyvsp[(1) - (3)].st).entero % (yyvsp[(3) - (3)].st).entero;
+            (yyval.st).tipo="entero";
+            printf( "entero %% entero = %ld\n", (yyval.st).entero);
+        } else{
+             error_compilacion++;
+             printf( "ERROR: No se puede operar");
+        }   
+    ;}
     break;
 
   case 12:
 
 /* Line 1464 of yacc.c  */
-#line 236 "controles_variables.y"
+#line 246 "controles_variables.y"
+    {
+        if (strcmp((yyvsp[(1) - (3)].st).tipo, "entero")==0 && strcmp((yyvsp[(3) - (3)].st).tipo, "entero")==0) { //Si ambos son enteros
+            (yyval.st).entero = pow((yyvsp[(1) - (3)].st).entero, (yyvsp[(3) - (3)].st).entero);
+            (yyval.st).tipo="entero";
+            printf( "entero^entero = %ld\n", (yyval.st).entero);
+        } else{
+             error_compilacion++;
+             printf( "ERROR: No se puede operar");
+        }
+    ;}
+    break;
+
+  case 13:
+
+/* Line 1464 of yacc.c  */
+#line 256 "controles_variables.y"
+    {(yyval.st) = (yyvsp[(1) - (1)].st);;}
+    break;
+
+  case 14:
+
+/* Line 1464 of yacc.c  */
+#line 257 "controles_variables.y"
     {
         //Hemos encontrado un identificador, hay que ver si está en la tabla para recogerlo y sino devolver un error
         int i = lookup((yyvsp[(1) - (1)].stringVal),table_size,table); //lo buscamos
@@ -1638,72 +1680,72 @@ yyreduce:
         ;}
     break;
 
-  case 13:
+  case 15:
 
 /* Line 1464 of yacc.c  */
-#line 264 "controles_variables.y"
+#line 285 "controles_variables.y"
     {(yyval.st).entero = (yyvsp[(1) - (1)].intVal); //Asignar el valor a .entero
             (yyval.st).tipo="entero"; //Definir el tipo a "entero"
             printf( "ENTERO %ld\n", (yyval.st).entero);;}
     break;
 
-  case 14:
+  case 16:
 
 /* Line 1464 of yacc.c  */
-#line 267 "controles_variables.y"
+#line 288 "controles_variables.y"
     {(yyval.st).entero = (yyvsp[(2) - (2)].intVal);
               (yyval.st).tipo="entero";
               printf( "ENTERO POSITIVO %ld\n", (yyval.st).entero);;}
     break;
 
-  case 15:
+  case 17:
 
 /* Line 1464 of yacc.c  */
-#line 270 "controles_variables.y"
+#line 291 "controles_variables.y"
     {(yyval.st).entero = -(yyvsp[(2) - (2)].intVal);
               (yyval.st).tipo="entero";
               printf( "ENTERO NEGATIVO %ld\n", (yyval.st).entero);;}
     break;
 
-  case 16:
+  case 18:
 
 /* Line 1464 of yacc.c  */
-#line 275 "controles_variables.y"
+#line 296 "controles_variables.y"
     {(yyval.st).real = (yyvsp[(1) - (1)].floatVal);
             (yyval.st).tipo="real";
             printf( "REAL  %f\n", (yyval.st).real);;}
     break;
 
-  case 17:
+  case 19:
 
 /* Line 1464 of yacc.c  */
-#line 278 "controles_variables.y"
+#line 299 "controles_variables.y"
     {(yyval.st).real = (yyvsp[(2) - (2)].floatVal);
                 (yyval.st).tipo="real";
                 printf( "REAL POSITIVO %f\n", (yyval.st).real);;}
     break;
 
-  case 18:
+  case 20:
 
 /* Line 1464 of yacc.c  */
-#line 281 "controles_variables.y"
+#line 302 "controles_variables.y"
     {(yyval.st).real = -(yyvsp[(2) - (2)].floatVal);
                   (yyval.st).tipo="real";
                   printf( "REAL NEGATIVO %f\n", (yyval.st).real);;}
     break;
 
-  case 19:
+  case 21:
 
 /* Line 1464 of yacc.c  */
-#line 285 "controles_variables.y"
+#line 306 "controles_variables.y"
     {(yyval.st) = (yyvsp[(2) - (3)].st);//Se hace una copia
                         printf( "PARENTESIS \n");;}
     break;
 
-  case 20:
+  case 22:
 
 /* Line 1464 of yacc.c  */
-#line 288 "controles_variables.y"
+#line 309 "controles_variables.y"
     {(yyval.st).texto = (yyvsp[(2) - (3)].stringVal);
             (yyval.st).tipo="texto";
             printf(" TEXTO %s\n", (yyval.st).texto);;}
@@ -1712,7 +1754,7 @@ yyreduce:
 
 
 /* Line 1464 of yacc.c  */
-#line 1716 "controles_variables.tab.c"
+#line 1758 "controles_variables.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1924,7 +1966,7 @@ yyreturn:
 
 
 /* Line 1684 of yacc.c  */
-#line 293 "controles_variables.y"
+#line 314 "controles_variables.y"
 
 
 main()

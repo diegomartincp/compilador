@@ -42,15 +42,17 @@
      MENOS = 259,
      POR = 260,
      DIV = 261,
-     PAR_OP = 262,
-     PAR_CL = 263,
-     CONCAT = 264,
-     COMILLA = 265,
-     IGUAL = 266,
-     PUNTOCOMA = 267,
-     ENT = 268,
-     REAL = 269,
-     TEXT = 270
+     MODULO = 262,
+     EXPON = 263,
+     PAR_OP = 264,
+     PAR_CL = 265,
+     CONCAT = 266,
+     COMILLA = 267,
+     IGUAL = 268,
+     PUNTOCOMA = 269,
+     ENT = 270,
+     REAL = 271,
+     TEXT = 272
    };
 #endif
 
@@ -61,7 +63,7 @@ typedef union YYSTYPE
 {
 
 /* Line 1685 of yacc.c  */
-#line 23 "controles_variables.y"
+#line 24 "controles_variables.y"
 
   int intVal;
   float floatVal;
@@ -76,7 +78,7 @@ typedef union YYSTYPE
 
 
 /* Line 1685 of yacc.c  */
-#line 80 "controles_variables.tab.h"
+#line 82 "controles_variables.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

@@ -2,6 +2,7 @@
 %{
 #include <ctype.h>
 #include <stdio.h>
+#include <math.h> //Para el pow, funcion para hacer el exponente EXPON
 #include <string.h> //Esta librería de C nos permite comparar los tipos con la funcion strcmp()
 
 //Variables
@@ -28,7 +29,7 @@ int linea=1;
 %type <st> exp term factor 
 
 /* Declarar tokens recogidos de FLEX*/
-%token MAS MENOS POR DIV MODULO EXPONPAR_OP PAR_CL CONCAT COMILLA
+%token MAS MENOS POR DIV MODULO EXPON PAR_OP PAR_CL CONCAT COMILLA
 
 /*Los que son números hay que definir su tipo */
 %token <intVal> ENT

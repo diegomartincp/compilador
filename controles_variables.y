@@ -6,6 +6,7 @@ Ejemplo:
 %{
 #include <ctype.h>
 #include <stdio.h>
+#include <math.h> //Para el pow, funcion para hacer el exponente EXPON
 #include <string.h> //Esta librería de C nos permite comparar los tipos con la funcion strcmp()
 #include "simbol_table.h"
 
@@ -36,7 +37,7 @@ int table_size = 0;//Se usa para conocer el índice del array disponible para in
 %type <st> exp term factor asignacion
 
 /* Declarar tokens recogidos de FLEX*/
-%token MAS MENOS POR DIV PAR_OP PAR_CL CONCAT COMILLA IGUAL PUNTOCOMA
+%token MAS MENOS POR DIV MODULO EXPON PAR_OP PAR_CL CONCAT COMILLA IGUAL PUNTOCOMA
 
 /*Los que son números hay que definir su tipo */
 %token <intVal> ENT
@@ -52,7 +53,7 @@ int table_size = 0;//Se usa para conocer el índice del array disponible para in
 command: exp {  if(error_compilacion>=1){
                     printf("\nHa habido %d error(es) de compilacion",error_compilacion);
                 }else{
-                    printf(error_compilacion);
+                    printf("%d",error_compilacion);
                     if(strcmp($1.tipo, "entero")==0){printf(" El resultado entero es %d\n", $1.entero); }
                     else if (strcmp($1.tipo, "real")==0){printf(" El resultado real es %f\n", $1.real); }
                     else if (strcmp($1.tipo, "texto")==0){printf(" El resultado texto es %s\n", $1.texto); }     
@@ -62,7 +63,7 @@ command: exp {  if(error_compilacion>=1){
         | asignacion PUNTOCOMA exp {  if(error_compilacion>=1){
                     printf("\nHa habido %d error(es) de compilacion",error_compilacion);
                 }else{
-                    printf(error_compilacion);
+                    printf("%d",error_compilacion);
                     if(strcmp($3.tipo, "entero")==0){printf(" El resultado entero es %d\n", $3.entero); }
                     else if (strcmp($3.tipo, "real")==0){printf(" El resultado real es %f\n", $3.real); }
                     else if (strcmp($3.tipo, "texto")==0){printf(" El resultado texto es %s\n", $3.texto); }     
@@ -228,6 +229,26 @@ term: term POR factor {
             printf( "real/entero = %f\n", $$.real);
         }
         else{
+             error_compilacion++;
+             printf( "ERROR: No se puede operar");
+        }
+    }
+    | term MODULO factor {
+        if (strcmp($1.tipo, "entero")==0 && strcmp($3.tipo, "entero")==0) { //Si ambos son enteros
+            $$.entero = $1.entero % $3.entero;
+            $$.tipo="entero";
+            printf( "entero %% entero = %ld\n", $$.entero);
+        } else{
+             error_compilacion++;
+             printf( "ERROR: No se puede operar");
+        }   
+    }
+    | term EXPON factor {
+        if (strcmp($1.tipo, "entero")==0 && strcmp($3.tipo, "entero")==0) { //Si ambos son enteros
+            $$.entero = pow($1.entero, $3.entero);
+            $$.tipo="entero";
+            printf( "entero^entero = %ld\n", $$.entero);
+        } else{
              error_compilacion++;
              printf( "ERROR: No se puede operar");
         }
