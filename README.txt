@@ -22,3 +22,8 @@ gcc -o variables  prueba_variables.tab.c  prueba_variables.lex.c
 bison -d -v controles_variables.y
 flex -o  controles_variables.lex.c  controles_variables.flex
 gcc -o calculadora_variables  controles_variables.tab.c  controles_variables.lex.c
+
+# 5 CONTROLES VARIABLES AST 
+bison -d -v controles_variables_AST.y
+flex -o  controles_variables_AST.lex.c  controles_variables_AST.flex
+gcc -o controles_variables_AST.exe  controles_variables_AST.tab.c  controles_variables_AST.lex.c

@@ -1,0 +1,520 @@
+Grammar
+
+    0 $accept: command $end
+
+    1 command: exp
+    2        | asignacion PUNTOCOMA exp
+
+    3 asignacion: TEXT IGUAL exp
+
+    4 exp: exp MAS term
+    5    | exp MENOS term
+    6    | exp CONCAT term
+    7    | term
+
+    8 term: term POR factor
+    9     | term DIV factor
+   10     | term MODULO factor
+   11     | term EXPON factor
+   12     | factor
+   13     | TEXT
+
+   14 factor: ENT
+   15       | MAS ENT
+   16       | MENOS ENT
+   17       | REAL
+   18       | MAS REAL
+   19       | MENOS REAL
+   20       | PAR_OP exp PAR_CL
+   21       | COMILLA TEXT COMILLA
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+MAS (258) 4 15 18
+MENOS (259) 5 16 19
+POR (260) 8
+DIV (261) 9
+MODULO (262) 10
+EXPON (263) 11
+PAR_OP (264) 20
+PAR_CL (265) 20
+CONCAT (266) 6
+COMILLA (267) 21
+IGUAL (268) 3
+PUNTOCOMA (269) 2
+ENT (270) 14 15 16
+REAL (271) 17 18 19
+TEXT (272) 3 13 21
+
+
+Nonterminals, with rules where they appear
+
+$accept (18)
+    on left: 0
+command (19)
+    on left: 1 2, on right: 0
+asignacion (20)
+    on left: 3, on right: 2
+exp (21)
+    on left: 4 5 6 7, on right: 1 2 3 4 5 6 20
+term (22)
+    on left: 8 9 10 11 12 13, on right: 4 5 6 7 8 9 10 11
+factor (23)
+    on left: 14 15 16 17 18 19 20 21, on right: 8 9 10 11 12
+
+
+state 0
+
+    0 $accept: . command $end
+
+    MAS      shift, and go to state 1
+    MENOS    shift, and go to state 2
+    PAR_OP   shift, and go to state 3
+    COMILLA  shift, and go to state 4
+    ENT      shift, and go to state 5
+    REAL     shift, and go to state 6
+    TEXT     shift, and go to state 7
+
+    command     go to state 8
+    asignacion  go to state 9
+    exp         go to state 10
+    term        go to state 11
+    factor      go to state 12
+
+
+state 1
+
+   15 factor: MAS . ENT
+   18       | MAS . REAL
+
+    ENT   shift, and go to state 13
+    REAL  shift, and go to state 14
+
+
+state 2
+
+   16 factor: MENOS . ENT
+   19       | MENOS . REAL
+
+    ENT   shift, and go to state 15
+    REAL  shift, and go to state 16
+
+
+state 3
+
+   20 factor: PAR_OP . exp PAR_CL
+
+    MAS      shift, and go to state 1
+    MENOS    shift, and go to state 2
+    PAR_OP   shift, and go to state 3
+    COMILLA  shift, and go to state 4
+    ENT      shift, and go to state 5
+    REAL     shift, and go to state 6
+    TEXT     shift, and go to state 17
+
+    exp     go to state 18
+    term    go to state 11
+    factor  go to state 12
+
+
+state 4
+
+   21 factor: COMILLA . TEXT COMILLA
+
+    TEXT  shift, and go to state 19
+
+
+state 5
+
+   14 factor: ENT .
+
+    $default  reduce using rule 14 (factor)
+
+
+state 6
+
+   17 factor: REAL .
+
+    $default  reduce using rule 17 (factor)
+
+
+state 7
+
+    3 asignacion: TEXT . IGUAL exp
+   13 term: TEXT .
+
+    IGUAL  shift, and go to state 20
+
+    $default  reduce using rule 13 (term)
+
+
+state 8
+
+    0 $accept: command . $end
+
+    $end  shift, and go to state 21
+
+
+state 9
+
+    2 command: asignacion . PUNTOCOMA exp
+
+    PUNTOCOMA  shift, and go to state 22
+
+
+state 10
+
+    1 command: exp .
+    4 exp: exp . MAS term
+    5    | exp . MENOS term
+    6    | exp . CONCAT term
+
+    MAS     shift, and go to state 23
+    MENOS   shift, and go to state 24
+    CONCAT  shift, and go to state 25
+
+    $default  reduce using rule 1 (command)
+
+
+state 11
+
+    7 exp: term .
+    8 term: term . POR factor
+    9     | term . DIV factor
+   10     | term . MODULO factor
+   11     | term . EXPON factor
+
+    POR     shift, and go to state 26
+    DIV     shift, and go to state 27
+    MODULO  shift, and go to state 28
+    EXPON   shift, and go to state 29
+
+    $default  reduce using rule 7 (exp)
+
+
+state 12
+
+   12 term: factor .
+
+    $default  reduce using rule 12 (term)
+
+
+state 13
+
+   15 factor: MAS ENT .
+
+    $default  reduce using rule 15 (factor)
+
+
+state 14
+
+   18 factor: MAS REAL .
+
+    $default  reduce using rule 18 (factor)
+
+
+state 15
+
+   16 factor: MENOS ENT .
+
+    $default  reduce using rule 16 (factor)
+
+
+state 16
+
+   19 factor: MENOS REAL .
+
+    $default  reduce using rule 19 (factor)
+
+
+state 17
+
+   13 term: TEXT .
+
+    $default  reduce using rule 13 (term)
+
+
+state 18
+
+    4 exp: exp . MAS term
+    5    | exp . MENOS term
+    6    | exp . CONCAT term
+   20 factor: PAR_OP exp . PAR_CL
+
+    MAS     shift, and go to state 23
+    MENOS   shift, and go to state 24
+    PAR_CL  shift, and go to state 30
+    CONCAT  shift, and go to state 25
+
+
+state 19
+
+   21 factor: COMILLA TEXT . COMILLA
+
+    COMILLA  shift, and go to state 31
+
+
+state 20
+
+    3 asignacion: TEXT IGUAL . exp
+
+    MAS      shift, and go to state 1
+    MENOS    shift, and go to state 2
+    PAR_OP   shift, and go to state 3
+    COMILLA  shift, and go to state 4
+    ENT      shift, and go to state 5
+    REAL     shift, and go to state 6
+    TEXT     shift, and go to state 17
+
+    exp     go to state 32
+    term    go to state 11
+    factor  go to state 12
+
+
+state 21
+
+    0 $accept: command $end .
+
+    $default  accept
+
+
+state 22
+
+    2 command: asignacion PUNTOCOMA . exp
+
+    MAS      shift, and go to state 1
+    MENOS    shift, and go to state 2
+    PAR_OP   shift, and go to state 3
+    COMILLA  shift, and go to state 4
+    ENT      shift, and go to state 5
+    REAL     shift, and go to state 6
+    TEXT     shift, and go to state 17
+
+    exp     go to state 33
+    term    go to state 11
+    factor  go to state 12
+
+
+state 23
+
+    4 exp: exp MAS . term
+
+    MAS      shift, and go to state 1
+    MENOS    shift, and go to state 2
+    PAR_OP   shift, and go to state 3
+    COMILLA  shift, and go to state 4
+    ENT      shift, and go to state 5
+    REAL     shift, and go to state 6
+    TEXT     shift, and go to state 17
+
+    term    go to state 34
+    factor  go to state 12
+
+
+state 24
+
+    5 exp: exp MENOS . term
+
+    MAS      shift, and go to state 1
+    MENOS    shift, and go to state 2
+    PAR_OP   shift, and go to state 3
+    COMILLA  shift, and go to state 4
+    ENT      shift, and go to state 5
+    REAL     shift, and go to state 6
+    TEXT     shift, and go to state 17
+
+    term    go to state 35
+    factor  go to state 12
+
+
+state 25
+
+    6 exp: exp CONCAT . term
+
+    MAS      shift, and go to state 1
+    MENOS    shift, and go to state 2
+    PAR_OP   shift, and go to state 3
+    COMILLA  shift, and go to state 4
+    ENT      shift, and go to state 5
+    REAL     shift, and go to state 6
+    TEXT     shift, and go to state 17
+
+    term    go to state 36
+    factor  go to state 12
+
+
+state 26
+
+    8 term: term POR . factor
+
+    MAS      shift, and go to state 1
+    MENOS    shift, and go to state 2
+    PAR_OP   shift, and go to state 3
+    COMILLA  shift, and go to state 4
+    ENT      shift, and go to state 5
+    REAL     shift, and go to state 6
+
+    factor  go to state 37
+
+
+state 27
+
+    9 term: term DIV . factor
+
+    MAS      shift, and go to state 1
+    MENOS    shift, and go to state 2
+    PAR_OP   shift, and go to state 3
+    COMILLA  shift, and go to state 4
+    ENT      shift, and go to state 5
+    REAL     shift, and go to state 6
+
+    factor  go to state 38
+
+
+state 28
+
+   10 term: term MODULO . factor
+
+    MAS      shift, and go to state 1
+    MENOS    shift, and go to state 2
+    PAR_OP   shift, and go to state 3
+    COMILLA  shift, and go to state 4
+    ENT      shift, and go to state 5
+    REAL     shift, and go to state 6
+
+    factor  go to state 39
+
+
+state 29
+
+   11 term: term EXPON . factor
+
+    MAS      shift, and go to state 1
+    MENOS    shift, and go to state 2
+    PAR_OP   shift, and go to state 3
+    COMILLA  shift, and go to state 4
+    ENT      shift, and go to state 5
+    REAL     shift, and go to state 6
+
+    factor  go to state 40
+
+
+state 30
+
+   20 factor: PAR_OP exp PAR_CL .
+
+    $default  reduce using rule 20 (factor)
+
+
+state 31
+
+   21 factor: COMILLA TEXT COMILLA .
+
+    $default  reduce using rule 21 (factor)
+
+
+state 32
+
+    3 asignacion: TEXT IGUAL exp .
+    4 exp: exp . MAS term
+    5    | exp . MENOS term
+    6    | exp . CONCAT term
+
+    MAS     shift, and go to state 23
+    MENOS   shift, and go to state 24
+    CONCAT  shift, and go to state 25
+
+    $default  reduce using rule 3 (asignacion)
+
+
+state 33
+
+    2 command: asignacion PUNTOCOMA exp .
+    4 exp: exp . MAS term
+    5    | exp . MENOS term
+    6    | exp . CONCAT term
+
+    MAS     shift, and go to state 23
+    MENOS   shift, and go to state 24
+    CONCAT  shift, and go to state 25
+
+    $default  reduce using rule 2 (command)
+
+
+state 34
+
+    4 exp: exp MAS term .
+    8 term: term . POR factor
+    9     | term . DIV factor
+   10     | term . MODULO factor
+   11     | term . EXPON factor
+
+    POR     shift, and go to state 26
+    DIV     shift, and go to state 27
+    MODULO  shift, and go to state 28
+    EXPON   shift, and go to state 29
+
+    $default  reduce using rule 4 (exp)
+
+
+state 35
+
+    5 exp: exp MENOS term .
+    8 term: term . POR factor
+    9     | term . DIV factor
+   10     | term . MODULO factor
+   11     | term . EXPON factor
+
+    POR     shift, and go to state 26
+    DIV     shift, and go to state 27
+    MODULO  shift, and go to state 28
+    EXPON   shift, and go to state 29
+
+    $default  reduce using rule 5 (exp)
+
+
+state 36
+
+    6 exp: exp CONCAT term .
+    8 term: term . POR factor
+    9     | term . DIV factor
+   10     | term . MODULO factor
+   11     | term . EXPON factor
+
+    POR     shift, and go to state 26
+    DIV     shift, and go to state 27
+    MODULO  shift, and go to state 28
+    EXPON   shift, and go to state 29
+
+    $default  reduce using rule 6 (exp)
+
+
+state 37
+
+    8 term: term POR factor .
+
+    $default  reduce using rule 8 (term)
+
+
+state 38
+
+    9 term: term DIV factor .
+
+    $default  reduce using rule 9 (term)
+
+
+state 39
+
+   10 term: term MODULO factor .
+
+    $default  reduce using rule 10 (term)
+
+
+state 40
+
+   11 term: term EXPON factor .
+
+    $default  reduce using rule 11 (term)
