@@ -27,3 +27,8 @@ gcc -o calculadora_variables  controles_variables.tab.c  controles_variables.lex
 bison -d -v controles_variables_ast.y
 flex -o  controles_variables_ast.lex.c  controles_variables_ast.flex
 gcc -o ast  controles_variables_ast.tab.c  controles_variables_ast.lex.c
+
+# 6 PRUEBA CALCULADORA CON VARIABLES y AST QUE GENERA CÓDIGO ASM
+bison -d -v operaciones_a_asm.y
+flex -o  operaciones_a_asm.lex.c  operaciones_a_asm.flex
+gcc -o generarcodigo  operaciones_a_asm.tab.c  operaciones_a_asm.lex.c
