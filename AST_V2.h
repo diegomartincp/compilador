@@ -169,7 +169,7 @@ double eval(struct nodo *a) {
                 liberarRegistro(a->r);   //Liberar el antiguo
                 a->r->registro = buscarRegistroLibreF();    //Usar el nuevo
                 //Copiamos del registro antiguo al nuevo
-                fprintf(yyout,"mtcl $t%d, $f%d\n",registro_antiguo,a->r->registro);
+                fprintf(yyout,"mtc1 $t%d, $f%d\n",registro_antiguo,a->r->registro);
                 //Convertir a float el registro nuevo
                 fprintf(yyout,"cvt.s.w $f%d, $f%d\n",a->l->registro ,a->r->registro);
             }
