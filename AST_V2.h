@@ -5,8 +5,9 @@ extern FILE *yyout;
 
 //Array que almacena que registros $tn están disponibles. TRUE es disponible y FALSE es ocupado
 //Hay 10 registros T, desde el 0 hasta el 9
-bool array_registros_t[10] = {true, true, true, true, true, true, true, true, true, true};
-//Hay 32 registros F, desde el 0 hasta el 9
+//bool array_registros_t[10] = {true, true, true, true, true, true, true, true, true, true};
+
+//Hay 32 registros F, desde el 0 hasta el 31
 bool array_registros_f[32] = {true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true};
 //Usamos un array de 32 posiciones para almacenar las variables de .data
 float array_variables[32];
