@@ -57,7 +57,7 @@ command: exp {  if(error_compilacion>=1){
                 }else{
                     printf(">>>TERMINADO\n");
                     //EVALUAR
-                    double valor = eval($1.a);
+                    double valor = iniciar_evaluacion($1.a);
                     printf(">>>Resultado evaluado = %f\n",valor);
                     /*
                     if(strcmp($1.tipo, "entero")==0){printf(" El resultado entero es %d\n", $1.entero); }

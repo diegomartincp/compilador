@@ -8,6 +8,9 @@ extern FILE *yyout;
 bool array_registros_t[10] = {true, true, true, true, true, true, true, true, true, true};
 //Hay 32 registros F, desde el 0 hasta el 9
 bool array_registros_f[32] = {true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true};
+//Usamos un array de 32 posiciones para almacenar las variables de .data
+float array_variables[32];
+int cima_array_variables=0; //Apunta a la siguiente posición libre de array_variables
 
 // Definimos una estructura para nuestro nodo del AST
 struct nodo{
@@ -51,11 +54,7 @@ buscarRegistroLibreF(){
 }
 //Recibe un nodo y libera el registro que usa tanto si es real como float
 liberarRegistro(struct nodo *a){
-    if(strcmp(a->tipo, "entero")==0){
-        array_registros_t[a->registro]=true;
-    }else{
-        array_registros_f[a->registro]=true;
-    }
+  array_registros_f[a->registro]=true;
 }
 
 
@@ -72,16 +71,10 @@ struct nodo * new_node(int nodetype, char* tipo_, struct nodo *l, struct nodo *r
   a->r = r;
   a->tipo = tipo_;
 
-  if(strcmp(a->tipo, "entero")==0){
-    //Asignar registro para float
-    a->registro = buscarRegistroLibreT(); //Buscamos un registro no ocupado y se almacena en él
-    printf("El nodo ha reservado el registro t%d \n",a->registro);
-  }else{
-    //Asignar registro para float
-    a->registro = buscarRegistroLibreF();
-    printf("El nodo ha reservado el registro f%d \n",a->registro);
-  }
-  
+  //Asignar registro para float
+  a->registro = buscarRegistroLibreF();
+  printf("El nodo ha reservado el registro f%d \n",a->registro);
+ 
   return a;
 }
 
@@ -97,15 +90,15 @@ struct nodo * new_leaf_num(double value, char* tipo_) {
   a->value = value;
   a->tipo = tipo_;
 
-  if(strcmp(a->tipo, "entero")==0){
-    //Asignar registro para float
-    a->registro = buscarRegistroLibreT(); //Buscamos un registro no ocupado y se almacena en él
-    printf("El nodo con un %f ha reservado el registro t%d \n",a->value,a->registro);
-  }else{
-    //Asignar registro para float
-    a->registro = buscarRegistroLibreF();
-    printf("El nodo con un %f ha reservado el registro f%d \n",a->value,a->registro);
-  }
+  //Asignar registro para float
+  a->registro = buscarRegistroLibreF();
+  printf("El nodo ha reservado el registro f%d \n",a->registro);
+
+  //Registrar una nueva variable en .data con el valor
+  //Guarda en la misma posición que registro utiliza: Para $f14 usa la posición 14
+  array_variables[a->registro]=a->value;
+  cima_array_variables++;
+
   return a;
 }
 
@@ -123,78 +116,90 @@ struct nodo * new_leaf_text(char * string, char* tipo_) {
   return a;
 }
 
+
 //Evaluar un nodo
 double eval(struct nodo *a) {
   printf("EVALUA\n");
   double v;
   switch(a->nodetype) {
+
+    //NODO HOJA
     case 'L':
       v = a->value;
       printf("Hoja con %f\n",v);
-      //Cargar el valor en su registro asignado
-       if(strcmp(a->tipo, "entero")==0){
-        //Cargar un real
-        fprintf(yyout,"addi $t%d, $zero, %d\n",a->registro, (int)a->value);
-       }
-       else{
-        //Cargar un float
-        fprintf(yyout,"l.s $f%d, %f\n",a->registro,a->value);
-       }
+      //Cargar el valor en su registro asignado de tipo F
+      fprintf(yyout,"  lwc1 $f%d, variable%d\n",a->registro,a->registro);
       
 	  break;
 
-      //OPERACION SUMA
-      case '+':
-        printf("-> suma\n");
-        v = eval(a->l) + eval(a->r);
+    //OPERACION SUMA
+    case '+':
+      printf("-> suma\n");
+      v = eval(a->l) + eval(a->r);
 
-        if(strcmp(a->tipo, "entero")==0){
-            //Si el resultado es entero, los tres registros son T
-            fprintf(yyout,"add $t%d, $t%d, $t%d\n",a->registro,a->l->registro,a->r->registro);
-        }else{
-            //Si el registro de R o L es de tipo T, primero hay que copiar su contenido a un
-            //registro de tipo F y liberar el registro antiguo
-            if(strcmp(a->l->tipo, "entero")==0){
-                int registro_antiguo=a->l->registro;
-                liberarRegistro(a->l);   //Liberar el antiguo
-                a->l->registro = buscarRegistroLibreF();    //Usar el nuevo
-                //Copiamos del registro antiguo al nuevo
-                fprintf(yyout,"mtcl $t%d, $f%d\n",registro_antiguo,a->l->registro);
-                //Convertir a float el registro nuevo
-                fprintf(yyout,"cvt.s.w $f%d, $f%d\n",a->l->registro ,a->l->registro);
+      //Ahora usamos solo registros tipo F para sumar el float
+      fprintf(yyout,"  add.s $f%d, $f%d, $f%d\n",a->registro,a->l->registro,a->r->registro);   
 
-            }
-            if(strcmp(a->r->tipo, "entero")==0){
-                int registro_antiguo=a->r->registro;
-                liberarRegistro(a->r);   //Liberar el antiguo
-                a->r->registro = buscarRegistroLibreF();    //Usar el nuevo
-                //Copiamos del registro antiguo al nuevo
-                fprintf(yyout,"mtc1 $t%d, $f%d\n",registro_antiguo,a->r->registro);
-                //Convertir a float el registro nuevo
-                fprintf(yyout,"cvt.s.w $f%d, $f%d\n",a->l->registro ,a->r->registro);
-            }
-            //Ahora usamos solo registros tipo F para sumar el float
-            fprintf(yyout,"add.s $f%d, $f%d, $f%d\n",a->registro,a->l->registro,a->r->registro);
-        }     
+      //liberar los registros de los nodos L y R
+      liberarRegistro(a->l);
+      liberarRegistro(a->r);
+	  break;
+
+    //OPERACIÓN RESTA
+    case '-':
+        printf("-> resta\n");
+        v = eval(a->l) - eval(a->r); 
+			  
+        //Sentencia de la resta en ASM
+        fprintf(yyout,"  sub.s $f%d, $f%d, $f%d\n",a->registro,a->l->registro,a->r->registro);   
 
         //liberar los registros de los nodos L y R
         liberarRegistro(a->l);
         liberarRegistro(a->r);
-	  break;
-      case '-':
-        printf("-> resta\n");
-        v = eval(a->l) - eval(a->r); 
-			  //printf("%lf - %lf = %lf\n", eval(a->l), eval(a->r), v);
     break;
       case '*':
         printf("-> multiplicacion");
         v = eval(a->l) * eval(a->r); 
+
+        //Sentencia de la multiplicación en ASM
+        fprintf(yyout,"  mul.s $f%d, $f%d, $f%d\n",a->registro,a->l->registro,a->r->registro);   
+
+        //liberar los registros de los nodos L y R
+        liberarRegistro(a->l);
+        liberarRegistro(a->r);
     break;
       case '/':
          printf("-> division");
         v = eval(a->l) / eval(a->r); 
+
+        //Sentencia de la multiplicación en ASM
+        fprintf(yyout,"  div.s $f%d, $f%d, $f%d\n",a->registro,a->l->registro,a->r->registro);   
+
+        //liberar los registros de los nodos L y R
+        liberarRegistro(a->l);
+        liberarRegistro(a->r);
     break; 
     default: printf("Error: Nodo desconocido %c\n", a->nodetype); 
    }
   return v;
+}
+
+double iniciar_evaluacion(struct nodo *a){
+  //Crea todas las variables necesarias en .data
+  fprintf(yyout,".data #Variables\n");
+  //Recorremos el array de las variables que hay que definir
+  for (int i = 0; i < 32; i++){
+    //Si el espacio del array tiene algo
+    if(array_variables[i]!=0){
+      printf("%d\n",array_variables[i]);
+      //Define la variable
+      fprintf(yyout,"  variable%d: .float %f\n",i,array_variables[i]);
+      //La elimina pues ya se ha declarado
+      //array_variables[i]=NULL;
+    }
+  }
+
+  fprintf(yyout,"\n.text #Operaciones\n");
+
+  return eval(a);  //Con las variables ya definidas, comienza a evaluar la operación
 }

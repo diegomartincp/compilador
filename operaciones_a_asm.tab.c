@@ -1391,7 +1391,7 @@ yyreduce:
                 }else{
                     printf(">>>TERMINADO\n");
                     //EVALUAR
-                    double valor = eval((yyvsp[(1) - (1)].st).a);
+                    double valor = iniciar_evaluacion((yyvsp[(1) - (1)].st).a);
                     printf(">>>Resultado evaluado = %f\n",valor);
                     /*
                     if(strcmp($1.tipo, "entero")==0){printf(" El resultado entero es %d\n", $1.entero); }
