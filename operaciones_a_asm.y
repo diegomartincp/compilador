@@ -45,10 +45,11 @@ int table_size = 0;//Se usa para conocer el índice del array disponible para in
 %token <intVal> ENT
 %token <floatVal> REAL
 %token <stringVal> TEXT
+
 //Definir la asociatividad. POR y DIV tienen mayor precedencia que MAS y MENOS
 %left MAS MENOS
 %left  POR DIV  
-%left IGUAL PUNTOCOMA
+//%left IGUAL PUNTOCOMA
 
 %start command
 %%

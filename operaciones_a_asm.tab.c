@@ -455,9 +455,9 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    55,    55,    70,    81,   121,   147,   173,   184,   191,
-     217,   243,   244,   281,   286,   291,   298,   303,   308,   314,
-     317
+       0,    56,    56,    71,    82,   122,   148,   174,   185,   192,
+     218,   244,   245,   282,   287,   292,   299,   304,   309,   315,
+     318
 };
 #endif
 
@@ -1385,7 +1385,7 @@ yyreduce:
         case 2:
 
 /* Line 1464 of yacc.c  */
-#line 55 "operaciones_a_asm.y"
+#line 56 "operaciones_a_asm.y"
     {  if(error_compilacion>=1){
                     printf("\nHa habido %d error(es) de compilacion",error_compilacion);
                 }else{
@@ -1406,7 +1406,7 @@ yyreduce:
   case 3:
 
 /* Line 1464 of yacc.c  */
-#line 70 "operaciones_a_asm.y"
+#line 71 "operaciones_a_asm.y"
     {  if(error_compilacion>=1){
                     printf("\nHa habido %d error(es) de compilacion",error_compilacion);
                 }else{
@@ -1422,7 +1422,7 @@ yyreduce:
   case 4:
 
 /* Line 1464 of yacc.c  */
-#line 81 "operaciones_a_asm.y"
+#line 82 "operaciones_a_asm.y"
     {
     printf("Asignacion\n");
         int i = lookup((yyvsp[(1) - (3)].stringVal),table_size,table);
@@ -1460,7 +1460,7 @@ yyreduce:
   case 5:
 
 /* Line 1464 of yacc.c  */
-#line 121 "operaciones_a_asm.y"
+#line 122 "operaciones_a_asm.y"
     {
         if (strcmp((yyvsp[(1) - (3)].st).tipo, "entero")==0 && strcmp((yyvsp[(3) - (3)].st).tipo, "entero")==0) { //Si ambos son enteros
             (yyval.st).a = new_node('+',"entero", (yyvsp[(1) - (3)].st).a,(yyvsp[(3) - (3)].st).a);
@@ -1492,7 +1492,7 @@ yyreduce:
   case 6:
 
 /* Line 1464 of yacc.c  */
-#line 147 "operaciones_a_asm.y"
+#line 148 "operaciones_a_asm.y"
     {
         if (strcmp((yyvsp[(1) - (3)].st).tipo, "entero")==0 && strcmp((yyvsp[(3) - (3)].st).tipo, "entero")==0) { //Si ambos son enteros
             (yyval.st).a = new_node('-',"entero", (yyvsp[(1) - (3)].st).a,(yyvsp[(3) - (3)].st).a);
@@ -1524,7 +1524,7 @@ yyreduce:
   case 7:
 
 /* Line 1464 of yacc.c  */
-#line 173 "operaciones_a_asm.y"
+#line 174 "operaciones_a_asm.y"
     {
         if (strcmp((yyvsp[(1) - (3)].st).tipo, "texto")==0 && strcmp((yyvsp[(3) - (3)].st).tipo, "texto")==0){
             (yyval.st).texto = strcat((yyvsp[(1) - (3)].st).texto, (yyvsp[(3) - (3)].st).texto);
@@ -1541,14 +1541,14 @@ yyreduce:
   case 8:
 
 /* Line 1464 of yacc.c  */
-#line 184 "operaciones_a_asm.y"
+#line 185 "operaciones_a_asm.y"
     {(yyval.st) = (yyvsp[(1) - (1)].st); ;}
     break;
 
   case 9:
 
 /* Line 1464 of yacc.c  */
-#line 191 "operaciones_a_asm.y"
+#line 192 "operaciones_a_asm.y"
     {
         if (strcmp((yyvsp[(1) - (3)].st).tipo, "entero")==0 && strcmp((yyvsp[(3) - (3)].st).tipo, "entero")==0) { //Si ambos son enteros
             (yyval.st).a = new_node('*',"entero", (yyvsp[(1) - (3)].st).a,(yyvsp[(3) - (3)].st).a);
@@ -1580,7 +1580,7 @@ yyreduce:
   case 10:
 
 /* Line 1464 of yacc.c  */
-#line 217 "operaciones_a_asm.y"
+#line 218 "operaciones_a_asm.y"
     {
         if (strcmp((yyvsp[(1) - (3)].st).tipo, "entero")==0 && strcmp((yyvsp[(3) - (3)].st).tipo, "entero")==0) { //Si ambos son enteros
             (yyval.st).a = new_node('/',"real", (yyvsp[(1) - (3)].st).a,(yyvsp[(3) - (3)].st).a); 
@@ -1612,14 +1612,14 @@ yyreduce:
   case 11:
 
 /* Line 1464 of yacc.c  */
-#line 243 "operaciones_a_asm.y"
+#line 244 "operaciones_a_asm.y"
     {(yyval.st) = (yyvsp[(1) - (1)].st);;}
     break;
 
   case 12:
 
 /* Line 1464 of yacc.c  */
-#line 244 "operaciones_a_asm.y"
+#line 245 "operaciones_a_asm.y"
     {
         //Hemos encontrado un identificador, hay que ver si está en la tabla para recogerlo y sino devolver un error
         int i = lookup((yyvsp[(1) - (1)].stringVal),table_size,table); //lo buscamos
@@ -1658,7 +1658,7 @@ yyreduce:
   case 13:
 
 /* Line 1464 of yacc.c  */
-#line 281 "operaciones_a_asm.y"
+#line 282 "operaciones_a_asm.y"
     {
             (yyval.st).entero = (yyvsp[(1) - (1)].intVal); //Asignar el valor a .entero
             (yyval.st).a = new_leaf_num((yyvsp[(1) - (1)].intVal),"entero");    
@@ -1669,7 +1669,7 @@ yyreduce:
   case 14:
 
 /* Line 1464 of yacc.c  */
-#line 286 "operaciones_a_asm.y"
+#line 287 "operaciones_a_asm.y"
     {
             (yyval.st).entero = (yyvsp[(2) - (2)].intVal);
             (yyval.st).a = new_leaf_num((yyvsp[(2) - (2)].intVal),"entero");
@@ -1680,7 +1680,7 @@ yyreduce:
   case 15:
 
 /* Line 1464 of yacc.c  */
-#line 291 "operaciones_a_asm.y"
+#line 292 "operaciones_a_asm.y"
     {
             (yyval.st).entero = -(yyvsp[(2) - (2)].intVal);
             (yyval.st).a = new_leaf_num(-(yyvsp[(2) - (2)].intVal),"entero");
@@ -1691,7 +1691,7 @@ yyreduce:
   case 16:
 
 /* Line 1464 of yacc.c  */
-#line 298 "operaciones_a_asm.y"
+#line 299 "operaciones_a_asm.y"
     {
             (yyval.st).real = (yyvsp[(1) - (1)].floatVal);
             (yyval.st).a = new_leaf_num((yyvsp[(1) - (1)].floatVal),"real");
@@ -1702,7 +1702,7 @@ yyreduce:
   case 17:
 
 /* Line 1464 of yacc.c  */
-#line 303 "operaciones_a_asm.y"
+#line 304 "operaciones_a_asm.y"
     {
             (yyval.st).real = (yyvsp[(2) - (2)].floatVal);
             (yyval.st).a = new_leaf_num((yyvsp[(2) - (2)].floatVal),"real");
@@ -1713,7 +1713,7 @@ yyreduce:
   case 18:
 
 /* Line 1464 of yacc.c  */
-#line 308 "operaciones_a_asm.y"
+#line 309 "operaciones_a_asm.y"
     {
                 (yyval.st).real = -(yyvsp[(2) - (2)].floatVal);
                 (yyval.st).a = new_leaf_num(-(yyvsp[(2) - (2)].floatVal),"real");
@@ -1724,7 +1724,7 @@ yyreduce:
   case 19:
 
 /* Line 1464 of yacc.c  */
-#line 314 "operaciones_a_asm.y"
+#line 315 "operaciones_a_asm.y"
     {(yyval.st) = (yyvsp[(2) - (3)].st);//Se hace una copia
                         printf( "PARENTESIS \n");;}
     break;
@@ -1732,7 +1732,7 @@ yyreduce:
   case 20:
 
 /* Line 1464 of yacc.c  */
-#line 317 "operaciones_a_asm.y"
+#line 318 "operaciones_a_asm.y"
     {(yyval.st).texto = (yyvsp[(2) - (3)].stringVal);
             (yyval.st).tipo="texto";
             printf(" TEXTO %s\n", (yyval.st).texto);;}
@@ -1953,7 +1953,7 @@ yyreturn:
 
 
 /* Line 1684 of yacc.c  */
-#line 322 "operaciones_a_asm.y"
+#line 323 "operaciones_a_asm.y"
 
 
 main()

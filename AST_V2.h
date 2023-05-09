@@ -158,7 +158,7 @@ double eval(struct nodo *a) {
         liberarRegistro(a->r);
     break;
       case '*':
-        printf("-> multiplicacion");
+        printf("-> multiplicacion\n");
         v = eval(a->l) * eval(a->r); 
 
         //Sentencia de la multiplicación en ASM
@@ -169,7 +169,7 @@ double eval(struct nodo *a) {
         liberarRegistro(a->r);
     break;
       case '/':
-         printf("-> division");
+         printf("-> division\n");
         v = eval(a->l) / eval(a->r); 
 
         //Sentencia de la multiplicación en ASM
