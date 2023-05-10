@@ -1,0 +1,359 @@
+Terminals unused in grammar
+
+   POR
+   DIV
+   MODULO
+   EXPON
+   CONCAT
+   IGUAL
+   PUNTOCOMA
+   OSI
+   SINO
+
+
+Grammar
+
+    0 $accept: command $end
+
+    1 command: SI PAR_OP comparacion PAR_CL FIN
+
+    2 comparacion: factor MAYORQUE factor
+    3            | factor MENORQUE factor
+    4            | factor IGUALIGUAL factor
+    5            | factor DIFERENTE factor
+    6            | factor MAYORIGUAL factor
+    7            | factor MENORIGUAL factor
+
+    8 factor: ENT
+    9       | MAS ENT
+   10       | MENOS ENT
+   11       | REAL
+   12       | MAS REAL
+   13       | MENOS REAL
+   14       | COMILLA TEXT COMILLA
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+MAS (258) 9 12
+MENOS (259) 10 13
+POR (260)
+DIV (261)
+MODULO (262)
+EXPON (263)
+PAR_OP (264) 1
+PAR_CL (265) 1
+CONCAT (266)
+COMILLA (267) 14
+IGUAL (268)
+IGUALIGUAL (269) 4
+DIFERENTE (270) 5
+MENORIGUAL (271) 7
+MAYORIGUAL (272) 6
+PUNTOCOMA (273)
+SI (274) 1
+OSI (275)
+SINO (276)
+FIN (277) 1
+MAYORQUE (278) 2
+MENORQUE (279) 3
+ENT (280) 8 9 10
+REAL (281) 11 12 13
+TEXT (282) 14
+
+
+Nonterminals, with rules where they appear
+
+$accept (28)
+    on left: 0
+command (29)
+    on left: 1, on right: 0
+comparacion (30)
+    on left: 2 3 4 5 6 7, on right: 1
+factor (31)
+    on left: 8 9 10 11 12 13 14, on right: 2 3 4 5 6 7
+
+
+state 0
+
+    0 $accept: . command $end
+
+    SI  shift, and go to state 1
+
+    command  go to state 2
+
+
+state 1
+
+    1 command: SI . PAR_OP comparacion PAR_CL FIN
+
+    PAR_OP  shift, and go to state 3
+
+
+state 2
+
+    0 $accept: command . $end
+
+    $end  shift, and go to state 4
+
+
+state 3
+
+    1 command: SI PAR_OP . comparacion PAR_CL FIN
+
+    MAS      shift, and go to state 5
+    MENOS    shift, and go to state 6
+    COMILLA  shift, and go to state 7
+    ENT      shift, and go to state 8
+    REAL     shift, and go to state 9
+
+    comparacion  go to state 10
+    factor       go to state 11
+
+
+state 4
+
+    0 $accept: command $end .
+
+    $default  accept
+
+
+state 5
+
+    9 factor: MAS . ENT
+   12       | MAS . REAL
+
+    ENT   shift, and go to state 12
+    REAL  shift, and go to state 13
+
+
+state 6
+
+   10 factor: MENOS . ENT
+   13       | MENOS . REAL
+
+    ENT   shift, and go to state 14
+    REAL  shift, and go to state 15
+
+
+state 7
+
+   14 factor: COMILLA . TEXT COMILLA
+
+    TEXT  shift, and go to state 16
+
+
+state 8
+
+    8 factor: ENT .
+
+    $default  reduce using rule 8 (factor)
+
+
+state 9
+
+   11 factor: REAL .
+
+    $default  reduce using rule 11 (factor)
+
+
+state 10
+
+    1 command: SI PAR_OP comparacion . PAR_CL FIN
+
+    PAR_CL  shift, and go to state 17
+
+
+state 11
+
+    2 comparacion: factor . MAYORQUE factor
+    3            | factor . MENORQUE factor
+    4            | factor . IGUALIGUAL factor
+    5            | factor . DIFERENTE factor
+    6            | factor . MAYORIGUAL factor
+    7            | factor . MENORIGUAL factor
+
+    IGUALIGUAL  shift, and go to state 18
+    DIFERENTE   shift, and go to state 19
+    MENORIGUAL  shift, and go to state 20
+    MAYORIGUAL  shift, and go to state 21
+    MAYORQUE    shift, and go to state 22
+    MENORQUE    shift, and go to state 23
+
+
+state 12
+
+    9 factor: MAS ENT .
+
+    $default  reduce using rule 9 (factor)
+
+
+state 13
+
+   12 factor: MAS REAL .
+
+    $default  reduce using rule 12 (factor)
+
+
+state 14
+
+   10 factor: MENOS ENT .
+
+    $default  reduce using rule 10 (factor)
+
+
+state 15
+
+   13 factor: MENOS REAL .
+
+    $default  reduce using rule 13 (factor)
+
+
+state 16
+
+   14 factor: COMILLA TEXT . COMILLA
+
+    COMILLA  shift, and go to state 24
+
+
+state 17
+
+    1 command: SI PAR_OP comparacion PAR_CL . FIN
+
+    FIN  shift, and go to state 25
+
+
+state 18
+
+    4 comparacion: factor IGUALIGUAL . factor
+
+    MAS      shift, and go to state 5
+    MENOS    shift, and go to state 6
+    COMILLA  shift, and go to state 7
+    ENT      shift, and go to state 8
+    REAL     shift, and go to state 9
+
+    factor  go to state 26
+
+
+state 19
+
+    5 comparacion: factor DIFERENTE . factor
+
+    MAS      shift, and go to state 5
+    MENOS    shift, and go to state 6
+    COMILLA  shift, and go to state 7
+    ENT      shift, and go to state 8
+    REAL     shift, and go to state 9
+
+    factor  go to state 27
+
+
+state 20
+
+    7 comparacion: factor MENORIGUAL . factor
+
+    MAS      shift, and go to state 5
+    MENOS    shift, and go to state 6
+    COMILLA  shift, and go to state 7
+    ENT      shift, and go to state 8
+    REAL     shift, and go to state 9
+
+    factor  go to state 28
+
+
+state 21
+
+    6 comparacion: factor MAYORIGUAL . factor
+
+    MAS      shift, and go to state 5
+    MENOS    shift, and go to state 6
+    COMILLA  shift, and go to state 7
+    ENT      shift, and go to state 8
+    REAL     shift, and go to state 9
+
+    factor  go to state 29
+
+
+state 22
+
+    2 comparacion: factor MAYORQUE . factor
+
+    MAS      shift, and go to state 5
+    MENOS    shift, and go to state 6
+    COMILLA  shift, and go to state 7
+    ENT      shift, and go to state 8
+    REAL     shift, and go to state 9
+
+    factor  go to state 30
+
+
+state 23
+
+    3 comparacion: factor MENORQUE . factor
+
+    MAS      shift, and go to state 5
+    MENOS    shift, and go to state 6
+    COMILLA  shift, and go to state 7
+    ENT      shift, and go to state 8
+    REAL     shift, and go to state 9
+
+    factor  go to state 31
+
+
+state 24
+
+   14 factor: COMILLA TEXT COMILLA .
+
+    $default  reduce using rule 14 (factor)
+
+
+state 25
+
+    1 command: SI PAR_OP comparacion PAR_CL FIN .
+
+    $default  reduce using rule 1 (command)
+
+
+state 26
+
+    4 comparacion: factor IGUALIGUAL factor .
+
+    $default  reduce using rule 4 (comparacion)
+
+
+state 27
+
+    5 comparacion: factor DIFERENTE factor .
+
+    $default  reduce using rule 5 (comparacion)
+
+
+state 28
+
+    7 comparacion: factor MENORIGUAL factor .
+
+    $default  reduce using rule 7 (comparacion)
+
+
+state 29
+
+    6 comparacion: factor MAYORIGUAL factor .
+
+    $default  reduce using rule 6 (comparacion)
+
+
+state 30
+
+    2 comparacion: factor MAYORQUE factor .
+
+    $default  reduce using rule 2 (comparacion)
+
+
+state 31
+
+    3 comparacion: factor MENORQUE factor .
+
+    $default  reduce using rule 3 (comparacion)

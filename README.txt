@@ -27,3 +27,8 @@ gcc -o calculadora_variables  controles_variables.tab.c  controles_variables.lex
 bison -d -v controles_variables_AST.y
 flex -o  controles_variables_AST.lex.c  controles_variables_AST.flex
 gcc -o controles_variables_AST.exe  controles_variables_AST.tab.c  controles_variables_AST.lex.c
+
+# Statements
+bison -d -v statements.y
+flex -o  statements.lex.c  statements.flex
+gcc -o statements.exe  statements.tab.c  statements.lex.c
