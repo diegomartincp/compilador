@@ -32,3 +32,8 @@ gcc -o ast  controles_variables_ast.tab.c  controles_variables_ast.lex.c
 bison -d -v operaciones_a_asm.y
 flex -o  operaciones_a_asm.lex.c  operaciones_a_asm.flex
 gcc -o generarcodigo  operaciones_a_asm.tab.c  operaciones_a_asm.lex.c
+
+# 7 GRAMATICA
+bison -d -v gramatica.y
+flex -o  gramatica.lex.c  gramatica.flex
+gcc -o gramatica  gramatica.tab.c  gramatica.lex.c
