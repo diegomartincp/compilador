@@ -34,7 +34,7 @@ int table_size = 0;//Se usa para conocer el índice del array disponible para in
 
 
 /* Declarar tokens recogidos de FLEX*/
-%token MAS MENOS POR DIV LPAREN RPAREN CONCAT COMILLA IGUAL SI OSI SINO MIENTRAS FIN DOBLEAMPERSAN DOBLEBARRA 
+%token MAS MENOS POR DIV LPAREN RPAREN CONCAT COMILLA IGUAL SI OSI SINO MIENTRAS FIN DOBLEAMPERSAN DOBLEBARRA IMPRIMIR
 %token EXCLAMACION MAYQUE MENQUE MODULO EXPON
 %token PUNTOCOMA
 
@@ -80,6 +80,13 @@ statement:
     | mientras_statement {
         printf("Mientras statement \n")
     }
+    | imprimir_statement {
+        printf("Mientras statement \n")
+    }
+    ;
+
+imprimir_statement: IMPRIMIR LPAREN TEXT RPAREN
+    | IMPRIMIR LPAREN exp RPAREN
     ;
 
 asignacion_statement:
