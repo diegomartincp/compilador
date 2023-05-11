@@ -28,6 +28,8 @@ extern YYSTYPE yylval;
 "sino" return SINO;
 "mientras"  return MIENTRAS;
 "fin" return FIN;
+escribir|imprimir|poner return IMPRIMIR;
+
 
 [0-9]+          {yylval.intVal = atoi(yytext); return ENT;}
 [0-9]+"."[0-9]+ {yylval.floatVal = atof(yytext); return REAL;}
