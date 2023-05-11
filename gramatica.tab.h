@@ -49,17 +49,20 @@
      IGUAL = 266,
      SI = 267,
      OSI = 268,
-     MIENTRAS = 269,
-     FIN = 270,
-     DOBLEAMPERSAN = 271,
-     DOBLEBARRA = 272,
-     EXCLAMACION = 273,
-     MAYQUE = 274,
-     MENQUE = 275,
-     PUNTOCOMA = 276,
-     ENT = 277,
-     REAL = 278,
-     TEXT = 279
+     SINO = 269,
+     MIENTRAS = 270,
+     FIN = 271,
+     DOBLEAMPERSAN = 272,
+     DOBLEBARRA = 273,
+     EXCLAMACION = 274,
+     MAYQUE = 275,
+     MENQUE = 276,
+     MODULO = 277,
+     EXPON = 278,
+     PUNTOCOMA = 279,
+     ENT = 280,
+     REAL = 281,
+     TEXT = 282
    };
 #endif
 
@@ -70,7 +73,7 @@ typedef union YYSTYPE
 {
 
 /* Line 1685 of yacc.c  */
-#line 9 "gramatica.y"
+#line 13 "gramatica.y"
 
   int intVal;
   float floatVal;
@@ -86,7 +89,7 @@ typedef union YYSTYPE
 
 
 /* Line 1685 of yacc.c  */
-#line 90 "gramatica.tab.h"
+#line 93 "gramatica.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
