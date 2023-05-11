@@ -39,7 +39,7 @@ int table_size = 0;//Se usa para conocer el índice del array disponible para in
 %token PUNTOCOMA
 
 /* Los no terminales hacen uso de la estructura */
-%type <st> statement_list term factor statement exp asignacion_statement si_statement osi_list osi mientras_statement
+%type <st> statement_list term factor statement exp asignacion_statement si_statement osi_list osi mientras_statement imprimir_statement
 %type <st> condicion_list condicion 
 
 %token <intVal> ENT
@@ -85,8 +85,10 @@ statement:
     }
     ;
 
-imprimir_statement: IMPRIMIR LPAREN TEXT RPAREN
-    | IMPRIMIR LPAREN exp RPAREN
+imprimir_statement: IMPRIMIR LPAREN exp RPAREN{ //imprimir un identificador
+
+
+            }
     ;
 
 asignacion_statement:

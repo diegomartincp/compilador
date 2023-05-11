@@ -54,15 +54,16 @@
      FIN = 271,
      DOBLEAMPERSAN = 272,
      DOBLEBARRA = 273,
-     EXCLAMACION = 274,
-     MAYQUE = 275,
-     MENQUE = 276,
-     MODULO = 277,
-     EXPON = 278,
-     PUNTOCOMA = 279,
-     ENT = 280,
-     REAL = 281,
-     TEXT = 282
+     IMPRIMIR = 274,
+     EXCLAMACION = 275,
+     MAYQUE = 276,
+     MENQUE = 277,
+     MODULO = 278,
+     EXPON = 279,
+     PUNTOCOMA = 280,
+     ENT = 281,
+     REAL = 282,
+     TEXT = 283
    };
 #endif
 
@@ -89,7 +90,7 @@ typedef union YYSTYPE
 
 
 /* Line 1685 of yacc.c  */
-#line 93 "gramatica.tab.h"
+#line 94 "gramatica.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

@@ -1,7 +1,7 @@
 %option noyywrap
 
 %{
-#include "GRAMATICA.tab.h"
+#include "gramatica.tab.h"
 extern YYSTYPE yylval;
 %}
 %%
