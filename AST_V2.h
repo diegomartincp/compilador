@@ -216,6 +216,17 @@ double eval(struct nodo *a) {
         liberarRegistro(a->l);
         liberarRegistro(a->r);
     break; 
+      case '>':
+         printf("-> MAYOR QUE\n");
+        v = eval(a->l) > eval(a->r);
+
+        //Comparación de punto flotante de $f1 > $f2
+        fprintf(yyout,"  sgt $f%d, $f%d, $f%d\n",a->registro,a->l->registro,a->r->registro);   
+
+        //Liberar los registros de los nodos L y R
+        liberarRegistro(a->l);
+        liberarRegistro(a->r);
+    break;
     default: printf("Error: Nodo desconocido %c\n", a->nodetype); 
    }
   return v;
