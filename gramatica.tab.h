@@ -63,7 +63,8 @@
      PUNTOCOMA = 280,
      ENT = 281,
      REAL = 282,
-     TEXT = 283
+     TEXT = 283,
+     ID = 284
    };
 #endif
 
@@ -90,7 +91,7 @@ typedef union YYSTYPE
 
 
 /* Line 1685 of yacc.c  */
-#line 94 "gramatica.tab.h"
+#line 95 "gramatica.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

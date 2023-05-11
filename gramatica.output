@@ -1,5 +1,6 @@
 Terminals unused in grammar
 
+   COMILLA
    SINO
    PUNTOCOMA
 
@@ -20,7 +21,7 @@ Grammar
 
     8 imprimir_statement: IMPRIMIR LPAREN exp RPAREN
 
-    9 asignacion_statement: TEXT IGUAL exp
+    9 asignacion_statement: ID IGUAL exp
 
    10 si_statement: SI LPAREN condicion_list RPAREN statement_list osi_list FIN
    11             | SI LPAREN condicion_list RPAREN statement_list FIN
@@ -53,7 +54,7 @@ Grammar
    31     | term MODULO factor
    32     | term EXPON factor
    33     | factor
-   34     | TEXT
+   34     | ID
 
    35 factor: ENT
    36       | MENOS ENT
@@ -61,7 +62,7 @@ Grammar
    38       | MAS REAL
    39       | MENOS REAL
    40       | LPAREN exp RPAREN
-   41       | COMILLA TEXT COMILLA
+   41       | TEXT
 
 
 Terminals, with rules where they appear
@@ -75,7 +76,7 @@ DIV (261) 30
 LPAREN (262) 8 10 11 14 15 40
 RPAREN (263) 8 10 11 14 15 40
 CONCAT (264) 27
-COMILLA (265) 41
+COMILLA (265)
 IGUAL (266) 9 22 23 24
 SI (267) 10 11
 OSI (268) 14
@@ -93,40 +94,41 @@ EXPON (279) 32
 PUNTOCOMA (280)
 ENT (281) 35 36
 REAL (282) 37 38 39
-TEXT (283) 9 34 41
+TEXT (283) 41
+ID (284) 9 34
 
 
 Nonterminals, with rules where they appear
 
-$accept (29)
+$accept (30)
     on left: 0
-program (30)
+program (31)
     on left: 1, on right: 0
-statement_list (31)
+statement_list (32)
     on left: 2 3, on right: 1 3 10 11 14 15
-statement (32)
+statement (33)
     on left: 4 5 6 7, on right: 2 3
-imprimir_statement (33)
+imprimir_statement (34)
     on left: 8, on right: 7
-asignacion_statement (34)
+asignacion_statement (35)
     on left: 9, on right: 4
-si_statement (35)
+si_statement (36)
     on left: 10 11, on right: 5
-osi_list (36)
+osi_list (37)
     on left: 12 13, on right: 10 13
-osi (37)
+osi (38)
     on left: 14, on right: 12 13
-mientras_statement (38)
+mientras_statement (39)
     on left: 15, on right: 6
-condicion_list (39)
+condicion_list (40)
     on left: 16 17 18 19, on right: 10 11 14 15 16 17
-condicion (40)
+condicion (41)
     on left: 20 21 22 23 24, on right: 16 17 18 19
-exp (41)
+exp (42)
     on left: 25 26 27 28, on right: 8 9 20 21 22 23 24 25 26 27 40
-term (42)
+term (43)
     on left: 29 30 31 32 33 34, on right: 25 26 27 28 29 30 31 32
-factor (43)
+factor (44)
     on left: 35 36 37 38 39 40 41, on right: 29 30 31 32 33
 
 
@@ -137,7 +139,7 @@ state 0
     SI        shift, and go to state 1
     MIENTRAS  shift, and go to state 2
     IMPRIMIR  shift, and go to state 3
-    TEXT      shift, and go to state 4
+    ID        shift, and go to state 4
 
     program               go to state 5
     statement_list        go to state 6
@@ -172,7 +174,7 @@ state 3
 
 state 4
 
-    9 asignacion_statement: TEXT . IGUAL exp
+    9 asignacion_statement: ID . IGUAL exp
 
     IGUAL  shift, and go to state 15
 
@@ -192,7 +194,7 @@ state 6
     SI        shift, and go to state 1
     MIENTRAS  shift, and go to state 2
     IMPRIMIR  shift, and go to state 3
-    TEXT      shift, and go to state 4
+    ID        shift, and go to state 4
 
     $default  reduce using rule 1 (program)
 
@@ -246,11 +248,11 @@ state 12
     MAS          shift, and go to state 18
     MENOS        shift, and go to state 19
     LPAREN       shift, and go to state 20
-    COMILLA      shift, and go to state 21
-    EXCLAMACION  shift, and go to state 22
-    ENT          shift, and go to state 23
-    REAL         shift, and go to state 24
-    TEXT         shift, and go to state 25
+    EXCLAMACION  shift, and go to state 21
+    ENT          shift, and go to state 22
+    REAL         shift, and go to state 23
+    TEXT         shift, and go to state 24
+    ID           shift, and go to state 25
 
     condicion_list  go to state 26
     condicion       go to state 27
@@ -266,11 +268,11 @@ state 13
     MAS          shift, and go to state 18
     MENOS        shift, and go to state 19
     LPAREN       shift, and go to state 20
-    COMILLA      shift, and go to state 21
-    EXCLAMACION  shift, and go to state 22
-    ENT          shift, and go to state 23
-    REAL         shift, and go to state 24
-    TEXT         shift, and go to state 25
+    EXCLAMACION  shift, and go to state 21
+    ENT          shift, and go to state 22
+    REAL         shift, and go to state 23
+    TEXT         shift, and go to state 24
+    ID           shift, and go to state 25
 
     condicion_list  go to state 31
     condicion       go to state 27
@@ -283,13 +285,13 @@ state 14
 
     8 imprimir_statement: IMPRIMIR LPAREN . exp RPAREN
 
-    MAS      shift, and go to state 18
-    MENOS    shift, and go to state 19
-    LPAREN   shift, and go to state 20
-    COMILLA  shift, and go to state 21
-    ENT      shift, and go to state 23
-    REAL     shift, and go to state 24
-    TEXT     shift, and go to state 25
+    MAS     shift, and go to state 18
+    MENOS   shift, and go to state 19
+    LPAREN  shift, and go to state 20
+    ENT     shift, and go to state 22
+    REAL    shift, and go to state 23
+    TEXT    shift, and go to state 24
+    ID      shift, and go to state 25
 
     exp     go to state 32
     term    go to state 29
@@ -298,15 +300,15 @@ state 14
 
 state 15
 
-    9 asignacion_statement: TEXT IGUAL . exp
+    9 asignacion_statement: ID IGUAL . exp
 
-    MAS      shift, and go to state 18
-    MENOS    shift, and go to state 19
-    LPAREN   shift, and go to state 20
-    COMILLA  shift, and go to state 21
-    ENT      shift, and go to state 23
-    REAL     shift, and go to state 24
-    TEXT     shift, and go to state 25
+    MAS     shift, and go to state 18
+    MENOS   shift, and go to state 19
+    LPAREN  shift, and go to state 20
+    ENT     shift, and go to state 22
+    REAL    shift, and go to state 23
+    TEXT    shift, and go to state 24
+    ID      shift, and go to state 25
 
     exp     go to state 33
     term    go to state 29
@@ -347,13 +349,13 @@ state 20
 
    40 factor: LPAREN . exp RPAREN
 
-    MAS      shift, and go to state 18
-    MENOS    shift, and go to state 19
-    LPAREN   shift, and go to state 20
-    COMILLA  shift, and go to state 21
-    ENT      shift, and go to state 23
-    REAL     shift, and go to state 24
-    TEXT     shift, and go to state 25
+    MAS     shift, and go to state 18
+    MENOS   shift, and go to state 19
+    LPAREN  shift, and go to state 20
+    ENT     shift, and go to state 22
+    REAL    shift, and go to state 23
+    TEXT    shift, and go to state 24
+    ID      shift, and go to state 25
 
     exp     go to state 37
     term    go to state 29
@@ -362,46 +364,46 @@ state 20
 
 state 21
 
-   41 factor: COMILLA . TEXT COMILLA
-
-    TEXT  shift, and go to state 38
-
-
-state 22
-
    18 condicion_list: EXCLAMACION . condicion
 
-    MAS      shift, and go to state 18
-    MENOS    shift, and go to state 19
-    LPAREN   shift, and go to state 20
-    COMILLA  shift, and go to state 21
-    ENT      shift, and go to state 23
-    REAL     shift, and go to state 24
-    TEXT     shift, and go to state 25
+    MAS     shift, and go to state 18
+    MENOS   shift, and go to state 19
+    LPAREN  shift, and go to state 20
+    ENT     shift, and go to state 22
+    REAL    shift, and go to state 23
+    TEXT    shift, and go to state 24
+    ID      shift, and go to state 25
 
-    condicion  go to state 39
+    condicion  go to state 38
     exp        go to state 28
     term       go to state 29
     factor     go to state 30
 
 
-state 23
+state 22
 
    35 factor: ENT .
 
     $default  reduce using rule 35 (factor)
 
 
-state 24
+state 23
 
    37 factor: REAL .
 
     $default  reduce using rule 37 (factor)
 
 
+state 24
+
+   41 factor: TEXT .
+
+    $default  reduce using rule 41 (factor)
+
+
 state 25
 
-   34 term: TEXT .
+   34 term: ID .
 
     $default  reduce using rule 34 (term)
 
@@ -413,9 +415,9 @@ state 26
    16 condicion_list: condicion_list . DOBLEAMPERSAN condicion
    17               | condicion_list . DOBLEBARRA condicion
 
-    RPAREN         shift, and go to state 40
-    DOBLEAMPERSAN  shift, and go to state 41
-    DOBLEBARRA     shift, and go to state 42
+    RPAREN         shift, and go to state 39
+    DOBLEAMPERSAN  shift, and go to state 40
+    DOBLEBARRA     shift, and go to state 41
 
 
 state 27
@@ -436,12 +438,12 @@ state 28
    26    | exp . MENOS term
    27    | exp . CONCAT term
 
-    MAS     shift, and go to state 43
-    MENOS   shift, and go to state 44
-    CONCAT  shift, and go to state 45
-    IGUAL   shift, and go to state 46
-    MAYQUE  shift, and go to state 47
-    MENQUE  shift, and go to state 48
+    MAS     shift, and go to state 42
+    MENOS   shift, and go to state 43
+    CONCAT  shift, and go to state 44
+    IGUAL   shift, and go to state 45
+    MAYQUE  shift, and go to state 46
+    MENQUE  shift, and go to state 47
 
 
 state 29
@@ -452,10 +454,10 @@ state 29
    31     | term . MODULO factor
    32     | term . EXPON factor
 
-    POR     shift, and go to state 49
-    DIV     shift, and go to state 50
-    MODULO  shift, and go to state 51
-    EXPON   shift, and go to state 52
+    POR     shift, and go to state 48
+    DIV     shift, and go to state 49
+    MODULO  shift, and go to state 50
+    EXPON   shift, and go to state 51
 
     $default  reduce using rule 28 (exp)
 
@@ -473,9 +475,9 @@ state 31
    16 condicion_list: condicion_list . DOBLEAMPERSAN condicion
    17               | condicion_list . DOBLEBARRA condicion
 
-    RPAREN         shift, and go to state 53
-    DOBLEAMPERSAN  shift, and go to state 41
-    DOBLEBARRA     shift, and go to state 42
+    RPAREN         shift, and go to state 52
+    DOBLEAMPERSAN  shift, and go to state 40
+    DOBLEBARRA     shift, and go to state 41
 
 
 state 32
@@ -485,22 +487,22 @@ state 32
    26    | exp . MENOS term
    27    | exp . CONCAT term
 
-    MAS     shift, and go to state 43
-    MENOS   shift, and go to state 44
-    RPAREN  shift, and go to state 54
-    CONCAT  shift, and go to state 45
+    MAS     shift, and go to state 42
+    MENOS   shift, and go to state 43
+    RPAREN  shift, and go to state 53
+    CONCAT  shift, and go to state 44
 
 
 state 33
 
-    9 asignacion_statement: TEXT IGUAL exp .
+    9 asignacion_statement: ID IGUAL exp .
    25 exp: exp . MAS term
    26    | exp . MENOS term
    27    | exp . CONCAT term
 
-    MAS     shift, and go to state 43
-    MENOS   shift, and go to state 44
-    CONCAT  shift, and go to state 45
+    MAS     shift, and go to state 42
+    MENOS   shift, and go to state 43
+    CONCAT  shift, and go to state 44
 
     $default  reduce using rule 9 (asignacion_statement)
 
@@ -533,27 +535,20 @@ state 37
    27    | exp . CONCAT term
    40 factor: LPAREN exp . RPAREN
 
-    MAS     shift, and go to state 43
-    MENOS   shift, and go to state 44
-    RPAREN  shift, and go to state 55
-    CONCAT  shift, and go to state 45
+    MAS     shift, and go to state 42
+    MENOS   shift, and go to state 43
+    RPAREN  shift, and go to state 54
+    CONCAT  shift, and go to state 44
 
 
 state 38
-
-   41 factor: COMILLA TEXT . COMILLA
-
-    COMILLA  shift, and go to state 56
-
-
-state 39
 
    18 condicion_list: EXCLAMACION condicion .
 
     $default  reduce using rule 18 (condicion_list)
 
 
-state 40
+state 39
 
    10 si_statement: SI LPAREN condicion_list RPAREN . statement_list osi_list FIN
    11             | SI LPAREN condicion_list RPAREN . statement_list FIN
@@ -561,9 +556,9 @@ state 40
     SI        shift, and go to state 1
     MIENTRAS  shift, and go to state 2
     IMPRIMIR  shift, and go to state 3
-    TEXT      shift, and go to state 4
+    ID        shift, and go to state 4
 
-    statement_list        go to state 57
+    statement_list        go to state 55
     statement             go to state 7
     imprimir_statement    go to state 8
     asignacion_statement  go to state 9
@@ -571,19 +566,37 @@ state 40
     mientras_statement    go to state 11
 
 
-state 41
+state 40
 
    16 condicion_list: condicion_list DOBLEAMPERSAN . condicion
 
-    MAS      shift, and go to state 18
-    MENOS    shift, and go to state 19
-    LPAREN   shift, and go to state 20
-    COMILLA  shift, and go to state 21
-    ENT      shift, and go to state 23
-    REAL     shift, and go to state 24
-    TEXT     shift, and go to state 25
+    MAS     shift, and go to state 18
+    MENOS   shift, and go to state 19
+    LPAREN  shift, and go to state 20
+    ENT     shift, and go to state 22
+    REAL    shift, and go to state 23
+    TEXT    shift, and go to state 24
+    ID      shift, and go to state 25
 
-    condicion  go to state 58
+    condicion  go to state 56
+    exp        go to state 28
+    term       go to state 29
+    factor     go to state 30
+
+
+state 41
+
+   17 condicion_list: condicion_list DOBLEBARRA . condicion
+
+    MAS     shift, and go to state 18
+    MENOS   shift, and go to state 19
+    LPAREN  shift, and go to state 20
+    ENT     shift, and go to state 22
+    REAL    shift, and go to state 23
+    TEXT    shift, and go to state 24
+    ID      shift, and go to state 25
+
+    condicion  go to state 57
     exp        go to state 28
     term       go to state 29
     factor     go to state 30
@@ -591,90 +604,91 @@ state 41
 
 state 42
 
-   17 condicion_list: condicion_list DOBLEBARRA . condicion
+   25 exp: exp MAS . term
 
-    MAS      shift, and go to state 18
-    MENOS    shift, and go to state 19
-    LPAREN   shift, and go to state 20
-    COMILLA  shift, and go to state 21
-    ENT      shift, and go to state 23
-    REAL     shift, and go to state 24
-    TEXT     shift, and go to state 25
+    MAS     shift, and go to state 18
+    MENOS   shift, and go to state 19
+    LPAREN  shift, and go to state 20
+    ENT     shift, and go to state 22
+    REAL    shift, and go to state 23
+    TEXT    shift, and go to state 24
+    ID      shift, and go to state 25
 
-    condicion  go to state 59
-    exp        go to state 28
-    term       go to state 29
-    factor     go to state 30
+    term    go to state 58
+    factor  go to state 30
 
 
 state 43
 
-   25 exp: exp MAS . term
+   26 exp: exp MENOS . term
 
-    MAS      shift, and go to state 18
-    MENOS    shift, and go to state 19
-    LPAREN   shift, and go to state 20
-    COMILLA  shift, and go to state 21
-    ENT      shift, and go to state 23
-    REAL     shift, and go to state 24
-    TEXT     shift, and go to state 25
+    MAS     shift, and go to state 18
+    MENOS   shift, and go to state 19
+    LPAREN  shift, and go to state 20
+    ENT     shift, and go to state 22
+    REAL    shift, and go to state 23
+    TEXT    shift, and go to state 24
+    ID      shift, and go to state 25
 
-    term    go to state 60
+    term    go to state 59
     factor  go to state 30
 
 
 state 44
 
-   26 exp: exp MENOS . term
+   27 exp: exp CONCAT . term
 
-    MAS      shift, and go to state 18
-    MENOS    shift, and go to state 19
-    LPAREN   shift, and go to state 20
-    COMILLA  shift, and go to state 21
-    ENT      shift, and go to state 23
-    REAL     shift, and go to state 24
-    TEXT     shift, and go to state 25
+    MAS     shift, and go to state 18
+    MENOS   shift, and go to state 19
+    LPAREN  shift, and go to state 20
+    ENT     shift, and go to state 22
+    REAL    shift, and go to state 23
+    TEXT    shift, and go to state 24
+    ID      shift, and go to state 25
 
-    term    go to state 61
+    term    go to state 60
     factor  go to state 30
 
 
 state 45
 
-   27 exp: exp CONCAT . term
+   24 condicion: exp IGUAL . IGUAL exp
 
-    MAS      shift, and go to state 18
-    MENOS    shift, and go to state 19
-    LPAREN   shift, and go to state 20
-    COMILLA  shift, and go to state 21
-    ENT      shift, and go to state 23
-    REAL     shift, and go to state 24
-    TEXT     shift, and go to state 25
-
-    term    go to state 62
-    factor  go to state 30
+    IGUAL  shift, and go to state 61
 
 
 state 46
 
-   24 condicion: exp IGUAL . IGUAL exp
+   20 condicion: exp MAYQUE . exp
+   22          | exp MAYQUE . IGUAL exp
 
-    IGUAL  shift, and go to state 63
+    MAS     shift, and go to state 18
+    MENOS   shift, and go to state 19
+    LPAREN  shift, and go to state 20
+    IGUAL   shift, and go to state 62
+    ENT     shift, and go to state 22
+    REAL    shift, and go to state 23
+    TEXT    shift, and go to state 24
+    ID      shift, and go to state 25
+
+    exp     go to state 63
+    term    go to state 29
+    factor  go to state 30
 
 
 state 47
 
-   20 condicion: exp MAYQUE . exp
-   22          | exp MAYQUE . IGUAL exp
+   21 condicion: exp MENQUE . exp
+   23          | exp MENQUE . IGUAL exp
 
-    MAS      shift, and go to state 18
-    MENOS    shift, and go to state 19
-    LPAREN   shift, and go to state 20
-    COMILLA  shift, and go to state 21
-    IGUAL    shift, and go to state 64
-    ENT      shift, and go to state 23
-    REAL     shift, and go to state 24
-    TEXT     shift, and go to state 25
+    MAS     shift, and go to state 18
+    MENOS   shift, and go to state 19
+    LPAREN  shift, and go to state 20
+    IGUAL   shift, and go to state 64
+    ENT     shift, and go to state 22
+    REAL    shift, and go to state 23
+    TEXT    shift, and go to state 24
+    ID      shift, and go to state 25
 
     exp     go to state 65
     term    go to state 29
@@ -683,89 +697,70 @@ state 47
 
 state 48
 
-   21 condicion: exp MENQUE . exp
-   23          | exp MENQUE . IGUAL exp
+   29 term: term POR . factor
 
-    MAS      shift, and go to state 18
-    MENOS    shift, and go to state 19
-    LPAREN   shift, and go to state 20
-    COMILLA  shift, and go to state 21
-    IGUAL    shift, and go to state 66
-    ENT      shift, and go to state 23
-    REAL     shift, and go to state 24
-    TEXT     shift, and go to state 25
+    MAS     shift, and go to state 18
+    MENOS   shift, and go to state 19
+    LPAREN  shift, and go to state 20
+    ENT     shift, and go to state 22
+    REAL    shift, and go to state 23
+    TEXT    shift, and go to state 24
 
-    exp     go to state 67
-    term    go to state 29
-    factor  go to state 30
+    factor  go to state 66
 
 
 state 49
 
-   29 term: term POR . factor
+   30 term: term DIV . factor
 
-    MAS      shift, and go to state 18
-    MENOS    shift, and go to state 19
-    LPAREN   shift, and go to state 20
-    COMILLA  shift, and go to state 21
-    ENT      shift, and go to state 23
-    REAL     shift, and go to state 24
+    MAS     shift, and go to state 18
+    MENOS   shift, and go to state 19
+    LPAREN  shift, and go to state 20
+    ENT     shift, and go to state 22
+    REAL    shift, and go to state 23
+    TEXT    shift, and go to state 24
 
-    factor  go to state 68
+    factor  go to state 67
 
 
 state 50
 
-   30 term: term DIV . factor
+   31 term: term MODULO . factor
 
-    MAS      shift, and go to state 18
-    MENOS    shift, and go to state 19
-    LPAREN   shift, and go to state 20
-    COMILLA  shift, and go to state 21
-    ENT      shift, and go to state 23
-    REAL     shift, and go to state 24
+    MAS     shift, and go to state 18
+    MENOS   shift, and go to state 19
+    LPAREN  shift, and go to state 20
+    ENT     shift, and go to state 22
+    REAL    shift, and go to state 23
+    TEXT    shift, and go to state 24
 
-    factor  go to state 69
+    factor  go to state 68
 
 
 state 51
 
-   31 term: term MODULO . factor
+   32 term: term EXPON . factor
 
-    MAS      shift, and go to state 18
-    MENOS    shift, and go to state 19
-    LPAREN   shift, and go to state 20
-    COMILLA  shift, and go to state 21
-    ENT      shift, and go to state 23
-    REAL     shift, and go to state 24
+    MAS     shift, and go to state 18
+    MENOS   shift, and go to state 19
+    LPAREN  shift, and go to state 20
+    ENT     shift, and go to state 22
+    REAL    shift, and go to state 23
+    TEXT    shift, and go to state 24
 
-    factor  go to state 70
+    factor  go to state 69
 
 
 state 52
-
-   32 term: term EXPON . factor
-
-    MAS      shift, and go to state 18
-    MENOS    shift, and go to state 19
-    LPAREN   shift, and go to state 20
-    COMILLA  shift, and go to state 21
-    ENT      shift, and go to state 23
-    REAL     shift, and go to state 24
-
-    factor  go to state 71
-
-
-state 53
 
    15 mientras_statement: MIENTRAS LPAREN condicion_list RPAREN . statement_list FIN
 
     SI        shift, and go to state 1
     MIENTRAS  shift, and go to state 2
     IMPRIMIR  shift, and go to state 3
-    TEXT      shift, and go to state 4
+    ID        shift, and go to state 4
 
-    statement_list        go to state 72
+    statement_list        go to state 70
     statement             go to state 7
     imprimir_statement    go to state 8
     asignacion_statement  go to state 9
@@ -773,64 +768,57 @@ state 53
     mientras_statement    go to state 11
 
 
-state 54
+state 53
 
     8 imprimir_statement: IMPRIMIR LPAREN exp RPAREN .
 
     $default  reduce using rule 8 (imprimir_statement)
 
 
-state 55
+state 54
 
    40 factor: LPAREN exp RPAREN .
 
     $default  reduce using rule 40 (factor)
 
 
-state 56
-
-   41 factor: COMILLA TEXT COMILLA .
-
-    $default  reduce using rule 41 (factor)
-
-
-state 57
+state 55
 
     3 statement_list: statement_list . statement
    10 si_statement: SI LPAREN condicion_list RPAREN statement_list . osi_list FIN
    11             | SI LPAREN condicion_list RPAREN statement_list . FIN
 
     SI        shift, and go to state 1
-    OSI       shift, and go to state 73
+    OSI       shift, and go to state 71
     MIENTRAS  shift, and go to state 2
-    FIN       shift, and go to state 74
+    FIN       shift, and go to state 72
     IMPRIMIR  shift, and go to state 3
-    TEXT      shift, and go to state 4
+    ID        shift, and go to state 4
 
     statement             go to state 17
     imprimir_statement    go to state 8
     asignacion_statement  go to state 9
     si_statement          go to state 10
-    osi_list              go to state 75
-    osi                   go to state 76
+    osi_list              go to state 73
+    osi                   go to state 74
     mientras_statement    go to state 11
 
 
-state 58
+state 56
 
    16 condicion_list: condicion_list DOBLEAMPERSAN condicion .
 
     $default  reduce using rule 16 (condicion_list)
 
 
-state 59
+state 57
 
    17 condicion_list: condicion_list DOBLEBARRA condicion .
 
     $default  reduce using rule 17 (condicion_list)
 
 
-state 60
+state 58
 
    25 exp: exp MAS term .
    29 term: term . POR factor
@@ -838,15 +826,15 @@ state 60
    31     | term . MODULO factor
    32     | term . EXPON factor
 
-    POR     shift, and go to state 49
-    DIV     shift, and go to state 50
-    MODULO  shift, and go to state 51
-    EXPON   shift, and go to state 52
+    POR     shift, and go to state 48
+    DIV     shift, and go to state 49
+    MODULO  shift, and go to state 50
+    EXPON   shift, and go to state 51
 
     $default  reduce using rule 25 (exp)
 
 
-state 61
+state 59
 
    26 exp: exp MENOS term .
    29 term: term . POR factor
@@ -854,15 +842,15 @@ state 61
    31     | term . MODULO factor
    32     | term . EXPON factor
 
-    POR     shift, and go to state 49
-    DIV     shift, and go to state 50
-    MODULO  shift, and go to state 51
-    EXPON   shift, and go to state 52
+    POR     shift, and go to state 48
+    DIV     shift, and go to state 49
+    MODULO  shift, and go to state 50
+    EXPON   shift, and go to state 51
 
     $default  reduce using rule 26 (exp)
 
 
-state 62
+state 60
 
    27 exp: exp CONCAT term .
    29 term: term . POR factor
@@ -870,131 +858,131 @@ state 62
    31     | term . MODULO factor
    32     | term . EXPON factor
 
-    POR     shift, and go to state 49
-    DIV     shift, and go to state 50
-    MODULO  shift, and go to state 51
-    EXPON   shift, and go to state 52
+    POR     shift, and go to state 48
+    DIV     shift, and go to state 49
+    MODULO  shift, and go to state 50
+    EXPON   shift, and go to state 51
 
     $default  reduce using rule 27 (exp)
 
 
-state 63
+state 61
 
    24 condicion: exp IGUAL IGUAL . exp
 
-    MAS      shift, and go to state 18
-    MENOS    shift, and go to state 19
-    LPAREN   shift, and go to state 20
-    COMILLA  shift, and go to state 21
-    ENT      shift, and go to state 23
-    REAL     shift, and go to state 24
-    TEXT     shift, and go to state 25
+    MAS     shift, and go to state 18
+    MENOS   shift, and go to state 19
+    LPAREN  shift, and go to state 20
+    ENT     shift, and go to state 22
+    REAL    shift, and go to state 23
+    TEXT    shift, and go to state 24
+    ID      shift, and go to state 25
 
-    exp     go to state 77
+    exp     go to state 75
     term    go to state 29
     factor  go to state 30
 
 
-state 64
+state 62
 
    22 condicion: exp MAYQUE IGUAL . exp
 
-    MAS      shift, and go to state 18
-    MENOS    shift, and go to state 19
-    LPAREN   shift, and go to state 20
-    COMILLA  shift, and go to state 21
-    ENT      shift, and go to state 23
-    REAL     shift, and go to state 24
-    TEXT     shift, and go to state 25
+    MAS     shift, and go to state 18
+    MENOS   shift, and go to state 19
+    LPAREN  shift, and go to state 20
+    ENT     shift, and go to state 22
+    REAL    shift, and go to state 23
+    TEXT    shift, and go to state 24
+    ID      shift, and go to state 25
 
-    exp     go to state 78
+    exp     go to state 76
     term    go to state 29
     factor  go to state 30
 
 
-state 65
+state 63
 
    20 condicion: exp MAYQUE exp .
    25 exp: exp . MAS term
    26    | exp . MENOS term
    27    | exp . CONCAT term
 
-    MAS     shift, and go to state 43
-    MENOS   shift, and go to state 44
-    CONCAT  shift, and go to state 45
+    MAS     shift, and go to state 42
+    MENOS   shift, and go to state 43
+    CONCAT  shift, and go to state 44
 
     $default  reduce using rule 20 (condicion)
 
 
-state 66
+state 64
 
    23 condicion: exp MENQUE IGUAL . exp
 
-    MAS      shift, and go to state 18
-    MENOS    shift, and go to state 19
-    LPAREN   shift, and go to state 20
-    COMILLA  shift, and go to state 21
-    ENT      shift, and go to state 23
-    REAL     shift, and go to state 24
-    TEXT     shift, and go to state 25
+    MAS     shift, and go to state 18
+    MENOS   shift, and go to state 19
+    LPAREN  shift, and go to state 20
+    ENT     shift, and go to state 22
+    REAL    shift, and go to state 23
+    TEXT    shift, and go to state 24
+    ID      shift, and go to state 25
 
-    exp     go to state 79
+    exp     go to state 77
     term    go to state 29
     factor  go to state 30
 
 
-state 67
+state 65
 
    21 condicion: exp MENQUE exp .
    25 exp: exp . MAS term
    26    | exp . MENOS term
    27    | exp . CONCAT term
 
-    MAS     shift, and go to state 43
-    MENOS   shift, and go to state 44
-    CONCAT  shift, and go to state 45
+    MAS     shift, and go to state 42
+    MENOS   shift, and go to state 43
+    CONCAT  shift, and go to state 44
 
     $default  reduce using rule 21 (condicion)
 
 
-state 68
+state 66
 
    29 term: term POR factor .
 
     $default  reduce using rule 29 (term)
 
 
-state 69
+state 67
 
    30 term: term DIV factor .
 
     $default  reduce using rule 30 (term)
 
 
-state 70
+state 68
 
    31 term: term MODULO factor .
 
     $default  reduce using rule 31 (term)
 
 
-state 71
+state 69
 
    32 term: term EXPON factor .
 
     $default  reduce using rule 32 (term)
 
 
-state 72
+state 70
 
     3 statement_list: statement_list . statement
    15 mientras_statement: MIENTRAS LPAREN condicion_list RPAREN statement_list . FIN
 
     SI        shift, and go to state 1
     MIENTRAS  shift, and go to state 2
-    FIN       shift, and go to state 80
+    FIN       shift, and go to state 78
     IMPRIMIR  shift, and go to state 3
-    TEXT      shift, and go to state 4
+    ID        shift, and go to state 4
 
     statement             go to state 17
     imprimir_statement    go to state 8
@@ -1003,142 +991,142 @@ state 72
     mientras_statement    go to state 11
 
 
-state 73
+state 71
 
    14 osi: OSI . LPAREN condicion_list RPAREN statement_list
 
-    LPAREN  shift, and go to state 81
+    LPAREN  shift, and go to state 79
 
 
-state 74
+state 72
 
    11 si_statement: SI LPAREN condicion_list RPAREN statement_list FIN .
 
     $default  reduce using rule 11 (si_statement)
 
 
-state 75
+state 73
 
    10 si_statement: SI LPAREN condicion_list RPAREN statement_list osi_list . FIN
    13 osi_list: osi_list . osi
 
-    OSI  shift, and go to state 73
-    FIN  shift, and go to state 82
+    OSI  shift, and go to state 71
+    FIN  shift, and go to state 80
 
-    osi  go to state 83
+    osi  go to state 81
 
 
-state 76
+state 74
 
    12 osi_list: osi .
 
     $default  reduce using rule 12 (osi_list)
 
 
-state 77
+state 75
 
    24 condicion: exp IGUAL IGUAL exp .
    25 exp: exp . MAS term
    26    | exp . MENOS term
    27    | exp . CONCAT term
 
-    MAS     shift, and go to state 43
-    MENOS   shift, and go to state 44
-    CONCAT  shift, and go to state 45
+    MAS     shift, and go to state 42
+    MENOS   shift, and go to state 43
+    CONCAT  shift, and go to state 44
 
     $default  reduce using rule 24 (condicion)
 
 
-state 78
+state 76
 
    22 condicion: exp MAYQUE IGUAL exp .
    25 exp: exp . MAS term
    26    | exp . MENOS term
    27    | exp . CONCAT term
 
-    MAS     shift, and go to state 43
-    MENOS   shift, and go to state 44
-    CONCAT  shift, and go to state 45
+    MAS     shift, and go to state 42
+    MENOS   shift, and go to state 43
+    CONCAT  shift, and go to state 44
 
     $default  reduce using rule 22 (condicion)
 
 
-state 79
+state 77
 
    23 condicion: exp MENQUE IGUAL exp .
    25 exp: exp . MAS term
    26    | exp . MENOS term
    27    | exp . CONCAT term
 
-    MAS     shift, and go to state 43
-    MENOS   shift, and go to state 44
-    CONCAT  shift, and go to state 45
+    MAS     shift, and go to state 42
+    MENOS   shift, and go to state 43
+    CONCAT  shift, and go to state 44
 
     $default  reduce using rule 23 (condicion)
 
 
-state 80
+state 78
 
    15 mientras_statement: MIENTRAS LPAREN condicion_list RPAREN statement_list FIN .
 
     $default  reduce using rule 15 (mientras_statement)
 
 
-state 81
+state 79
 
    14 osi: OSI LPAREN . condicion_list RPAREN statement_list
 
     MAS          shift, and go to state 18
     MENOS        shift, and go to state 19
     LPAREN       shift, and go to state 20
-    COMILLA      shift, and go to state 21
-    EXCLAMACION  shift, and go to state 22
-    ENT          shift, and go to state 23
-    REAL         shift, and go to state 24
-    TEXT         shift, and go to state 25
+    EXCLAMACION  shift, and go to state 21
+    ENT          shift, and go to state 22
+    REAL         shift, and go to state 23
+    TEXT         shift, and go to state 24
+    ID           shift, and go to state 25
 
-    condicion_list  go to state 84
+    condicion_list  go to state 82
     condicion       go to state 27
     exp             go to state 28
     term            go to state 29
     factor          go to state 30
 
 
-state 82
+state 80
 
    10 si_statement: SI LPAREN condicion_list RPAREN statement_list osi_list FIN .
 
     $default  reduce using rule 10 (si_statement)
 
 
-state 83
+state 81
 
    13 osi_list: osi_list osi .
 
     $default  reduce using rule 13 (osi_list)
 
 
-state 84
+state 82
 
    14 osi: OSI LPAREN condicion_list . RPAREN statement_list
    16 condicion_list: condicion_list . DOBLEAMPERSAN condicion
    17               | condicion_list . DOBLEBARRA condicion
 
-    RPAREN         shift, and go to state 85
-    DOBLEAMPERSAN  shift, and go to state 41
-    DOBLEBARRA     shift, and go to state 42
+    RPAREN         shift, and go to state 83
+    DOBLEAMPERSAN  shift, and go to state 40
+    DOBLEBARRA     shift, and go to state 41
 
 
-state 85
+state 83
 
    14 osi: OSI LPAREN condicion_list RPAREN . statement_list
 
     SI        shift, and go to state 1
     MIENTRAS  shift, and go to state 2
     IMPRIMIR  shift, and go to state 3
-    TEXT      shift, and go to state 4
+    ID        shift, and go to state 4
 
-    statement_list        go to state 86
+    statement_list        go to state 84
     statement             go to state 7
     imprimir_statement    go to state 8
     asignacion_statement  go to state 9
@@ -1146,7 +1134,7 @@ state 85
     mientras_statement    go to state 11
 
 
-state 86
+state 84
 
     3 statement_list: statement_list . statement
    14 osi: OSI LPAREN condicion_list RPAREN statement_list .
@@ -1154,7 +1142,7 @@ state 86
     SI        shift, and go to state 1
     MIENTRAS  shift, and go to state 2
     IMPRIMIR  shift, and go to state 3
-    TEXT      shift, and go to state 4
+    ID        shift, and go to state 4
 
     $default  reduce using rule 14 (osi)
 

@@ -45,6 +45,7 @@ int table_size = 0;//Se usa para conocer el índice del array disponible para in
 %token <intVal> ENT
 %token <floatVal> REAL
 %token <stringVal> TEXT
+%token <stringVal> ID
 
 %left MAS MENOS
 %left POR DIV  
@@ -91,11 +92,11 @@ imprimir_statement: IMPRIMIR LPAREN exp RPAREN{ //imprimir un identificador
             printf(">>>IMPRIMIR %f\n",valor);
             //Ya conocemos en que registro está el valor, que será float
             imprimir($3.a);
-            }
+        }
     ;
 
 asignacion_statement:
-    TEXT IGUAL exp {
+    ID IGUAL exp {
         printf("Asignacion\n");
         double valor = iniciar_evaluacion($3.a); //Evaluar la exppresión para hacer la asignación
         printf(">>>Resultado evaluado = %f\n",valor);
@@ -447,7 +448,7 @@ OJO HAY QUE HACER ESTA OPERACIÓN EN EL AST Y ASM
 /**
 OJO HAY QUE CONTROLAR EL USO DE VARIABLES EN EL AST
 **/
-    | TEXT {
+    | ID {
             //Hemos encontrado un identificador, hay que ver si está en la tabla para recogerlo y sino devolver un error
             int i = lookup($1,table_size,table); //lo buscamos
             if(i == -1){
@@ -505,8 +506,8 @@ factor: ENT {$$.entero = $1;
     | LPAREN exp RPAREN {
             $$ = $2;
             printf("PARENTESIS\n");}
-    | COMILLA TEXT COMILLA {
-            $$.texto = $2;
+    | TEXT  {
+            $$.texto = $1;
             $$.tipo="texto";
             printf(" TEXTO %s\n", $$.texto);}
     ;

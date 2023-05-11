@@ -33,5 +33,6 @@ escribir|imprimir|poner return IMPRIMIR;
 
 [0-9]+          {yylval.intVal = atoi(yytext); return ENT;}
 [0-9]+"."[0-9]+ {yylval.floatVal = atof(yytext); return REAL;}
-[a-zA-Z]+		{yylval.stringVal=strdup(yytext); printf( yytext);return TEXT ;}
+\"([a-zA-Z0-9\s]*)\" 		{yylval.stringVal=strdup(yytext); printf( yytext);return TEXT ;}
+[a-zA-Z0-9\s]*		{yylval.stringVal=strdup(yytext); printf( yytext);return ID ;}
 %%
