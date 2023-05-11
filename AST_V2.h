@@ -251,3 +251,12 @@ double iniciar_evaluacion(struct nodo *a){
 
   return eval(a);  //Con las variables ya definidas, comienza a evaluar la operación
 }
+
+void imprimir(struct nodo *a){
+  //Preparar para imprimir
+  fprintf(yyout,"  li $v0, 2\n");   
+  //Mover del registro n al registro 12
+  fprintf(yyout,"  mov.s $f12, $f%d\n",a->registro);   
+  //Llamada al sistema
+  fprintf(yyout,"  syscall\n");   
+}

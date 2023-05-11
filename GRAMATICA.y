@@ -86,8 +86,11 @@ statement:
     ;
 
 imprimir_statement: IMPRIMIR LPAREN exp RPAREN{ //imprimir un identificador
-
-
+            //Evaluamos la expresión
+            double valor = iniciar_evaluacion($3.a); //Evaluar la exppresión para hacer la asignación
+            printf(">>>IMPRIMIR %f\n",valor);
+            //Ya conocemos en que registro está el valor, que será float
+            imprimir($3.a);
             }
     ;
 
