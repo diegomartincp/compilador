@@ -35,7 +35,7 @@ int table_size = 0;//Se usa para conocer el índice del array disponible para in
 
 /* Declarar tokens recogidos de FLEX*/
 %token MAS MENOS POR DIV LPAREN RPAREN CONCAT COMILLA IGUAL SI OSI SINO MIENTRAS FIN DOBLEAMPERSAN DOBLEBARRA IMPRIMIR
-%token EXCLAMACION MAYQUE MENQUE MODULO EXPON
+%token EXCLAMACION MAYQUE MENQUE MODULO EXPON MAYORIGUAL IGUALIGUAL MENORIGUAL
 %token PUNTOCOMA
 
 /* Los no terminales hacen uso de la estructura */
@@ -158,13 +158,9 @@ asignacion_statement:
 si_statement: SI LPAREN condicion_list RPAREN statement_list osi_list FIN  {printf("SI con cadena de OSI\n");}
     | SI LPAREN condicion_list RPAREN statement_list FIN {
         printf("SI\n");
-        if ($3.entero == 1) {
-            printf("Entramos en el if (enteros)");
-        } else if ($3.real == 1.0) {
-            printf("Entreamos en el if (reales)");
-        } else {
-            printf("No entramos en el if");
-        }
+        double valor = iniciar_evaluacion($3.a); //$3.a->registro
+        printf(">>>Resultado evaluado comparacion MAYOR QUE= %f\n",valor);
+        
         }
     ;
 //Varios osi encadenados
@@ -185,7 +181,9 @@ mientras_statement:
 condicion_list: condicion_list DOBLEAMPERSAN  condicion {printf("Condicion && condicion\n");}
     | condicion_list DOBLEBARRA condicion {printf("Condicion || condicion\n");}
     | EXCLAMACION condicion {printf("!condicion\n");}
-    | condicion {printf("\nCondicion\n");}
+    | condicion {
+        $$.a = $1.a;
+        printf("\nCondicion\n");}
 
 //Condiciones
 /**
@@ -195,11 +193,11 @@ condicion: exp MAYQUE exp {
         printf("Condicion mayor que\n");
         if (strcmp($1.tipo, "entero")== 0 && strcmp($3.tipo, "entero")==0) {
             if ($1.entero > $3.entero) {
-                $$.entero = 1;
+                $$.a = new_node('>', $1.a, $3.a)
                 $$.tipo = "bool";
                 printf( "\nentero>entero");
             } else {
-                $$.entero = 0;
+                $$.a = new_node('>', $1.a, $3.a)
                 $$.tipo = "bool";
                 printf( "\nentero<entero");
             }
@@ -283,14 +281,123 @@ condicion: exp MAYQUE exp {
             printf("\nOperacion no reconocida.\n");
         }
     }
-    | exp MAYQUE IGUAL exp {
+    | exp MAYORIGUAL exp {
         printf("Condicion mayor o igual que\n");
+        if (strcmp($1.tipo, "entero")== 0 && strcmp($3.tipo, "entero")==0) {
+            if ($1.entero >= $3.entero) {
+                $$.entero = 1;
+                $$.tipo = "bool";
+                printf( "\nentero>=entero");
+            } else {
+                $$.entero = 0;
+                $$.tipo = "bool";
+                printf( "\nentero<=entero");
+            }
+        } else if (strcmp($1.tipo, "real")== 0 && strcmp($3.tipo, "real")==0) {
+            if ($1.real >= $3.real) {
+                $$.real = 1.0;
+                $$.tipo = "bool";
+                printf( "\nreal>=real");
+            } else {
+                $$.real = 0.0;
+                $$.tipo = "bool";
+                printf( "\nreal<=real");
+            } 
+        } else if (strcmp($1.tipo, "entero")==0 && strcmp($3.tipo, "real")==0) {
+            if ($1.entero >= $3.real) {
+                $$.real = 1.0;
+                $$.tipo = "bool";
+                printf( "\nentero>=real");
+            } else {
+                $$.real = 0.0;
+                $$.tipo = "bool";
+                printf( "\nentero<=real");
+            }
+        } else if (strcmp($1.tipo, "real")==0 && strcmp($3.tipo, "entero")==0) {
+            if ($1.real >= $3.entero) {
+                $$.real = 1.0;
+                $$.tipo = "bool";
+                printf( "\nreal>=entero");
+            } else {
+                $$.real = 0.0;
+                $$.tipo = "bool";
+                printf( "\nreal<=entero");
+            }
+        } else {
+            printf("\nOperacion no reconocida.\n")
+        }
     }
-    | exp MENQUE IGUAL exp {
+    | exp MENORIGUAL exp {
         printf("Condicion menor o igual que\n");
+        if (strcmp($1.tipo, "entero")== 0 && strcmp($3.tipo, "entero")==0) {
+            if ($1.entero <= $3.entero) {
+                $$.entero = 1;
+                $$.tipo = "bool";
+                printf( "\nentero<=entero");
+            } else {
+                $$.entero = 0;
+                $$.tipo = "bool";
+                printf( "\nentero>=entero");
+            }
+        } else if (strcmp($1.tipo, "real")== 0 && strcmp($3.tipo, "real")==0) {
+            if ($1.real <= $3.real) {
+                $$.real = 1.0;
+                $$.tipo = "bool";
+                printf( "\nreal<=real");
+            } else {
+                $$.real = 0.0;
+                $$.tipo = "bool";
+                printf( "\nreal>=real");
+            } 
+        } else if (strcmp($1.tipo, "entero")==0 && strcmp($3.tipo, "real")==0) {
+            if ($1.entero <= $3.real) {
+                $$.real = 1.0;
+                $$.tipo = "bool";
+                printf( "\nentero<=real");
+            } else {
+                $$.real = 0.0;
+                $$.tipo = "bool";
+                printf( "\nentero>=real");
+            }
+        } else if (strcmp($1.tipo, "real")==0 && strcmp($3.tipo, "entero")==0) {
+            if ($1.real <= $3.entero) {
+                $$.real = 1.0;
+                $$.tipo = "bool";
+                printf( "\nreal<=entero");
+            } else {
+                $$.real = 0.0;
+                $$.tipo = "bool";
+                printf( "\nreal>=entero");
+            }
+        } else {
+            printf("\nOperacion no reconocida.\n")
+        }
     }
     | exp IGUAL IGUAL exp {
         printf("Condicion igual igual que\n");
+        if (strcmp($1.tipo, "entero")== 0 && strcmp($3.tipo, "entero")==0) {
+            if ($1.entero == $3.entero) {
+                $$.entero = 1;
+                $$.tipo = "bool";
+                printf( "\nentero==entero");
+            } else {
+                $$.entero = 0;
+                $$.tipo = "bool";
+                printf( "\nentero!=entero");
+            }
+        } else if (strcmp($1.tipo, "real")== 0 && strcmp($3.tipo, "real")==0) {
+            if ($1.real == $3.real) {
+                $$.real = 1.0;
+                $$.tipo = "bool";
+                printf( "\nreal==real");
+            } else {
+                $$.real = 0.0;
+                $$.tipo = "bool";
+                printf( "\nreal!=real");
+            }
+        } else {
+            printf("\nOperacion no reconocida.\n")
+        }
     }
 
 exp: exp MAS term {

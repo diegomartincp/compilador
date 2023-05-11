@@ -863,67 +863,67 @@ return MENQUE;
 case 15:
 YY_RULE_SETUP
 #line 22 "gramatica.flex"
-return PUNTOCOMA;
+return IGUALIGUAL;
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
 #line 23 "gramatica.flex"
-return CONCAT;
+return MAYORIGUAL;
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
 #line 24 "gramatica.flex"
-return MODULO;
+return MENORIGUAL;
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
 #line 25 "gramatica.flex"
-return EXPON;
+return PUNTOCOMA;
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
 #line 26 "gramatica.flex"
-return SI;
+return CONCAT;
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
 #line 27 "gramatica.flex"
-return OSI;
+return MODULO;
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
 #line 28 "gramatica.flex"
-return SINO;
+return EXPON;
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
 #line 29 "gramatica.flex"
-return MIENTRAS;
+return SI;
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
 #line 30 "gramatica.flex"
-return FIN;
+return OSI;
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
 #line 31 "gramatica.flex"
-return IMPRIMIR;
+return SINO;
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 34 "gramatica.flex"
-{yylval.intVal = atoi(yytext); return ENT;}
+#line 32 "gramatica.flex"
+return MIENTRAS;
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 35 "gramatica.flex"
-{yylval.floatVal = atof(yytext); return REAL;}
+#line 33 "gramatica.flex"
+return FIN;
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 36 "gramatica.flex"
-{yylval.stringVal=strdup(yytext); printf( yytext);return TEXT ;}
+#line 34 "gramatica.flex"
+return IMPRIMIR;
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
