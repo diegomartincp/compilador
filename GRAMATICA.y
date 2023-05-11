@@ -32,6 +32,9 @@ int table_size = 0;//Se usa para conocer el índice del array disponible para in
   }st;
 }
 
+int numEtiqueta=0;
+variableGlobalFaltaEtiqueta=FALSE;
+
 
 /* Declarar tokens recogidos de FLEX*/
 %token MAS MENOS POR DIV LPAREN RPAREN CONCAT COMILLA IGUAL SI OSI SINO MIENTRAS FIN DOBLEAMPERSAN DOBLEBARRA IMPRIMIR
@@ -82,11 +85,15 @@ statement:
         printf("Mientras statement \n")
     }
     | imprimir_statement {
-        printf("Mientras statement \n")
+        printf("imprimir statement \n")
     }
     ;
 
 imprimir_statement: IMPRIMIR LPAREN exp RPAREN{ //imprimir un identificador
+            if(variableGlobalFaltaEtiqueta==TRUE){  //Hay que imprimir una etiqueta
+                printf(yyout, "Etiqueta%d",numEtiqueta);
+                numEtiqueta++;
+            }
             //Evaluamos la expresión
             double valor = iniciar_evaluacion($3.a); //Evaluar la exppresión para hacer la asignación
             printf(">>>IMPRIMIR %f\n",valor);
@@ -98,6 +105,10 @@ imprimir_statement: IMPRIMIR LPAREN exp RPAREN{ //imprimir un identificador
 asignacion_statement:
     ID IGUAL exp {
         printf("Asignacion\n");
+        if(variableGlobalFaltaEtiqueta==TRUE){  //Hay que imprimir una etiqueta
+            printf(yyout, "Etiqueta%d",numEtiqueta);
+            numEtiqueta++;
+        }
         double valor = iniciar_evaluacion($3.a); //Evaluar la exppresión para hacer la asignación
         printf(">>>Resultado evaluado = %f\n",valor);
         int i = lookup($1,table_size,table);
@@ -158,9 +169,14 @@ asignacion_statement:
 si_statement: SI LPAREN condicion_list RPAREN statement_list osi_list FIN  {printf("SI con cadena de OSI\n");}
     | SI LPAREN condicion_list RPAREN statement_list FIN {
         printf("SI\n");
+        if(variableGlobalFaltaEtiqueta==TRUE){  //Hay que imprimir una etiqueta
+            printf(yyout, "Etiqueta%d",numEtiqueta);
+            numEtiqueta++;
+        }
         double valor = iniciar_evaluacion($3.a); //$3.a->registro
         printf(">>>Resultado evaluado comparacion MAYOR QUE= %f\n",valor);
-        
+        si_statement($3.a, numEtiqueta);
+
         }
     ;
 //Varios osi encadenados
@@ -174,7 +190,13 @@ osi: OSI LPAREN condicion_list RPAREN statement_list {printf("OSI\n");}
 
 //mientras
 mientras_statement:
-    MIENTRAS LPAREN condicion_list RPAREN statement_list FIN {printf("MIENTRAS\n");}
+    MIENTRAS LPAREN condicion_list RPAREN statement_list FIN {
+        printf("MIENTRAS\n");
+        if(variableGlobalFaltaEtiqueta==TRUE){  //Hay que imprimir una etiqueta
+            printf(yyout, "Etiqueta%d",numEtiqueta);
+            numEtiqueta++
+        }
+    }
     ;
 
 //Lista de condiciones
@@ -191,212 +213,48 @@ OJO AQUI HAY QUE EVALUAR LAS DOS EXPRESIONES ANTES DE COMPARAR NADA, SINO NO TIE
 **/
 condicion: exp MAYQUE exp {
         printf("Condicion mayor que\n");
-        if (strcmp($1.tipo, "entero")== 0 && strcmp($3.tipo, "entero")==0) {
-            if ($1.entero > $3.entero) {
-                $$.a = new_node('>', $1.a, $3.a)
-                $$.tipo = "bool";
-                printf( "\nentero>entero");
-            } else {
-                $$.a = new_node('>', $1.a, $3.a)
-                $$.tipo = "bool";
-                printf( "\nentero<entero");
-            }
-        } else if (strcmp($1.tipo, "real")== 0 && strcmp($3.tipo, "real")==0) {
-            if ($1.real > $3.real) {
-                $$.real = 1.0;
-                $$.tipo = "bool";
-                printf( "\nreal>real");
-            } else {
-                $$.real = 0.0;
-                $$.tipo = "bool";
-                printf( "\nreal<real");
-            } 
-        } else if (strcmp($1.tipo, "entero")==0 && strcmp($3.tipo, "real")==0) {
-            if ($1.entero > $3.real) {
-                $$.real = 1.0;
-                $$.tipo = "bool";
-                printf( "\nentero>real");
-            } else {
-                $$.real = 0.0;
-                $$.tipo = "bool";
-                printf( "\nentero<real");
-            }
-        } else if (strcmp($1.tipo, "real")==0 && strcmp($3.tipo, "entero")==0) {
-            if ($1.real > $3.entero) {
-                $$.real = 1.0;
-                $$.tipo = "bool";
-                printf( "\nreal>entero");
-            } else {
-                $$.real = 0.0;
-                $$.tipo = "bool";
-                printf( "\nreal<entero");
-            }
-        } else {
+        if (strcmp($1.tipo, "texto")==0 || strcmp($3.tipo, "texto")==0) { 
             printf("\nOperacion no reconocida.\n");
+        } else {
+            $$.a = new_node('>', $1.a, $3.a)
+            $$.tipo = "bool";
         }
+        
     }
     | exp MENQUE exp   {
         printf("Condicion menor que\n");
-        if (strcmp($1.tipo, "entero")== 0 && strcmp($3.tipo, "entero")==0) {
-            if ($1.entero < $3.entero) {
-                $$.entero = 1;
-                $$.tipo = "bool";
-                printf( "\nentero<entero");
-            } else {
-                $$.entero = 0;
-                $$.tipo = "bool";
-                printf( "\nentero>entero");
-            }
-        } else if (strcmp($1.tipo, "real")== 0 && strcmp($3.tipo, "real")==0) {
-            if ($1.real < $3.real) {
-                $$.real = 1.0;
-                $$.tipo = "bool";
-                printf( "\nreal<real");
-            } else {
-                $$.real = 0.0;
-                $$.tipo = "bool";
-                printf( "\nreal>real");
-            } 
-        } else if (strcmp($1.tipo, "entero")==0 && strcmp($3.tipo, "real")==0) {
-            if ($1.entero < $3.real) {
-                $$.real = 1.0;
-                $$.tipo = "bool";
-                printf( "\nentero<real");
-            } else {
-                $$.real = 0.0;
-                $$.tipo = "bool";
-                printf( "\nentero>real");
-            }
-        } else if (strcmp($1.tipo, "real")==0 && strcmp($3.tipo, "entero")==0) {
-            if ($1.real < $3.entero) {
-                $$.real = 1.0;
-                $$.tipo = "bool";
-                printf( "\nreal<entero");
-            } else {
-                $$.real = 0.0;
-                $$.tipo = "bool";
-                printf( "\nreal>entero");
-            }
-        } else {
+        if (strcmp($1.tipo, "texto")==0 || strcmp($3.tipo, "texto")==0) { 
             printf("\nOperacion no reconocida.\n");
+        } else {
+            $$.a = new_node('<', $1.a, $3.a)
+            $$.tipo = "bool";
         }
     }
     | exp MAYORIGUAL exp {
         printf("Condicion mayor o igual que\n");
-        if (strcmp($1.tipo, "entero")== 0 && strcmp($3.tipo, "entero")==0) {
-            if ($1.entero >= $3.entero) {
-                $$.entero = 1;
-                $$.tipo = "bool";
-                printf( "\nentero>=entero");
-            } else {
-                $$.entero = 0;
-                $$.tipo = "bool";
-                printf( "\nentero<=entero");
-            }
-        } else if (strcmp($1.tipo, "real")== 0 && strcmp($3.tipo, "real")==0) {
-            if ($1.real >= $3.real) {
-                $$.real = 1.0;
-                $$.tipo = "bool";
-                printf( "\nreal>=real");
-            } else {
-                $$.real = 0.0;
-                $$.tipo = "bool";
-                printf( "\nreal<=real");
-            } 
-        } else if (strcmp($1.tipo, "entero")==0 && strcmp($3.tipo, "real")==0) {
-            if ($1.entero >= $3.real) {
-                $$.real = 1.0;
-                $$.tipo = "bool";
-                printf( "\nentero>=real");
-            } else {
-                $$.real = 0.0;
-                $$.tipo = "bool";
-                printf( "\nentero<=real");
-            }
-        } else if (strcmp($1.tipo, "real")==0 && strcmp($3.tipo, "entero")==0) {
-            if ($1.real >= $3.entero) {
-                $$.real = 1.0;
-                $$.tipo = "bool";
-                printf( "\nreal>=entero");
-            } else {
-                $$.real = 0.0;
-                $$.tipo = "bool";
-                printf( "\nreal<=entero");
-            }
+        if (strcmp($1.tipo, "texto")==0 || strcmp($3.tipo, "texto")==0) { 
+            printf("\nOperacion no reconocida.\n");
         } else {
-            printf("\nOperacion no reconocida.\n")
+            $$.a = new_node('>=', $1.a, $3.a)
+            $$.tipo = "bool";
         }
     }
     | exp MENORIGUAL exp {
         printf("Condicion menor o igual que\n");
-        if (strcmp($1.tipo, "entero")== 0 && strcmp($3.tipo, "entero")==0) {
-            if ($1.entero <= $3.entero) {
-                $$.entero = 1;
-                $$.tipo = "bool";
-                printf( "\nentero<=entero");
-            } else {
-                $$.entero = 0;
-                $$.tipo = "bool";
-                printf( "\nentero>=entero");
-            }
-        } else if (strcmp($1.tipo, "real")== 0 && strcmp($3.tipo, "real")==0) {
-            if ($1.real <= $3.real) {
-                $$.real = 1.0;
-                $$.tipo = "bool";
-                printf( "\nreal<=real");
-            } else {
-                $$.real = 0.0;
-                $$.tipo = "bool";
-                printf( "\nreal>=real");
-            } 
-        } else if (strcmp($1.tipo, "entero")==0 && strcmp($3.tipo, "real")==0) {
-            if ($1.entero <= $3.real) {
-                $$.real = 1.0;
-                $$.tipo = "bool";
-                printf( "\nentero<=real");
-            } else {
-                $$.real = 0.0;
-                $$.tipo = "bool";
-                printf( "\nentero>=real");
-            }
-        } else if (strcmp($1.tipo, "real")==0 && strcmp($3.tipo, "entero")==0) {
-            if ($1.real <= $3.entero) {
-                $$.real = 1.0;
-                $$.tipo = "bool";
-                printf( "\nreal<=entero");
-            } else {
-                $$.real = 0.0;
-                $$.tipo = "bool";
-                printf( "\nreal>=entero");
-            }
+        if (strcmp($1.tipo, "texto")==0 || strcmp($3.tipo, "texto")==0) { 
+            printf("\nOperacion no reconocida.\n");
         } else {
-            printf("\nOperacion no reconocida.\n")
+            $$.a = new_node('<=', $1.a, $3.a)
+            $$.tipo = "bool";
         }
     }
-    | exp IGUAL IGUAL exp {
+    | exp IGUALIGUAL exp {
         printf("Condicion igual igual que\n");
-        if (strcmp($1.tipo, "entero")== 0 && strcmp($3.tipo, "entero")==0) {
-            if ($1.entero == $3.entero) {
-                $$.entero = 1;
-                $$.tipo = "bool";
-                printf( "\nentero==entero");
-            } else {
-                $$.entero = 0;
-                $$.tipo = "bool";
-                printf( "\nentero!=entero");
-            }
-        } else if (strcmp($1.tipo, "real")== 0 && strcmp($3.tipo, "real")==0) {
-            if ($1.real == $3.real) {
-                $$.real = 1.0;
-                $$.tipo = "bool";
-                printf( "\nreal==real");
-            } else {
-                $$.real = 0.0;
-                $$.tipo = "bool";
-                printf( "\nreal!=real");
-            }
+        if (strcmp($1.tipo, "texto")==0 || strcmp($3.tipo, "texto")==0) { 
+            printf("\nOperacion no reconocida.\n");
         } else {
-            printf("\nOperacion no reconocida.\n")
+            $$.a = new_node('==', $1.a, $3.a)
+            $$.tipo = "bool";
         }
     }
 

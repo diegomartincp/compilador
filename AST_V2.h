@@ -227,6 +227,50 @@ double eval(struct nodo *a) {
         liberarRegistro(a->l);
         liberarRegistro(a->r);
     break;
+      case '<':
+         printf("-> MENOR QUE\n");
+        v = eval(a->l) < eval(a->r);
+
+        //Comparación de punto flotante de $f1 > $f2
+        fprintf(yyout,"  slt $f%d, $f%d, $f%d\n",a->registro,a->l->registro,a->r->registro);   
+
+        //Liberar los registros de los nodos L y R
+        liberarRegistro(a->l);
+        liberarRegistro(a->r);
+    break;
+      case '>=':
+         printf("-> MAYOR IGUAL QUE\n");
+        v = eval(a->l) >= eval(a->r);
+
+        //Comparación de punto flotante de $f1 > $f2
+        fprintf(yyout,"  sge $f%d, $f%d, $f%d\n",a->registro,a->l->registro,a->r->registro);   
+
+        //Liberar los registros de los nodos L y R
+        liberarRegistro(a->l);
+        liberarRegistro(a->r);
+    break;
+      case '<=':
+         printf("-> MENOR IGUAL QUE\n");
+        v = eval(a->l) <= eval(a->r);
+
+        //Comparación de punto flotante de $f1 > $f2
+        fprintf(yyout,"  sle $f%d, $f%d, $f%d\n",a->registro,a->l->registro,a->r->registro);   
+
+        //Liberar los registros de los nodos L y R
+        liberarRegistro(a->l);
+        liberarRegistro(a->r);
+    break;
+      case '==':
+         printf("-> IGUAL IGUAL QUE\n");
+        v = eval(a->l) == eval(a->r);
+
+        //Comparación de punto flotante de $f1 > $f2
+        fprintf(yyout,"  seq $f%d, $f%d, $f%d\n",a->registro,a->l->registro,a->r->registro);   
+
+        //Liberar los registros de los nodos L y R
+        liberarRegistro(a->l);
+        liberarRegistro(a->r);
+    break;
     default: printf("Error: Nodo desconocido %c\n", a->nodetype); 
    }
   return v;
@@ -259,4 +303,10 @@ void imprimir(struct nodo *a){
   fprintf(yyout,"  mov.s $f12, $f%d\n",a->registro);   
   //Llamada al sistema
   fprintf(yyout,"  syscall\n");   
+}
+
+void si_statement(struct nodo *a, int numEtiqueta) {
+  // Calibrar que el valor del registro de la comparación sea 0
+  fprintf(yyout, "  beq $f%d, 0, etiq%d\n", a->registro, numEtiqueta);
+  
 }
