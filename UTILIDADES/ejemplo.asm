@@ -24,4 +24,7 @@
 
 .text #Operaciones
   lwc1 $f0, variable6
-  add.s $f2, $f1, $f0
+  add.s $f12, $f1, $f0
+  
+  li $v0, 2 
+  syscall

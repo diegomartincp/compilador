@@ -73,7 +73,7 @@ typedef union YYSTYPE
 {
 
 /* Line 1685 of yacc.c  */
-#line 13 "gramatica.y"
+#line 22 "gramatica.y"
 
   int intVal;
   float floatVal;

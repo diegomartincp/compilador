@@ -5,13 +5,13 @@ extern FILE *yyout;
 
 //Array que almacena que registros $tn están disponibles. TRUE es disponible y FALSE es ocupado
 //Hay 10 registros T, desde el 0 hasta el 9
-//bool array_registros_t[10] = {true, true, true, true, true, true, true, true, true, true};
+bool array_registros_t[10] = {true, true, true, true, true, true, true, true, true, true};
 
 //Hay 32 registros F, desde el 0 hasta el 31
 bool array_registros_f[32] = {true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true};
 //Usamos un array de 32 posiciones para almacenar las variables de .data
-float array_variables[32];
-int cima_array_variables=0; //Apunta a la siguiente posición libre de array_variables
+float array_variables[32][2]; //En 0 el dato y en 1 el nombre de la variable
+int siguienteVariableDisponible=0; //Apunta al siguiente número disponible para declarar una variable en .data
 
 // Definimos una estructura para nuestro nodo del AST
 struct nodo{
@@ -22,6 +22,7 @@ struct nodo{
   struct nodo *l;    //Nodo izquierdo
   struct nodo *r;    //Nodo derecho
   int registro;      //Registro donde está el resultado
+  int variableNum; //Indica el nombre de la variable "variableN" que se usa para declarar
 };
 
 //Ver que registros T están libres
@@ -61,7 +62,7 @@ liberarRegistro(struct nodo *a){
 
 
 //Nodo NO HOJA
-struct nodo * new_node(int nodetype, char* tipo_, struct nodo *l, struct nodo *r) {
+struct nodo * new_node(int nodetype, struct nodo *l, struct nodo *r) { //, char* tipo_
   struct nodo *a = malloc(sizeof(struct nodo));  //Crea un nuevo nodo
   if(!a) {
     exit(0); //Si el nuevo nodo es NULL significa que hay un error de memoria insuficiente
@@ -70,7 +71,7 @@ struct nodo * new_node(int nodetype, char* tipo_, struct nodo *l, struct nodo *r
   a->nodetype = nodetype; 
   a->l = l;
   a->r = r;
-  a->tipo = tipo_;
+  //a->tipo = tipo_;
 
   //Asignar registro para float
   a->registro = buscarRegistroLibreF();
@@ -80,7 +81,7 @@ struct nodo * new_node(int nodetype, char* tipo_, struct nodo *l, struct nodo *r
 }
 
 //Nodo HOJA
-struct nodo * new_leaf_num(double value, char* tipo_) {
+struct nodo * new_leaf_num(double value) { //, char* tipo_
   struct nodo *a = malloc(sizeof(struct nodo));    //Asigna la dirección de memoria para un nuevo nodo del tipo struct
     if(!a) {
     exit(0); //Si el nuevo nodo es NULL significa que hay un error de memoria insuficiente
@@ -89,17 +90,45 @@ struct nodo * new_leaf_num(double value, char* tipo_) {
   a->l = NULL;
   a->r = NULL;
   a->value = value;
-  a->tipo = tipo_;
+  //a->tipo = tipo_;
 
   //Asignar registro para float
   a->registro = buscarRegistroLibreF();
   printf("El nodo ha reservado el registro f%d \n",a->registro);
 
+  //Guardar como se llama la variable de .data
+  a->variableNum=siguienteVariableDisponible;
+  printf("%f se almacena en la 'variable%d'\n",a->value,a->variableNum);
+  siguienteVariableDisponible++; //Se incrementa
+
   //Registrar una nueva variable en .data con el valor
   //Guarda en la misma posición que registro utiliza: Para $f14 usa la posición 14
-  array_variables[a->registro]=a->value;
-  cima_array_variables++;
+  array_variables[a->registro][0]=a->value;
+  array_variables[a->registro][1]=a->variableNum;
 
+  return a;
+}
+
+//Nodo HOJA que es una variable definida anteriormente que ya cuenta con un registro asignado
+struct nodo * new_var_leaf_num(double value, int registro_) { //, char* tipo_
+  struct nodo *a = malloc(sizeof(struct nodo));    //Asigna la dirección de memoria para un nuevo nodo del tipo struct
+    if(!a) {
+    exit(0); //Si el nuevo nodo es NULL significa que hay un error de memoria insuficiente
+  }
+  a->nodetype = 'V';  //V de Variable
+  a->l = NULL;
+  a->r = NULL;
+  a->value = value;
+  //a->tipo = tipo_;
+
+  //Asignar registro para float
+  a->registro = registro_;
+  printf("El nodo YA CONTABA con el registro f%d \n",a->registro);
+
+  //Guardar como se llama la variable de .data
+  a->variableNum=siguienteVariableDisponible;
+  printf("%f se almacena en la 'variable%d'\n",a->value,a->variableNum);
+  siguienteVariableDisponible++; //Se incrementa
   return a;
 }
 
@@ -112,7 +141,7 @@ struct nodo * new_leaf_text(char * string, char* tipo_) {
   a->nodetype = 'S';  //S de String
   a->l = NULL;
   a->r = NULL;
-  a->tipo = tipo_;
+  //a->tipo = tipo_;
   a->string = string;
   return a;
 }
@@ -129,8 +158,15 @@ double eval(struct nodo *a) {
       v = a->value;
       printf("Hoja con %f\n",v);
       //Cargar el valor en su registro asignado de tipo F
-      fprintf(yyout,"  lwc1 $f%d, variable%d\n",a->registro,a->registro);
+      fprintf(yyout,"  lwc1 $f%d, variable%d\n",a->registro,a->variableNum);
       
+	  break;
+
+    //NODO HOJA que es una variable
+    case 'V':
+      v = a->value; //El valor ya lo conocíamos
+      //No volvemos hay que hacer nada xq ya está en un registro
+      printf("Esta variable está en el registro $f%d\n",a->registro);      
 	  break;
 
     //OPERACION SUMA
@@ -141,7 +177,7 @@ double eval(struct nodo *a) {
       //Ahora usamos solo registros tipo F para sumar el float
       fprintf(yyout,"  add.s $f%d, $f%d, $f%d\n",a->registro,a->l->registro,a->r->registro);   
 
-      //liberar los registros de los nodos L y R
+      //liberar los registros de los nodos L y R 
       liberarRegistro(a->l);
       liberarRegistro(a->r);
 	  break;
@@ -187,16 +223,16 @@ double eval(struct nodo *a) {
 
 double iniciar_evaluacion(struct nodo *a){
   //Crea todas las variables necesarias en .data
-  fprintf(yyout,".data #Variables\n");
+  fprintf(yyout,"\n.data #Variables\n");
   //Recorremos el array de las variables que hay que definir
   for (int i = 0; i < 32; i++){
     //Si el espacio del array tiene algo
-    if(array_variables[i]!=0){
-      printf("%d\n",array_variables[i]);
+    if(array_variables[i][0]!=0){
+      printf("%d\n",array_variables[i][0]);
       //Define la variable
-      fprintf(yyout,"  variable%d: .float %f\n",i,array_variables[i]);
+      fprintf(yyout,"  variable%d: .float %f\n",(int)array_variables[i][1],array_variables[i][0]);
       //La elimina pues ya se ha declarado
-      //array_variables[i]=NULL;
+      array_variables[i][0]=0;
     }
   }
 

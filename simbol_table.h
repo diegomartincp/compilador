@@ -7,6 +7,7 @@ typedef struct {
     float real;
     int entero;
     char* texto;
+    int registro;      //Registro donde está el resultado
 } symbol;
 
 /*
