@@ -16,6 +16,9 @@ int linea=1;
 symbol table[100];
 int table_size = 0;//Se usa para conocer el índice del array disponible para insertar el siguiente número
 
+int numEtiqueta=0;
+variableGlobalFaltaEtiqueta=FALSE;
+
 %}
 
 /* declare type possibilities of symbols */
@@ -31,9 +34,6 @@ int table_size = 0;//Se usa para conocer el índice del array disponible para in
     char* tipo; //Cadena de caracteres que almacena textualmente el tipo del elemento para poder ofrecer controles semánticos sobre el mismo
   }st;
 }
-
-int numEtiqueta=0;
-variableGlobalFaltaEtiqueta=FALSE;
 
 
 /* Declarar tokens recogidos de FLEX*/
@@ -176,7 +176,6 @@ si_statement: SI LPAREN condicion_list RPAREN statement_list osi_list FIN  {prin
         double valor = iniciar_evaluacion($3.a); //$3.a->registro
         printf(">>>Resultado evaluado comparacion MAYOR QUE= %f\n",valor);
         si_statement($3.a, numEtiqueta);
-
         }
     ;
 //Varios osi encadenados

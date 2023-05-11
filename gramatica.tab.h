@@ -60,11 +60,14 @@
      MENQUE = 277,
      MODULO = 278,
      EXPON = 279,
-     PUNTOCOMA = 280,
-     ENT = 281,
-     REAL = 282,
-     TEXT = 283,
-     ID = 284
+     MAYORIGUAL = 280,
+     IGUALIGUAL = 281,
+     MENORIGUAL = 282,
+     PUNTOCOMA = 283,
+     ENT = 284,
+     REAL = 285,
+     TEXT = 286,
+     ID = 287
    };
 #endif
 
@@ -75,7 +78,7 @@ typedef union YYSTYPE
 {
 
 /* Line 1685 of yacc.c  */
-#line 22 "gramatica.y"
+#line 25 "gramatica.y"
 
   int intVal;
   float floatVal;
@@ -91,7 +94,7 @@ typedef union YYSTYPE
 
 
 /* Line 1685 of yacc.c  */
-#line 95 "gramatica.tab.h"
+#line 98 "gramatica.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
