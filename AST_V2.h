@@ -3,6 +3,9 @@
 
 extern FILE *yyout;
 
+//Etiqueta para los if o while
+int numEtiqueta=0;
+
 //Array que almacena que registros $tn están disponibles. TRUE es disponible y FALSE es ocupado
 //Hay 10 registros T, desde el 0 hasta el 9
 bool array_registros_t[10] = {true, true, true, true, true, true, true, true, true, true};
@@ -146,6 +149,19 @@ struct nodo * new_leaf_text(char * string, char* tipo_) {
   return a;
 }
 
+//Devuelve un nodo vacío
+struct nodo * nodo_vacio() {
+  struct nodo *a = malloc(sizeof(struct nodo));    //Asigna la dirección de memoria para un nuevo nodo del tipo struct
+    if(!a) {
+    exit(0); //Si el nuevo nodo es NULL significa que hay un error de memoria insuficiente
+  }
+  a->nodetype= NULL;  //S de String
+  a->l = NULL;
+  a->r = NULL;
+  return a;
+}
+
+
 
 //Evaluar un nodo
 double eval(struct nodo *a) {
@@ -221,7 +237,7 @@ double eval(struct nodo *a) {
         v = eval(a->l) > eval(a->r);
 
         //Comparación de punto flotante de $f1 > $f2
-        fprintf(yyout,"  sgt $f%d, $f%d, $f%d\n",a->registro,a->l->registro,a->r->registro);   
+        fprintf(yyout,"  c.lt.s $f%d, $f%d\n",a->l->registro,a->r->registro);   
 
         //Liberar los registros de los nodos L y R
         liberarRegistro(a->l);
@@ -232,7 +248,7 @@ double eval(struct nodo *a) {
         v = eval(a->l) < eval(a->r);
 
         //Comparación de punto flotante de $f1 > $f2
-        fprintf(yyout,"  slt $f%d, $f%d, $f%d\n",a->registro,a->l->registro,a->r->registro);   
+        fprintf(yyout,"  c.lt.s $f%d, $f%d\n",a->r->registro,a->l->registro);   //MISMA OPERACIÓN QUE ARRIBA PERO INTERCAMBIADA PARA > --> <  
 
         //Liberar los registros de los nodos L y R
         liberarRegistro(a->l);
@@ -243,7 +259,7 @@ double eval(struct nodo *a) {
         v = eval(a->l) >= eval(a->r);
 
         //Comparación de punto flotante de $f1 > $f2
-        fprintf(yyout,"  sge $f%d, $f%d, $f%d\n",a->registro,a->l->registro,a->r->registro);   
+         fprintf(yyout,"  c.le.s $f%d, $f%d\n",a->l->registro,a->r->registro);      
 
         //Liberar los registros de los nodos L y R
         liberarRegistro(a->l);
@@ -254,7 +270,7 @@ double eval(struct nodo *a) {
         v = eval(a->l) <= eval(a->r);
 
         //Comparación de punto flotante de $f1 > $f2
-        fprintf(yyout,"  sle $f%d, $f%d, $f%d\n",a->registro,a->l->registro,a->r->registro);   
+        fprintf(yyout,"  c.lt.s $f%d, $f%d\n",a->r->registro,a->l->registro);      
 
         //Liberar los registros de los nodos L y R
         liberarRegistro(a->l);
@@ -276,16 +292,30 @@ double eval(struct nodo *a) {
         v = eval(a->l);
     break;
       case 'S': //SI statement
-         printf("-> SI\n");
+         
         v = eval(a->l); //condicion en a->l
+        printf("-> SI donde su condicion es %f\n",v);
         si_statement(a->l, numEtiqueta);
         
+        //Código del IF
         eval(a->r); //el resto del codigo a->r
+
+        //Etiqueta que se usa para saltar al resto si condicion=FALSE
+        fprintf(yyout, "etiq%d:\n",numEtiqueta);
+        //Incrementar el número de etiqueta para usar una distinta más tarde
+        numEtiqueta++;
     break;
       case 'SL': //Statement List
          printf("-> Statement List\n");
         v = eval(a->l); //statement_list
         eval(a->r); //staetment
+    break;
+      case 'P': //Statement List
+          printf("-> Statement Imprimir\n");
+          //Resuelve la operación evaluandola
+          eval(a->l);
+          //Imprime el resultado almacenado en al registro de
+          imprimir(a->l);
     break;
     default: printf("Error: Nodo desconocido %c\n", a->nodetype); 
    }
@@ -295,6 +325,8 @@ double eval(struct nodo *a) {
 double iniciar_evaluacion(struct nodo *a){
   //Crea todas las variables necesarias en .data
   fprintf(yyout,"\n.data #Variables\n");
+  //Variable que SIEMPRE se imprime para el salto de línea
+  fprintf(yyout,"newLine: .asciiz \"\\n\"\n");
   //Recorremos el array de las variables que hay que definir
   for (int i = 0; i < 32; i++){
     //Si el espacio del array tiene algo
@@ -319,11 +351,17 @@ void imprimir(struct nodo *a){
   fprintf(yyout,"  mov.s $f12, $f%d\n",a->registro);   
   //Llamada al sistema
   fprintf(yyout,"  syscall\n");   
+
+  //Salto de línea
+  fprintf(yyout,"  li $v0, 4\n");   
+  fprintf(yyout,"  la $a0, newLine\n");
+  fprintf(yyout,"  syscall\n");  
+
 }
 
 void si_statement(struct nodo *a, int numEtiqueta) {
   // Calibrar que el valor del registro de la comparación sea 0
-  fprintf(yyout, "  beq $f%d, 0, etiq%d\n", a->registro, numEtiqueta);
+  fprintf(yyout, "  bc1t etiq%d\n", numEtiqueta);
   //salto a etiqueta
-  fprintf(yyout, "etiq%d:\n", numEtiqueta);
+  //fprintf(yyout, "Etiq%d:\n", numEtiqueta);
 }

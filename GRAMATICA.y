@@ -17,8 +17,8 @@ int linea=1;
 symbol table[100];
 int table_size = 0;//Se usa para conocer el índice del array disponible para insertar el siguiente número
 
-int numEtiqueta=0;
-bool variableGlobalFaltaEtiqueta= false;
+//int numEtiqueta=0;
+//bool variableGlobalFaltaEtiqueta= false;
 
 %}
 
@@ -84,40 +84,42 @@ statement_list:
 //Una signación, IF o WHILE
 statement:
     asignacion_statement {
-        printf("Statement reconocido\n")
+        printf("Statement reconocido\n");
+        $$.a=$1.a;
     }
     | si_statement {
         printf("Si statment reconocido \n");
         $$.a=$1.a;
     }
     | mientras_statement {
-        printf("Mientras statement \n")
+        printf("Mientras statement \n");
     }
     | imprimir_statement {
-        printf("imprimir statement \n")
+        printf("imprimir statement \n");
+        $$.a=$1.a;
     }
     ;
 
 imprimir_statement: IMPRIMIR LPAREN exp RPAREN{ //imprimir un identificador
-            if(variableGlobalFaltaEtiqueta==true){  //Hay que imprimir una etiqueta
+           /*if(variableGlobalFaltaEtiqueta==true){  //Hay que imprimir una etiqueta
                 printf(yyout, "Etiqueta%d",numEtiqueta);
                 numEtiqueta++;
-            }
+            }*/
             //Evaluamos la expresión
             //double valor = iniciar_evaluacion($3.a); //Evaluar la exppresión para hacer la asignación
             //printf(">>>IMPRIMIR %f\n",valor);
             //Ya conocemos en que registro está el valor, que será float
-            imprimir($3.a);
+            $$.a = new_node('P',$3.a, nodo_vacio());
+            
         }
     ;
 
 asignacion_statement:
     ID IGUAL exp {
+        //Se almacena en la tabla de símbolos el registro en el que se encuentra el resultado del ID
+        $$.a=$3.a;
+
         printf("Asignacion\n");
-        if(variableGlobalFaltaEtiqueta==true){  //Hay que imprimir una etiqueta
-            printf(yyout, "Etiqueta%d",numEtiqueta);
-            numEtiqueta++;
-        }
         //double valor = iniciar_evaluacion($3.a); //Evaluar la exppresión para hacer la asignación
         //printf(">>>Resultado evaluado = %f\n",valor);
         int i = lookup($1,table_size,table);
@@ -125,21 +127,21 @@ asignacion_statement:
             printf(">>>Se asigna la variable en tabla de símbolos\n");
             if(strcmp($3.tipo, "entero")==0){
                 table[table_size].name = $1;
-                table[table_size].entero = (int)valor;
+                //table[table_size].entero = (int)valor;
                 table[table_size].tipo = "entero";
                 table[table_size].registro = $3.a->registro;   //Al asignar guarda en la tabla de símbolos el registro donde se almacena el resultado
                 table_size++;
             }
             else if(strcmp($3.tipo, "real")==0){
                 table[table_size].name = $1;
-                table[table_size].real = (float)valor;
+                //table[table_size].real = (float)valor;
                 table[table_size].tipo = "real";
                 table[table_size].registro = $3.a->registro;
                 table_size++;
             }
             else if(strcmp($3.tipo, "texto")==0){
                 table[table_size].name = $1;
-                table[table_size].texto = $3.texto;
+                //table[table_size].texto = $3.texto;
                 table[table_size].tipo = "texto";
                 table[table_size].registro = $3.a->registro;
                 table_size++;
@@ -151,21 +153,21 @@ asignacion_statement:
             printf(">>>Se sobreescribe el valor de la variable: %s\n",table[i].name = $1);
             if(strcmp($3.tipo, "entero")==0){
                 table[i].name = $1;
-                table[i].entero = (int)valor;
+                //table[i].entero = (int)valor;
                 table[i].tipo = "entero";
                 table[i].registro = $3.a->registro;   //Al asignar guarda en la tabla de símbolos el registro donde se almacena el resultado
                 //En este caso no se incrementa el tamaño del array
             }
             else if(strcmp($3.tipo, "real")==0){
                 table[i].name = $1;
-                table[i].real = (float)valor;
+                //table[i].real = (float)valor;
                 table[i].tipo = "real";
                 table[i].registro = $3.a->registro;
                 //
             }
             else if(strcmp($3.tipo, "texto")==0){
                 table[i].name = $1;
-                table[i].texto = $3.texto;
+                //table[i].texto = $3.texto;
                 table[i].tipo = "texto";
                 table[i].registro = $3.a->registro;
                 //
@@ -178,10 +180,7 @@ asignacion_statement:
 si_statement: SI LPAREN condicion_list RPAREN statement_list osi_list FIN  {printf("SI con cadena de OSI\n");}
     | SI LPAREN condicion_list RPAREN statement_list FIN {
         printf("SI\n");
-        if(variableGlobalFaltaEtiqueta==true){  //Hay que imprimir una etiqueta
-            fprintf(yyout, "Etiqueta:%d",numEtiqueta);
-            numEtiqueta++;
-        }
+
         $$.a = new_node('S',$3.a, $5.a);
         }
     ;
@@ -198,10 +197,6 @@ osi: OSI LPAREN condicion_list RPAREN statement_list {printf("OSI\n");}
 mientras_statement:
     MIENTRAS LPAREN condicion_list RPAREN statement_list FIN {
         printf("MIENTRAS\n");
-        if(variableGlobalFaltaEtiqueta==true){  //Hay que imprimir una etiqueta
-            printf(yyout, "Etiqueta%d",numEtiqueta);
-            numEtiqueta++;
-        }
     }
     ;
 
@@ -212,7 +207,7 @@ condicion_list: condicion_list DOBLEAMPERSAN  condicion {printf("Condicion && co
     | condicion {
         $$.a = $1.a;
         printf("\nCondicion\n");
-        $$.a = new_node('C',$1.a, NULL);
+        $$.a = new_node('C',$1.a, nodo_vacio());
         //double valor = iniciar_evaluacion($1.a); //$1.a->registro
         //printf(">>>Resultado evaluado comparacion MAYOR QUE= %f\n",valor);
     }
