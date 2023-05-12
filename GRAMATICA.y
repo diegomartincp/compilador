@@ -197,6 +197,7 @@ osi: OSI LPAREN condicion_list RPAREN statement_list {printf("OSI\n");}
 mientras_statement:
     MIENTRAS LPAREN condicion_list RPAREN statement_list FIN {
         printf("MIENTRAS\n");
+        $$.a = new_node('M',$3.a,$5.a);
     }
     ;
 

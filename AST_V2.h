@@ -13,7 +13,7 @@ bool array_registros_t[10] = {true, true, true, true, true, true, true, true, tr
 //Hay 32 registros F, desde el 0 hasta el 31
 bool array_registros_f[32] = {true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true};
 //Usamos un array de 32 posiciones para almacenar las variables de .data
-float array_variables[32][2]; //En 0 el dato y en 1 el nombre de la variable
+float array_variables[32][3]; //En 0 el dato y en 1 el nombre de la variable y en el 2 si esta ocupado
 int siguienteVariableDisponible=0; //Apunta al siguiente número disponible para declarar una variable en .data
 
 // Definimos una estructura para nuestro nodo del AST
@@ -108,6 +108,7 @@ struct nodo * new_leaf_num(double value) { //, char* tipo_
   //Guarda en la misma posición que registro utiliza: Para $f14 usa la posición 14
   array_variables[a->registro][0]=a->value;
   array_variables[a->registro][1]=a->variableNum;
+  array_variables[a->registro][2]=1; //ocupado
 
   return a;
 }
@@ -237,7 +238,7 @@ double eval(struct nodo *a) {
         v = eval(a->l) > eval(a->r);
 
         //Comparación de punto flotante de $f1 > $f2
-        fprintf(yyout,"  c.lt.s $f%d, $f%d\n",a->l->registro,a->r->registro);   
+        fprintf(yyout,"  c.lt.s $f%d, $f%d\n",a->r->registro,a->l->registro);   
 
         //Liberar los registros de los nodos L y R
         liberarRegistro(a->l);
@@ -248,7 +249,7 @@ double eval(struct nodo *a) {
         v = eval(a->l) < eval(a->r);
 
         //Comparación de punto flotante de $f1 > $f2
-        fprintf(yyout,"  c.lt.s $f%d, $f%d\n",a->r->registro,a->l->registro);   //MISMA OPERACIÓN QUE ARRIBA PERO INTERCAMBIADA PARA > --> <  
+        fprintf(yyout,"  c.lt.s $f%d, $f%d\n",a->l->registro,a->r->registro);   //MISMA OPERACIÓN QUE ARRIBA PERO INTERCAMBIADA PARA > --> <  
 
         //Liberar los registros de los nodos L y R
         liberarRegistro(a->l);
@@ -259,7 +260,7 @@ double eval(struct nodo *a) {
         v = eval(a->l) >= eval(a->r);
 
         //Comparación de punto flotante de $f1 > $f2
-         fprintf(yyout,"  c.le.s $f%d, $f%d\n",a->l->registro,a->r->registro);      
+         fprintf(yyout,"  c.le.s $f%d, $f%d\n",a->r->registro,a->l->registro);      
 
         //Liberar los registros de los nodos L y R
         liberarRegistro(a->l);
@@ -270,7 +271,7 @@ double eval(struct nodo *a) {
         v = eval(a->l) <= eval(a->r);
 
         //Comparación de punto flotante de $f1 > $f2
-        fprintf(yyout,"  c.lt.s $f%d, $f%d\n",a->r->registro,a->l->registro);      
+        fprintf(yyout,"  c.lt.s $f%d, $f%d\n",a->l->registro,a->r->registro);      
 
         //Liberar los registros de los nodos L y R
         liberarRegistro(a->l);
@@ -305,17 +306,34 @@ double eval(struct nodo *a) {
         //Incrementar el número de etiqueta para usar una distinta más tarde
         numEtiqueta++;
     break;
-      case 'SL': //Statement List
-         printf("-> Statement List\n");
-        v = eval(a->l); //statement_list
-        eval(a->r); //staetment
+      case 'M': //SI statement
+        //Saltar a la etiqueta del comienzo del WHILE
+        fprintf(yyout, "  etiq%d:\n", numEtiqueta);
+        v = eval(a->l); //condicion en a->l
+        printf("-> MIENTRAS donde su condicion es %f\n",v);
+        mientras_statement(a->l, numEtiqueta+1);
+        
+        //Código del IF
+        eval(a->r); //el resto del codigo a->r
+
+        //Saltar a la etiqueta del comienzo del WHILE
+        fprintf(yyout, "  j etiq%d\n", numEtiqueta);
+        //Etiqueta que se usa para salir del WHILE
+        fprintf(yyout, "etiq%d:\n",numEtiqueta+1);
+        //Incrementar el número de etiqueta para usar una distinta más tarde
+        numEtiqueta += 2;
     break;
-      case 'P': //Statement List
+        case 'P': //Statement List
           printf("-> Statement Imprimir\n");
           //Resuelve la operación evaluandola
           eval(a->l);
           //Imprime el resultado almacenado en al registro de
           imprimir(a->l);
+    break;
+      case 'SL': //Statement List
+         printf("-> Statement List\n");
+        v = eval(a->l); //statement_list
+        eval(a->r); //staetment
     break;
     default: printf("Error: Nodo desconocido %c\n", a->nodetype); 
    }
@@ -330,12 +348,12 @@ double iniciar_evaluacion(struct nodo *a){
   //Recorremos el array de las variables que hay que definir
   for (int i = 0; i < 32; i++){
     //Si el espacio del array tiene algo
-    if(array_variables[i][0]!=0){
+    if(array_variables[i][2]==1){
       printf("%d\n",array_variables[i][0]);
       //Define la variable
       fprintf(yyout,"  variable%d: .float %f\n",(int)array_variables[i][1],array_variables[i][0]);
       //La elimina pues ya se ha declarado
-      array_variables[i][0]=0;
+      array_variables[i][2]=0;
     }
   }
 
@@ -363,5 +381,12 @@ void si_statement(struct nodo *a, int numEtiqueta) {
   // Calibrar que el valor del registro de la comparación sea 0
   fprintf(yyout, "  bc1t etiq%d\n", numEtiqueta);
   //salto a etiqueta
+  //fprintf(yyout, "Etiq%d:\n", numEtiqueta);
+}
+
+void mientras_statement(struct nodo *a, int numEtiqueta) {
+  // Calibrar que el valor del registro de la comparación sea 0
+  fprintf(yyout, "  bc1f etiq%d\n", numEtiqueta);
+  // Saltar a la etiqueta si la condición es falsa
   //fprintf(yyout, "Etiq%d:\n", numEtiqueta);
 }
