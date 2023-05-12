@@ -3,6 +3,9 @@
 
 extern FILE *yyout;
 
+extern int table_size;
+extern symbol table[100];
+
 //Etiqueta para los if o while
 int numEtiqueta=0;
 
@@ -129,15 +132,17 @@ struct nodo * new_var_leaf_num(double value, int registro_) { //, char* tipo_
   a->registro = registro_;
   printf("El nodo YA CONTABA con el registro f%d \n",a->registro);
 
+/**
   //Guardar como se llama la variable de .data
   a->variableNum=siguienteVariableDisponible;
   printf("%f se almacena en la 'variable%d'\n",a->value,a->variableNum);
   siguienteVariableDisponible++; //Se incrementa
+  */
   return a;
 }
 
 //Nodo hoja con string
-struct nodo * new_leaf_text(char * string, char* tipo_) {
+struct nodo * new_leaf_text(char * string, char * tipo_) {
   struct nodo *a = malloc(sizeof(struct nodo));    //Asigna la dirección de memoria para un nuevo nodo del tipo struct
     if(!a) {
     exit(0); //Si el nuevo nodo es NULL significa que hay un error de memoria insuficiente
@@ -162,6 +167,18 @@ struct nodo * nodo_vacio() {
   return a;
 }
 
+//Devuelve un nodo vacío pero permite usar los campos nodetype y string para almacenar info para la asignación
+struct nodo * nodo_con_info_para_asignacion(int registro) {
+  struct nodo *a = malloc(sizeof(struct nodo));    //Asigna la dirección de memoria para un nuevo nodo del tipo struct
+    if(!a) {
+    exit(0); //Si el nuevo nodo es NULL significa que hay un error de memoria insuficiente
+  }
+  a->registro= registro; 
+  a->l = NULL;
+  a->r = NULL;
+  return a;
+}
+
 
 
 //Evaluar un nodo
@@ -181,16 +198,34 @@ double eval(struct nodo *a) {
 
     //NODO HOJA que es una variable
     case 'V':
-      v = a->value; //El valor ya lo conocíamos
+      //v = eval(a->l); //El valor ya lo conocíamos
       //No volvemos hay que hacer nada xq ya está en un registro
       printf("Esta variable está en el registro $f%d\n",a->registro);      
+	  break;
+
+    //ASIGNACIÓN
+    case 'A':
+      //Asigna el resultado de la operación que se encuentra en el nodo a->l al registro que tenia la variable originalmente
+      v = eval(a->l);
+
+      printf("Creada y resuelta una variable con un  $f%d\n",v);    
+	  break;
+
+    //ASIGNACIÓN y REEMPLAZAR
+    case 'R':
+      //Asigna el resultado de la operación que se encuentra en el nodo a->l al registro que tenia la variable originalmente
+      v = eval(a->l);
+      //Con la operación evaluada, se que en a->registro esta el registro con el resultado
+      fprintf(yyout,"  mov.s $f%d, $f%d\n",a->r->registro,a->l->registro); 
+
+      printf("Sobreescribe una variable que se encuentra en el registro  $f%d\n",a->r->registro);    
 	  break;
 
     //OPERACION SUMA
     case '+':
       printf("-> suma\n");
       v = eval(a->l) + eval(a->r);
-
+      printf("-> Se ha hecho la suma\n");
       //Ahora usamos solo registros tipo F para sumar el float
       fprintf(yyout,"  add.s $f%d, $f%d, $f%d\n",a->registro,a->l->registro,a->r->registro);   
 
@@ -345,6 +380,8 @@ double iniciar_evaluacion(struct nodo *a){
   fprintf(yyout,"\n.data #Variables\n");
   //Variable que SIEMPRE se imprime para el salto de línea
   fprintf(yyout,"newLine: .asciiz \"\\n\"\n");
+    //Variable que SIEMPRE se imprime para tener un zero float
+  fprintf(yyout,"zero_f: .float 0.0\n");
   //Recorremos el array de las variables que hay que definir
   for (int i = 0; i < 32; i++){
     //Si el espacio del array tiene algo
@@ -358,6 +395,7 @@ double iniciar_evaluacion(struct nodo *a){
   }
 
   fprintf(yyout,"\n.text #Operaciones\n");
+  fprintf(yyout,"  lwc1 $f31, zero_f\n\n");
 
   return eval(a);  //Con las variables ya definidas, comienza a evaluar la operación
 }
@@ -366,7 +404,8 @@ void imprimir(struct nodo *a){
   //Preparar para imprimir
   fprintf(yyout,"  li $v0, 2\n");   
   //Mover del registro n al registro 12
-  fprintf(yyout,"  mov.s $f12, $f%d\n",a->registro);   
+  fprintf(yyout,"  add.s $f12, $f31, $f%d\n",a->registro); 
+  //fprintf(yyout,"  mov.s $f12, $f%d\n",a->registro);   
   //Llamada al sistema
   fprintf(yyout,"  syscall\n");   
 
@@ -379,7 +418,7 @@ void imprimir(struct nodo *a){
 
 void si_statement(struct nodo *a, int numEtiqueta) {
   // Calibrar que el valor del registro de la comparación sea 0
-  fprintf(yyout, "  bc1t etiq%d\n", numEtiqueta);
+  fprintf(yyout, "  bc1f etiq%d\n", numEtiqueta);
   //salto a etiqueta
   //fprintf(yyout, "Etiq%d:\n", numEtiqueta);
 }
