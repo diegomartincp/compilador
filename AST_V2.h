@@ -186,6 +186,7 @@ double eval(struct nodo *a) {
   printf("EVALUA\n");
   double v;
   int etiquetaTemporal;
+
   switch(a->nodetype) {
 
     //NODO HOJA
@@ -329,24 +330,26 @@ double eval(struct nodo *a) {
         v = eval(a->l);
     break;
       case 'S': //SI statement
-         
+      etiquetaTemporal=numEtiqueta;
+      numEtiqueta ++;
+
         v = eval(a->l); //condicion en a->l
         printf("-> SI donde su condicion es %f\n",v);
-        si_statement(a->l, numEtiqueta);
+        si_statement(a->l, etiquetaTemporal);
         
         //Código del IF
         eval(a->r); //el resto del codigo a->r
 
         //Etiqueta que se usa para saltar al resto si condicion=FALSE
-        fprintf(yyout, "etiq%d:\n",numEtiqueta);
+        fprintf(yyout, "etiq%d:\n",etiquetaTemporal);
         //Incrementar el número de etiqueta para usar una distinta más tarde
-        numEtiqueta++;
+
     break;
       case 'M': //SI statement
 
-      
       etiquetaTemporal=numEtiqueta;
       numEtiqueta += 2;
+
         //Saltar a la etiqueta del comienzo del WHILE
         fprintf(yyout, "  etiq%d:\n", etiquetaTemporal);
         v = eval(a->l); //condicion en a->l
