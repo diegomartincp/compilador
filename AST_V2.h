@@ -185,6 +185,7 @@ struct nodo * nodo_con_info_para_asignacion(int registro) {
 double eval(struct nodo *a) {
   printf("EVALUA\n");
   double v;
+  int etiquetaTemporal;
   switch(a->nodetype) {
 
     //NODO HOJA
@@ -342,21 +343,25 @@ double eval(struct nodo *a) {
         numEtiqueta++;
     break;
       case 'M': //SI statement
+
+      
+      etiquetaTemporal=numEtiqueta;
+      numEtiqueta += 2;
         //Saltar a la etiqueta del comienzo del WHILE
-        fprintf(yyout, "  etiq%d:\n", numEtiqueta);
+        fprintf(yyout, "  etiq%d:\n", etiquetaTemporal);
         v = eval(a->l); //condicion en a->l
         printf("-> MIENTRAS donde su condicion es %f\n",v);
-        mientras_statement(a->l, numEtiqueta+1);
+        mientras_statement(a->l, etiquetaTemporal+1);
         
         //Código del IF
         eval(a->r); //el resto del codigo a->r
 
         //Saltar a la etiqueta del comienzo del WHILE
-        fprintf(yyout, "  j etiq%d\n", numEtiqueta);
+        fprintf(yyout, "  j etiq%d\n", etiquetaTemporal);
         //Etiqueta que se usa para salir del WHILE
-        fprintf(yyout, "etiq%d:\n",numEtiqueta+1);
+        fprintf(yyout, "etiq%d:\n",etiquetaTemporal+1);
         //Incrementar el número de etiqueta para usar una distinta más tarde
-        numEtiqueta += 2;
+
     break;
         case 'P': //Statement List
           printf("-> Statement Imprimir\n");
