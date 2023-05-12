@@ -5,6 +5,7 @@
 #include <math.h>
 #include "simbol_table.h"
 #include "AST_V2.h"
+#include <stdbool.h>
 
 FILE *yyout;
 
@@ -17,7 +18,7 @@ symbol table[100];
 int table_size = 0;//Se usa para conocer el índice del array disponible para insertar el siguiente número
 
 int numEtiqueta=0;
-variableGlobalFaltaEtiqueta=FALSE;
+bool variableGlobalFaltaEtiqueta= false;
 
 %}
 
@@ -50,6 +51,7 @@ variableGlobalFaltaEtiqueta=FALSE;
 %token <stringVal> TEXT
 %token <stringVal> ID
 
+%left MAYQUE MENQUE MAYORIGUAL MENORIGUAL IGUALIGUAL
 %left MAS MENOS
 %left POR DIV  
 %left IGUAL PUNTOCOMA
@@ -64,13 +66,19 @@ program:
         if(error_compilacion>=1){
             printf("\nHa habido %d error(es) de compilacion",error_compilacion);
         }
+        double valor = iniciar_evaluacion($1.a); //$1.a->registro
+        printf(">>>Resultado evaluado= %f\n",valor);
     }
     ;
 
 //Varias cosas encadenadas
 statement_list:
-    statement
-    | statement_list statement
+    statement {
+        $$.a=$1.a;
+    }
+    | statement_list statement {
+        $$.a = new_node('SL', $1.a, $2.a);
+    }
     ;
 
 //Una signación, IF o WHILE
@@ -80,6 +88,7 @@ statement:
     }
     | si_statement {
         printf("Si statment reconocido \n");
+        $$.a=$1.a;
     }
     | mientras_statement {
         printf("Mientras statement \n")
@@ -90,13 +99,13 @@ statement:
     ;
 
 imprimir_statement: IMPRIMIR LPAREN exp RPAREN{ //imprimir un identificador
-            if(variableGlobalFaltaEtiqueta==TRUE){  //Hay que imprimir una etiqueta
+            if(variableGlobalFaltaEtiqueta==true){  //Hay que imprimir una etiqueta
                 printf(yyout, "Etiqueta%d",numEtiqueta);
                 numEtiqueta++;
             }
             //Evaluamos la expresión
-            double valor = iniciar_evaluacion($3.a); //Evaluar la exppresión para hacer la asignación
-            printf(">>>IMPRIMIR %f\n",valor);
+            //double valor = iniciar_evaluacion($3.a); //Evaluar la exppresión para hacer la asignación
+            //printf(">>>IMPRIMIR %f\n",valor);
             //Ya conocemos en que registro está el valor, que será float
             imprimir($3.a);
         }
@@ -105,12 +114,12 @@ imprimir_statement: IMPRIMIR LPAREN exp RPAREN{ //imprimir un identificador
 asignacion_statement:
     ID IGUAL exp {
         printf("Asignacion\n");
-        if(variableGlobalFaltaEtiqueta==TRUE){  //Hay que imprimir una etiqueta
+        if(variableGlobalFaltaEtiqueta==true){  //Hay que imprimir una etiqueta
             printf(yyout, "Etiqueta%d",numEtiqueta);
             numEtiqueta++;
         }
-        double valor = iniciar_evaluacion($3.a); //Evaluar la exppresión para hacer la asignación
-        printf(">>>Resultado evaluado = %f\n",valor);
+        //double valor = iniciar_evaluacion($3.a); //Evaluar la exppresión para hacer la asignación
+        //printf(">>>Resultado evaluado = %f\n",valor);
         int i = lookup($1,table_size,table);
         if (i == -1) {
             printf(">>>Se asigna la variable en tabla de símbolos\n");
@@ -169,13 +178,11 @@ asignacion_statement:
 si_statement: SI LPAREN condicion_list RPAREN statement_list osi_list FIN  {printf("SI con cadena de OSI\n");}
     | SI LPAREN condicion_list RPAREN statement_list FIN {
         printf("SI\n");
-        if(variableGlobalFaltaEtiqueta==TRUE){  //Hay que imprimir una etiqueta
-            printf(yyout, "Etiqueta%d",numEtiqueta);
+        if(variableGlobalFaltaEtiqueta==true){  //Hay que imprimir una etiqueta
+            fprintf(yyout, "Etiqueta:%d",numEtiqueta);
             numEtiqueta++;
         }
-        double valor = iniciar_evaluacion($3.a); //$3.a->registro
-        printf(">>>Resultado evaluado comparacion MAYOR QUE= %f\n",valor);
-        si_statement($3.a, numEtiqueta);
+        $$.a = new_node('S',$3.a, $5.a);
         }
     ;
 //Varios osi encadenados
@@ -191,9 +198,9 @@ osi: OSI LPAREN condicion_list RPAREN statement_list {printf("OSI\n");}
 mientras_statement:
     MIENTRAS LPAREN condicion_list RPAREN statement_list FIN {
         printf("MIENTRAS\n");
-        if(variableGlobalFaltaEtiqueta==TRUE){  //Hay que imprimir una etiqueta
+        if(variableGlobalFaltaEtiqueta==true){  //Hay que imprimir una etiqueta
             printf(yyout, "Etiqueta%d",numEtiqueta);
-            numEtiqueta++
+            numEtiqueta++;
         }
     }
     ;
@@ -204,7 +211,11 @@ condicion_list: condicion_list DOBLEAMPERSAN  condicion {printf("Condicion && co
     | EXCLAMACION condicion {printf("!condicion\n");}
     | condicion {
         $$.a = $1.a;
-        printf("\nCondicion\n");}
+        printf("\nCondicion\n");
+        $$.a = new_node('C',$1.a, NULL);
+        //double valor = iniciar_evaluacion($1.a); //$1.a->registro
+        //printf(">>>Resultado evaluado comparacion MAYOR QUE= %f\n",valor);
+    }
 
 //Condiciones
 /**
@@ -215,7 +226,7 @@ condicion: exp MAYQUE exp {
         if (strcmp($1.tipo, "texto")==0 || strcmp($3.tipo, "texto")==0) { 
             printf("\nOperacion no reconocida.\n");
         } else {
-            $$.a = new_node('>', $1.a, $3.a)
+            $$.a = new_node('>', $1.a, $3.a);
             $$.tipo = "bool";
         }
         
@@ -225,7 +236,7 @@ condicion: exp MAYQUE exp {
         if (strcmp($1.tipo, "texto")==0 || strcmp($3.tipo, "texto")==0) { 
             printf("\nOperacion no reconocida.\n");
         } else {
-            $$.a = new_node('<', $1.a, $3.a)
+            $$.a = new_node('<', $1.a, $3.a);
             $$.tipo = "bool";
         }
     }
@@ -234,7 +245,7 @@ condicion: exp MAYQUE exp {
         if (strcmp($1.tipo, "texto")==0 || strcmp($3.tipo, "texto")==0) { 
             printf("\nOperacion no reconocida.\n");
         } else {
-            $$.a = new_node('>=', $1.a, $3.a)
+            $$.a = new_node('>=', $1.a, $3.a);
             $$.tipo = "bool";
         }
     }
@@ -243,7 +254,7 @@ condicion: exp MAYQUE exp {
         if (strcmp($1.tipo, "texto")==0 || strcmp($3.tipo, "texto")==0) { 
             printf("\nOperacion no reconocida.\n");
         } else {
-            $$.a = new_node('<=', $1.a, $3.a)
+            $$.a = new_node('<=', $1.a, $3.a);
             $$.tipo = "bool";
         }
     }
@@ -252,7 +263,7 @@ condicion: exp MAYQUE exp {
         if (strcmp($1.tipo, "texto")==0 || strcmp($3.tipo, "texto")==0) { 
             printf("\nOperacion no reconocida.\n");
         } else {
-            $$.a = new_node('==', $1.a, $3.a)
+            $$.a = new_node('==', $1.a, $3.a);
             $$.tipo = "bool";
         }
     }
@@ -387,7 +398,7 @@ OJO HAY QUE HACER ESTA OPERACIÓN EN EL AST Y ASM
 **/
     | term MODULO factor { //solo se puede hacer con enteros
         if (strcmp($1.tipo, "entero")==0 && strcmp($3.tipo, "entero")==0) { //Si ambos son enteros
-            $$.entero = $1.entero % $3.entero;
+            $$.a = new_node('%', $1.a,$3.a); 
             $$.tipo="entero";
             printf( "entero %% entero = %ld\n", $$.entero);
         } else{

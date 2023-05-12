@@ -271,6 +271,22 @@ double eval(struct nodo *a) {
         liberarRegistro(a->l);
         liberarRegistro(a->r);
     break;
+      case 'C': //condicion
+         printf("-> CONDICION\n");
+        v = eval(a->l);
+    break;
+      case 'S': //SI statement
+         printf("-> SI\n");
+        v = eval(a->l); //condicion en a->l
+        si_statement(a->l, numEtiqueta);
+        
+        eval(a->r); //el resto del codigo a->r
+    break;
+      case 'SL': //Statement List
+         printf("-> Statement List\n");
+        v = eval(a->l); //statement_list
+        eval(a->r); //staetment
+    break;
     default: printf("Error: Nodo desconocido %c\n", a->nodetype); 
    }
   return v;
@@ -308,5 +324,6 @@ void imprimir(struct nodo *a){
 void si_statement(struct nodo *a, int numEtiqueta) {
   // Calibrar que el valor del registro de la comparación sea 0
   fprintf(yyout, "  beq $f%d, 0, etiq%d\n", a->registro, numEtiqueta);
-  
+  //salto a etiqueta
+  fprintf(yyout, "etiq%d:\n", numEtiqueta);
 }

@@ -75,6 +75,7 @@
 #include <math.h>
 #include "simbol_table.h"
 #include "AST_V2.h"
+#include <stdbool.h>
 
 FILE *yyout;
 
@@ -87,12 +88,12 @@ symbol table[100];
 int table_size = 0;//Se usa para conocer el índice del array disponible para insertar el siguiente número
 
 int numEtiqueta=0;
-variableGlobalFaltaEtiqueta=FALSE;
+bool variableGlobalFaltaEtiqueta= false;
 
 
 
 /* Line 189 of yacc.c  */
-#line 96 "gramatica.tab.c"
+#line 97 "gramatica.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -159,7 +160,7 @@ typedef union YYSTYPE
 {
 
 /* Line 214 of yacc.c  */
-#line 25 "gramatica.y"
+#line 26 "gramatica.y"
 
   int intVal;
   float floatVal;
@@ -175,7 +176,7 @@ typedef union YYSTYPE
 
 
 /* Line 214 of yacc.c  */
-#line 179 "gramatica.tab.c"
+#line 180 "gramatica.tab.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -187,7 +188,7 @@ typedef union YYSTYPE
 
 
 /* Line 264 of yacc.c  */
-#line 191 "gramatica.tab.c"
+#line 192 "gramatica.tab.c"
 
 #ifdef short
 # undef short
@@ -489,11 +490,11 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    62,    62,    72,    73,    78,    81,    84,    87,    92,
-     106,   169,   170,   184,   185,   188,   193,   203,   204,   205,
-     206,   214,   224,   233,   242,   251,   261,   287,   316,   327,
-     330,   359,   389,   402,   412,   416,   452,   456,   460,   464,
-     467,   471,   474
+       0,    64,    64,    76,    79,    86,    89,    93,    96,   101,
+     115,   178,   179,   190,   191,   194,   199,   209,   210,   211,
+     212,   224,   234,   243,   252,   261,   271,   297,   326,   337,
+     340,   369,   399,   412,   422,   426,   462,   466,   470,   474,
+     477,   481,   484
 };
 #endif
 
@@ -1464,19 +1465,39 @@ yyreduce:
         case 2:
 
 /* Line 1464 of yacc.c  */
-#line 62 "gramatica.y"
+#line 64 "gramatica.y"
     {
         printf("-> SENTENCIA RECONOCIDA");
         if(error_compilacion>=1){
             printf("\nHa habido %d error(es) de compilacion",error_compilacion);
         }
+        double valor = iniciar_evaluacion((yyvsp[(1) - (1)].st).a); //$1.a->registro
+        printf(">>>Resultado evaluado= %f\n",valor);
+    ;}
+    break;
+
+  case 3:
+
+/* Line 1464 of yacc.c  */
+#line 76 "gramatica.y"
+    {
+        (yyval.st).a=(yyvsp[(1) - (1)].st).a;
+    ;}
+    break;
+
+  case 4:
+
+/* Line 1464 of yacc.c  */
+#line 79 "gramatica.y"
+    {
+        (yyval.st).a = new_node('SL', (yyvsp[(1) - (2)].st).a, (yyvsp[(2) - (2)].st).a);
     ;}
     break;
 
   case 5:
 
 /* Line 1464 of yacc.c  */
-#line 78 "gramatica.y"
+#line 86 "gramatica.y"
     {
         printf("Statement reconocido\n")
     ;}
@@ -1485,16 +1506,17 @@ yyreduce:
   case 6:
 
 /* Line 1464 of yacc.c  */
-#line 81 "gramatica.y"
+#line 89 "gramatica.y"
     {
         printf("Si statment reconocido \n");
+        (yyval.st).a=(yyvsp[(1) - (1)].st).a;
     ;}
     break;
 
   case 7:
 
 /* Line 1464 of yacc.c  */
-#line 84 "gramatica.y"
+#line 93 "gramatica.y"
     {
         printf("Mientras statement \n")
     ;}
@@ -1503,7 +1525,7 @@ yyreduce:
   case 8:
 
 /* Line 1464 of yacc.c  */
-#line 87 "gramatica.y"
+#line 96 "gramatica.y"
     {
         printf("imprimir statement \n")
     ;}
@@ -1512,9 +1534,9 @@ yyreduce:
   case 9:
 
 /* Line 1464 of yacc.c  */
-#line 92 "gramatica.y"
+#line 101 "gramatica.y"
     { //imprimir un identificador
-            if(variableGlobalFaltaEtiqueta==TRUE){  //Hay que imprimir una etiqueta
+            if(variableGlobalFaltaEtiqueta==true){  //Hay que imprimir una etiqueta
                 printf(yyout, "Etiqueta%d",numEtiqueta);
                 numEtiqueta++;
             }
@@ -1529,10 +1551,10 @@ yyreduce:
   case 10:
 
 /* Line 1464 of yacc.c  */
-#line 106 "gramatica.y"
+#line 115 "gramatica.y"
     {
         printf("Asignacion\n");
-        if(variableGlobalFaltaEtiqueta==TRUE){  //Hay que imprimir una etiqueta
+        if(variableGlobalFaltaEtiqueta==true){  //Hay que imprimir una etiqueta
             printf(yyout, "Etiqueta%d",numEtiqueta);
             numEtiqueta++;
         }
@@ -1595,57 +1617,54 @@ yyreduce:
   case 11:
 
 /* Line 1464 of yacc.c  */
-#line 169 "gramatica.y"
+#line 178 "gramatica.y"
     {printf("SI con cadena de OSI\n");;}
     break;
 
   case 12:
 
 /* Line 1464 of yacc.c  */
-#line 170 "gramatica.y"
+#line 179 "gramatica.y"
     {
         printf("SI\n");
-        if(variableGlobalFaltaEtiqueta==TRUE){  //Hay que imprimir una etiqueta
-            printf(yyout, "Etiqueta%d",numEtiqueta);
+        if(variableGlobalFaltaEtiqueta==true){  //Hay que imprimir una etiqueta
+            fprintf(yyout, "Etiqueta:%d",numEtiqueta);
             numEtiqueta++;
         }
-        double valor = iniciar_evaluacion((yyvsp[(3) - (6)].st).a); //$3.a->registro
-        printf(">>>Resultado evaluado comparacion MAYOR QUE= %f\n",valor);
-        si_statement((yyvsp[(3) - (6)].st).a, numEtiqueta);
-
+        (yyval.st).a = new_node('S',(yyvsp[(3) - (6)].st).a, (yyvsp[(5) - (6)].st).a);
         ;}
     break;
 
   case 13:
 
 /* Line 1464 of yacc.c  */
-#line 184 "gramatica.y"
+#line 190 "gramatica.y"
     {printf("UN OSI\n");;}
     break;
 
   case 14:
 
 /* Line 1464 of yacc.c  */
-#line 185 "gramatica.y"
+#line 191 "gramatica.y"
     {printf("VARIOS OSI\n");;}
     break;
 
   case 15:
 
 /* Line 1464 of yacc.c  */
-#line 188 "gramatica.y"
+#line 194 "gramatica.y"
     {printf("OSI\n");;}
     break;
 
   case 16:
 
 /* Line 1464 of yacc.c  */
-#line 193 "gramatica.y"
+#line 199 "gramatica.y"
     {
         printf("MIENTRAS\n");
-        if(variableGlobalFaltaEtiqueta==TRUE){  //Hay que imprimir una etiqueta
+        if(variableGlobalFaltaEtiqueta==true){  //Hay que imprimir una etiqueta
             printf(yyout, "Etiqueta%d",numEtiqueta);
-            numEtiqueta++
+            numEtiqueta++;
         }
     ;}
     break;
@@ -1653,43 +1672,47 @@ yyreduce:
   case 17:
 
 /* Line 1464 of yacc.c  */
-#line 203 "gramatica.y"
+#line 209 "gramatica.y"
     {printf("Condicion && condicion\n");;}
     break;
 
   case 18:
 
 /* Line 1464 of yacc.c  */
-#line 204 "gramatica.y"
+#line 210 "gramatica.y"
     {printf("Condicion || condicion\n");;}
     break;
 
   case 19:
 
 /* Line 1464 of yacc.c  */
-#line 205 "gramatica.y"
+#line 211 "gramatica.y"
     {printf("!condicion\n");;}
     break;
 
   case 20:
 
 /* Line 1464 of yacc.c  */
-#line 206 "gramatica.y"
+#line 212 "gramatica.y"
     {
         (yyval.st).a = (yyvsp[(1) - (1)].st).a;
-        printf("\nCondicion\n");;}
+        printf("\nCondicion\n");
+        (yyval.st).a = new_node('C',(yyvsp[(1) - (1)].st).a, NULL);
+        //double valor = iniciar_evaluacion($1.a); //$1.a->registro
+        //printf(">>>Resultado evaluado comparacion MAYOR QUE= %f\n",valor);
+    ;}
     break;
 
   case 21:
 
 /* Line 1464 of yacc.c  */
-#line 214 "gramatica.y"
+#line 224 "gramatica.y"
     {
         printf("Condicion mayor que\n");
         if (strcmp((yyvsp[(1) - (3)].st).tipo, "texto")==0 || strcmp((yyvsp[(3) - (3)].st).tipo, "texto")==0) { 
             printf("\nOperacion no reconocida.\n");
         } else {
-            (yyval.st).a = new_node('>', (yyvsp[(1) - (3)].st).a, (yyvsp[(3) - (3)].st).a)
+            (yyval.st).a = new_node('>', (yyvsp[(1) - (3)].st).a, (yyvsp[(3) - (3)].st).a);
             (yyval.st).tipo = "bool";
         }
         
@@ -1699,13 +1722,13 @@ yyreduce:
   case 22:
 
 /* Line 1464 of yacc.c  */
-#line 224 "gramatica.y"
+#line 234 "gramatica.y"
     {
         printf("Condicion menor que\n");
         if (strcmp((yyvsp[(1) - (3)].st).tipo, "texto")==0 || strcmp((yyvsp[(3) - (3)].st).tipo, "texto")==0) { 
             printf("\nOperacion no reconocida.\n");
         } else {
-            (yyval.st).a = new_node('<', (yyvsp[(1) - (3)].st).a, (yyvsp[(3) - (3)].st).a)
+            (yyval.st).a = new_node('<', (yyvsp[(1) - (3)].st).a, (yyvsp[(3) - (3)].st).a);
             (yyval.st).tipo = "bool";
         }
     ;}
@@ -1714,13 +1737,13 @@ yyreduce:
   case 23:
 
 /* Line 1464 of yacc.c  */
-#line 233 "gramatica.y"
+#line 243 "gramatica.y"
     {
         printf("Condicion mayor o igual que\n");
         if (strcmp((yyvsp[(1) - (3)].st).tipo, "texto")==0 || strcmp((yyvsp[(3) - (3)].st).tipo, "texto")==0) { 
             printf("\nOperacion no reconocida.\n");
         } else {
-            (yyval.st).a = new_node('>=', (yyvsp[(1) - (3)].st).a, (yyvsp[(3) - (3)].st).a)
+            (yyval.st).a = new_node('>=', (yyvsp[(1) - (3)].st).a, (yyvsp[(3) - (3)].st).a);
             (yyval.st).tipo = "bool";
         }
     ;}
@@ -1729,13 +1752,13 @@ yyreduce:
   case 24:
 
 /* Line 1464 of yacc.c  */
-#line 242 "gramatica.y"
+#line 252 "gramatica.y"
     {
         printf("Condicion menor o igual que\n");
         if (strcmp((yyvsp[(1) - (3)].st).tipo, "texto")==0 || strcmp((yyvsp[(3) - (3)].st).tipo, "texto")==0) { 
             printf("\nOperacion no reconocida.\n");
         } else {
-            (yyval.st).a = new_node('<=', (yyvsp[(1) - (3)].st).a, (yyvsp[(3) - (3)].st).a)
+            (yyval.st).a = new_node('<=', (yyvsp[(1) - (3)].st).a, (yyvsp[(3) - (3)].st).a);
             (yyval.st).tipo = "bool";
         }
     ;}
@@ -1744,13 +1767,13 @@ yyreduce:
   case 25:
 
 /* Line 1464 of yacc.c  */
-#line 251 "gramatica.y"
+#line 261 "gramatica.y"
     {
         printf("Condicion igual igual que\n");
         if (strcmp((yyvsp[(1) - (3)].st).tipo, "texto")==0 || strcmp((yyvsp[(3) - (3)].st).tipo, "texto")==0) { 
             printf("\nOperacion no reconocida.\n");
         } else {
-            (yyval.st).a = new_node('==', (yyvsp[(1) - (3)].st).a, (yyvsp[(3) - (3)].st).a)
+            (yyval.st).a = new_node('==', (yyvsp[(1) - (3)].st).a, (yyvsp[(3) - (3)].st).a);
             (yyval.st).tipo = "bool";
         }
     ;}
@@ -1759,7 +1782,7 @@ yyreduce:
   case 26:
 
 /* Line 1464 of yacc.c  */
-#line 261 "gramatica.y"
+#line 271 "gramatica.y"
     {
         if (strcmp((yyvsp[(1) - (3)].st).tipo, "entero")==0 && strcmp((yyvsp[(3) - (3)].st).tipo, "entero")==0) { //Si ambos son enteros
             (yyval.st).a = new_node('+', (yyvsp[(1) - (3)].st).a,(yyvsp[(3) - (3)].st).a); 
@@ -1791,7 +1814,7 @@ yyreduce:
   case 27:
 
 /* Line 1464 of yacc.c  */
-#line 287 "gramatica.y"
+#line 297 "gramatica.y"
     {
         if (strcmp((yyvsp[(1) - (3)].st).tipo, "entero")==0 && strcmp((yyvsp[(3) - (3)].st).tipo, "entero")==0) { //Si ambos son enteros
             (yyval.st).a = new_node('-', (yyvsp[(1) - (3)].st).a,(yyvsp[(3) - (3)].st).a);
@@ -1823,7 +1846,7 @@ yyreduce:
   case 28:
 
 /* Line 1464 of yacc.c  */
-#line 316 "gramatica.y"
+#line 326 "gramatica.y"
     {
         if (strcmp((yyvsp[(1) - (3)].st).tipo, "texto")==0 && strcmp((yyvsp[(3) - (3)].st).tipo, "texto")==0){
             (yyval.st).texto = strcat((yyvsp[(1) - (3)].st).texto, (yyvsp[(3) - (3)].st).texto);
@@ -1840,14 +1863,14 @@ yyreduce:
   case 29:
 
 /* Line 1464 of yacc.c  */
-#line 327 "gramatica.y"
+#line 337 "gramatica.y"
     {(yyval.st) = (yyvsp[(1) - (1)].st); ;}
     break;
 
   case 30:
 
 /* Line 1464 of yacc.c  */
-#line 330 "gramatica.y"
+#line 340 "gramatica.y"
     {
         if (strcmp((yyvsp[(1) - (3)].st).tipo, "entero")==0 && strcmp((yyvsp[(3) - (3)].st).tipo, "entero")==0) { //Si ambos son enteros
             (yyval.st).a = new_node('*', (yyvsp[(1) - (3)].st).a,(yyvsp[(3) - (3)].st).a);
@@ -1879,7 +1902,7 @@ yyreduce:
   case 31:
 
 /* Line 1464 of yacc.c  */
-#line 359 "gramatica.y"
+#line 369 "gramatica.y"
     {
         if (strcmp((yyvsp[(1) - (3)].st).tipo, "entero")==0 && strcmp((yyvsp[(3) - (3)].st).tipo, "entero")==0) { //Si ambos son enteros
             (yyval.st).a = new_node('/', (yyvsp[(1) - (3)].st).a,(yyvsp[(3) - (3)].st).a); 
@@ -1911,10 +1934,10 @@ yyreduce:
   case 32:
 
 /* Line 1464 of yacc.c  */
-#line 389 "gramatica.y"
+#line 399 "gramatica.y"
     { //solo se puede hacer con enteros
         if (strcmp((yyvsp[(1) - (3)].st).tipo, "entero")==0 && strcmp((yyvsp[(3) - (3)].st).tipo, "entero")==0) { //Si ambos son enteros
-            (yyval.st).entero = (yyvsp[(1) - (3)].st).entero % (yyvsp[(3) - (3)].st).entero;
+            (yyval.st).a = new_node('%', (yyvsp[(1) - (3)].st).a,(yyvsp[(3) - (3)].st).a); 
             (yyval.st).tipo="entero";
             printf( "entero %% entero = %ld\n", (yyval.st).entero);
         } else{
@@ -1927,7 +1950,7 @@ yyreduce:
   case 33:
 
 /* Line 1464 of yacc.c  */
-#line 402 "gramatica.y"
+#line 412 "gramatica.y"
     { //solo se puede hacer con enteros
         if (strcmp((yyvsp[(1) - (3)].st).tipo, "entero")==0 && strcmp((yyvsp[(3) - (3)].st).tipo, "entero")==0) { //Si ambos son enteros
             (yyval.st).entero = pow((yyvsp[(1) - (3)].st).entero, (yyvsp[(3) - (3)].st).entero);
@@ -1943,14 +1966,14 @@ yyreduce:
   case 34:
 
 /* Line 1464 of yacc.c  */
-#line 412 "gramatica.y"
+#line 422 "gramatica.y"
     {(yyval.st) = (yyvsp[(1) - (1)].st);;}
     break;
 
   case 35:
 
 /* Line 1464 of yacc.c  */
-#line 416 "gramatica.y"
+#line 426 "gramatica.y"
     {
             //Hemos encontrado un identificador, hay que ver si está en la tabla para recogerlo y sino devolver un error
             int i = lookup((yyvsp[(1) - (1)].stringVal),table_size,table); //lo buscamos
@@ -1990,7 +2013,7 @@ yyreduce:
   case 36:
 
 /* Line 1464 of yacc.c  */
-#line 452 "gramatica.y"
+#line 462 "gramatica.y"
     {(yyval.st).entero = (yyvsp[(1) - (1)].intVal);
             (yyval.st).a = new_leaf_num((yyvsp[(1) - (1)].intVal)); 
             (yyval.st).tipo="entero"; 
@@ -2000,7 +2023,7 @@ yyreduce:
   case 37:
 
 /* Line 1464 of yacc.c  */
-#line 456 "gramatica.y"
+#line 466 "gramatica.y"
     {(yyval.st).entero = -(yyvsp[(2) - (2)].intVal);
             (yyval.st).a = new_leaf_num(-(yyvsp[(2) - (2)].intVal));
             (yyval.st).tipo="entero";
@@ -2010,7 +2033,7 @@ yyreduce:
   case 38:
 
 /* Line 1464 of yacc.c  */
-#line 460 "gramatica.y"
+#line 470 "gramatica.y"
     {(yyval.st).real = (yyvsp[(1) - (1)].floatVal);
             (yyval.st).a = new_leaf_num((yyvsp[(1) - (1)].floatVal));
             (yyval.st).tipo="real";
@@ -2020,7 +2043,7 @@ yyreduce:
   case 39:
 
 /* Line 1464 of yacc.c  */
-#line 464 "gramatica.y"
+#line 474 "gramatica.y"
     {(yyval.st).real = (yyvsp[(2) - (2)].floatVal);
             (yyval.st).tipo="real";
             printf( "REAL POSITIVO %f\n", (yyval.st).real);;}
@@ -2029,7 +2052,7 @@ yyreduce:
   case 40:
 
 /* Line 1464 of yacc.c  */
-#line 467 "gramatica.y"
+#line 477 "gramatica.y"
     {(yyval.st).real = -(yyvsp[(2) - (2)].floatVal);
             (yyval.st).a = new_leaf_num(-(yyvsp[(2) - (2)].floatVal));
             (yyval.st).tipo="real";
@@ -2039,7 +2062,7 @@ yyreduce:
   case 41:
 
 /* Line 1464 of yacc.c  */
-#line 471 "gramatica.y"
+#line 481 "gramatica.y"
     {
             (yyval.st) = (yyvsp[(2) - (3)].st);
             printf("PARENTESIS\n");;}
@@ -2048,7 +2071,7 @@ yyreduce:
   case 42:
 
 /* Line 1464 of yacc.c  */
-#line 474 "gramatica.y"
+#line 484 "gramatica.y"
     {
             (yyval.st).texto = (yyvsp[(1) - (1)].stringVal);
             (yyval.st).tipo="texto";
@@ -2058,7 +2081,7 @@ yyreduce:
 
 
 /* Line 1464 of yacc.c  */
-#line 2062 "gramatica.tab.c"
+#line 2085 "gramatica.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2270,7 +2293,7 @@ yyreturn:
 
 
 /* Line 1684 of yacc.c  */
-#line 479 "gramatica.y"
+#line 489 "gramatica.y"
 
 
 int main() {
