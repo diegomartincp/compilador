@@ -1,1 +1,1 @@
-si (3+2>=5) var1=3%3 var2=3/3 imprimir(var1+var2) fin
+si (80>=70) var1 = 5 si (10==10) var1=var1+1 fin imprimir(var1+10) fin

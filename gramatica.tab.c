@@ -1752,7 +1752,7 @@ yyreduce:
         if (strcmp((yyvsp[(1) - (3)].st).tipo, "entero")==0 && strcmp((yyvsp[(3) - (3)].st).tipo, "entero")==0) { //Si ambos son enteros
             (yyval.st).a = new_node('+', (yyvsp[(1) - (3)].st).a,(yyvsp[(3) - (3)].st).a); 
             (yyval.st).tipo="entero";
-            printf(" operacion(entero+entero): resultado = %ld\n", (yyvsp[(1) - (3)].st).entero+(yyvsp[(3) - (3)].st).entero);
+            printf(" operacion(entero+entero): resultado = %ld\n", (yyvsp[(1) - (3)].st).entero+(yyvsp[(3) - (3)].st).entero);  
         }
         else if (strcmp((yyvsp[(1) - (3)].st).tipo, "real")==0 && strcmp((yyvsp[(3) - (3)].st).tipo, "real")==0){  //Si los dos son float
             (yyval.st).a = new_node('+', (yyvsp[(1) - (3)].st).a,(yyvsp[(3) - (3)].st).a);
