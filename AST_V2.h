@@ -301,6 +301,7 @@ double eval(struct nodo *a)
     fprintf(yyout, "  mfhi $t%d\n", a->registro); // obtenemos el residuo/modulo
     // el cociente se almacena en el registro especial LO Lower y el residuo se almacena en el registro especial HI Higher
     fprintf(yyout, "  mtc1 $t%d, $f%d\n", a->registro, a->registro); // reconvertimos
+    fprintf(yyout, "  cvt.s.w $f%d, $f%d\n", a->registro, a->registro); // reconvertimos
 
     // liberar los registros de los nodos L y R
     liberarRegistro(a->l);
