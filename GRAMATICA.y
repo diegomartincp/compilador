@@ -386,7 +386,7 @@ OJO HAY QUE HACER ESTA OPERACIÓN EN EL AST Y ASM
 **/
     | term EXPON factor { //solo se puede hacer con enteros
         if (strcmp($1.tipo, "entero")==0 && strcmp($3.tipo, "entero")==0) { //Si ambos son enteros
-            $$.entero = pow($1.entero, $3.entero);
+            $$.a = new_node('^', $1.a,$3.a);
             $$.tipo="entero";
             printf( "entero^entero = %ld\n", $$.entero);
         } else{

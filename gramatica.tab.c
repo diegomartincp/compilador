@@ -1928,7 +1928,7 @@ if (i == -1) {
 #line 387 "gramatica.y"
     { //solo se puede hacer con enteros
         if (strcmp((yyvsp[(1) - (3)].st).tipo, "entero")==0 && strcmp((yyvsp[(3) - (3)].st).tipo, "entero")==0) { //Si ambos son enteros
-            (yyval.st).entero = pow((yyvsp[(1) - (3)].st).entero, (yyvsp[(3) - (3)].st).entero);
+            (yyval.st).a = new_node('^', (yyvsp[(1) - (3)].st).a,(yyvsp[(3) - (3)].st).a);
             (yyval.st).tipo="entero";
             printf( "entero^entero = %ld\n", (yyval.st).entero);
         } else{
