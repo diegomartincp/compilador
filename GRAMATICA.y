@@ -68,15 +68,12 @@ program:
             printf("\nHa habido %d error(es) de compilacion",error_compilacion);
         }
         double valor = iniciar_evaluacion($1.a); //$1.a->registro
-        printf(">>>Resultado evaluado= %f\n",valor);
+        /*printf(">>>Resultado evaluado= %f\n",valor);
         printf("\n>>>Variables de la tabla de símbolos: %f\n",valor);
-                
-                for (int i = 0; i < 100; i++){
-
-
-                printf("%s\n",table[i].name);
-
-                }
+        for (int i = 0; i < 100; i++){
+        printf("%s\n",table[i].name);
+        }*/
+        printf("\nCodigo ASM generado correctamente");
             
     }
     ;
@@ -94,18 +91,14 @@ statement_list:
 //Una signación, IF o WHILE
 statement:
     asignacion_statement {
-        printf("Asignacion statement reconocido\n");
         $$.a=$1.a;
     }
     | si_statement {
-        printf("Si statment reconocido \n");
         $$.a=$1.a;
     }
     | mientras_statement {
-        printf("Mientras statement \n");
     }
     | imprimir_statement {
-        printf("imprimir statement \n");
         $$.a=$1.a;
     }
     ;
@@ -126,39 +119,37 @@ imprimir_statement: IMPRIMIR LPAREN exp RPAREN{ //imprimir un identificador
 
 asignacion_statement:
     ID IGUAL exp {
-        printf("ID IGUAL exp\n");
-        printf("Asignacion con tipo %s\n",$3.tipo);
+        printf("Asignacion con datos de tipo %s\n",$3.tipo);
 
 
-int i = lookup($1,table_size,table);
-if (i == -1) {
-    if(strcmp($3.tipo, "entero")==0){
-        table[table_size].name = $1;
-        table[table_size].tipo = "entero";
-        table[table_size].registro = $3.a->registro;
-        table_size++;
-    }
-    //real string
-        $$.a=new_node('A',$3.a, nodo_vacio());
+        int i = lookup($1,table_size,table);
+        if (i == -1) {
+            if(strcmp($3.tipo, "entero")==0){
+                table[table_size].name = $1;
+                table[table_size].tipo = "entero";
+                table[table_size].registro = $3.a->registro;
+                table_size++;
+            }
+            //real string
+                $$.a=new_node('A',$3.a, nodo_vacio());
 
-}else{
-    printf("Esta var se encuentra en el registro  $f%d\n",table[i].registro); 
-    //Si lo encuentra, tiene que coger el resultado de exp y moverlo al registro
-    //que tiene asignada la variable
-    if(strcmp($3.tipo, "entero")==0){
-        table[i].tipo = "entero";
-    }
-    //real string
-    $$.a=new_node('R',$3.a, nodo_con_info_para_asignacion(table[i].registro));
-}
+        }else{
+            printf("Esta var se encuentra en el registro  $f%d\n",table[i].registro); 
+            //Si lo encuentra, tiene que coger el resultado de exp y moverlo al registro
+            //que tiene asignada la variable
+            if(strcmp($3.tipo, "entero")==0){
+                table[i].tipo = "entero";
+            }
+            //real string
+            $$.a=new_node('R',$3.a, nodo_con_info_para_asignacion(table[i].registro));
+        }
     }
     ;
 
 //Si
-si_statement: SI LPAREN condicion_list RPAREN statement_list osi_list FIN  {printf("SI con cadena de OSI\n");}
+si_statement: SI LPAREN condicion_list RPAREN statement_list osi_list FIN  {printf("Bucle SI con cadena de OSI\n");}
     | SI LPAREN condicion_list RPAREN statement_list FIN {
-        printf("SI\n");
-
+        printf("Bucle SI\n");
         $$.a = new_node('S',$3.a, $5.a);
         }
     ;
@@ -174,7 +165,7 @@ osi: OSI LPAREN condicion_list RPAREN statement_list {printf("OSI\n");}
 //mientras
 mientras_statement:
     MIENTRAS LPAREN condicion_list RPAREN statement_list FIN {
-        printf("MIENTRAS\n");
+        printf("Bucle MIENTRAS\n");
         $$.a = new_node('M',$3.a,$5.a);
     }
     ;
@@ -246,48 +237,48 @@ exp: exp MAS term {
         if (strcmp($1.tipo, "entero")==0 && strcmp($3.tipo, "entero")==0) { //Si ambos son enteros
             $$.a = new_node('+', $1.a,$3.a); 
             $$.tipo="entero";
-            printf( "entero+entero = %ld\n", $$.entero);
+            printf(" operacion(entero+entero): resultado = %ld\n", $$.entero);
         }
         else if (strcmp($1.tipo, "real")==0 && strcmp($3.tipo, "real")==0){  //Si los dos son float
             $$.a = new_node('+', $1.a,$3.a);
             $$.tipo="real";
-            printf( "real+real = %f\n", $$.real);
+            printf(" operacion(real+real): resultado = %f\n", $1.real+$3.real);
         }
         else if (strcmp($1.tipo, "entero")==0 && strcmp($3.tipo, "real")==0){  // Entero y real
             $$.a = new_node('+', $1.a,$3.a);
             $$.tipo="real";
-            printf( "entero+real = %f\n", $$.real);
+            printf("operacion(entero+real): resultado = %f\n", $1.entero+$3.real);
         }
         else if (strcmp($1.tipo, "real")==0 && strcmp($3.tipo, "entero")==0){  // Real y entero
             $$.a = new_node('+', $1.a,$3.a);
             $$.tipo="real";
-            printf( "real+entero = %f\n", $$.real);
+            printf("operacion(real+entero): resultado = %f\n", $1.real+$3.entero);
         }
         else{
             error_compilacion++;
-            printf( "ERROR: No se puede operar en línea %d",linea);
+            printf("ERROR: No se puede operar en línea %d",linea);
         }
     }
     | exp MENOS term {
         if (strcmp($1.tipo, "entero")==0 && strcmp($3.tipo, "entero")==0) { //Si ambos son enteros
             $$.a = new_node('-', $1.a,$3.a);
             $$.tipo="entero";
-            printf( "entero-entero = %ld\n", $$.entero);
+            printf("operacion(entero-entero): resultado =  %ld\n", $1.entero-$3.entero);
         }
         else if (strcmp($1.tipo, "real")==0 && strcmp($3.tipo, "real")==0){  //Si los dos son float
             $$.a = new_node('-', $1.a,$3.a);
             $$.tipo="real";
-            printf( "real-real = %f\n", $$.real);
+            printf("operacion(real-real): resultado = %f\n", $1.real-$3.real);
         }
         else if (strcmp($1.tipo, "entero")==0 && strcmp($3.tipo, "real")==0){  // Entero y real
             $$.a = new_node('-', $1.a,$3.a);
             $$.tipo="real";
-            printf( "entero-real = %f\n", $$.real);
+            printf("operacion(entero-real): resultado =	 %f\n", $1.entero-$3.real);
         }
         else if (strcmp($1.tipo, "real")==0 && strcmp($3.tipo, "entero")==0){  // Real y entero
             $$.a = new_node('-', $1.a,$3.a);
             $$.tipo="real";
-            printf( "real-entero = %f\n", $$.real);
+            printf("operacion(real-entero): resultado =	 %f\n", $1.real-$3.entero);
         }
         else{
                 error_compilacion++;
@@ -309,7 +300,7 @@ FALTA POR HACER LA CONCATENACIÓN
         }
     }
     | term {
-        printf("Termino con tipo %s\n",$1.tipo);
+        //printf("Termino con tipo %s\n",$1.tipo);
         $$ = $1; }   //Se hace una copia
     ;
 
@@ -396,13 +387,13 @@ OJO HAY QUE HACER ESTA OPERACIÓN EN EL AST Y ASM
         }
     }
     | factor {
-        printf("Factor con tipo %s\n",$1.tipo);
+        //printf("Factor con tipo %s\n",$1.tipo);
         $$ = $1;}
 /**
 OJO HAY QUE CONTROLAR EL USO DE VARIABLES EN EL AST
 **/
     | ID {
-            printf("Hemos encontrado un identificador");
+            //printf("Hemos encontrado un identificador");
             //Hemos encontrado un identificador, hay que ver si está en la tabla para recogerlo y sino devolver un error
             int i = lookup($1,table_size,table); //lo buscamos
             if(i == -1){
@@ -436,29 +427,29 @@ OJO HAY QUE CONTROLAR EL USO DE VARIABLES EN EL AST
 factor: ENT {$$.entero = $1;
             $$.a = new_leaf_num($1); 
             $$.tipo="entero"; 
-            printf( "ENTERO %ld\n", $$.entero);}   
+            printf( "Variable de tipo ENTERO: %ld\n", $$.entero);}   
     | MENOS ENT {$$.entero = -$2;
             $$.a = new_leaf_num(-$2);
             $$.tipo="entero";
-            printf( "ENTERO NEGATIVO %ld\n", $$.entero);}
+            printf( "Variable de tipo ENTERO NEGATIVO: %ld\n", $$.entero);}
     | REAL {$$.real = $1;
             $$.a = new_leaf_num($1);
             $$.tipo="real";
-            printf( "REAL  %f\n", $$.real);}
+            printf( "Variable de tipo REAL: %f\n", $$.real);}
     | MAS REAL {$$.real = $2;
             $$.tipo="real";
-            printf( "REAL POSITIVO %f\n", $$.real);}
+            printf( "Variable de tipo REAL POSITIVO: %f\n", $$.real);}
     | MENOS REAL {$$.real = -$2;
             $$.a = new_leaf_num(-$2);
             $$.tipo="real";
-            printf( "REAL NEGATIVO %f\n", $$.real);}
+            printf( "Variable de tipo REAL NEGATIVO: %f\n", $$.real);}
     | LPAREN exp RPAREN {
             $$ = $2;
             printf("PARENTESIS\n");}
     | TEXT  {
             $$.texto = $1;
             $$.tipo="texto";
-            printf(" TEXTO %s\n", $$.texto);}
+            printf("Variable de tipo TEXTO: %s\n", $$.texto);}
     ;
 %%
 

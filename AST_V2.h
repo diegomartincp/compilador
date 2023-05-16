@@ -89,8 +89,8 @@ struct nodo *new_node(int nodetype, struct nodo *l, struct nodo *r)
 
   // Asignar registro para float
   a->registro = buscarRegistroLibreF();
-  printf("El nodo ha reservado el registro f%d \n", a->registro);
-
+  printf("Se ha reservado el registro $f%d para almancear el resultado de una operacion\n\n",a->registro);
+ 
   return a;
 }
 
@@ -110,12 +110,12 @@ struct nodo *new_leaf_num(double value)
 
   // Asignar registro para float
   a->registro = buscarRegistroLibreF();
-  printf("El nodo ha reservado el registro f%d \n", a->registro);
 
   // Guardar como se llama la variable de .data
   a->variableNum = siguienteVariableDisponible;
-  printf("%f se almacena en la 'variable%d'\n", a->value, a->variableNum);
   siguienteVariableDisponible++; // Se incrementa
+
+  printf("La variable%d almacena el valor %f en el registro $f%d \n", a->variableNum,a->value,a->registro);
 
   // Registrar una nueva variable en .data con el valor
   // Guarda en la misma posición que registro utiliza: Para $f14 usa la posición 14
@@ -142,7 +142,8 @@ struct nodo *new_var_leaf_num(double value, int registro_)
 
   // Asignar registro para float
   a->registro = registro_;
-  printf("El nodo YA CONTABA con el registro f%d \n", a->registro);
+  printf("El identificador estaba almacenado en el registro f%d \n",a->registro);
+  
 
   /**
     //Guardar como se llama la variable de .data
@@ -200,7 +201,6 @@ struct nodo *nodo_con_info_para_asignacion(int registro)
 // Evaluar un nodo
 double eval(struct nodo *a)
 {
-  printf("EVALUA\n");
   double v;
   int etiquetaTemporal;
 
@@ -220,7 +220,7 @@ double eval(struct nodo *a)
   case 'V':
     // v = eval(a->l); //El valor ya lo conocíamos
     // No volvemos hay que hacer nada xq ya está en un registro
-    printf("Esta variable está en el registro $f%d\n", a->registro);
+    printf("Esta variable esta en el registro $f%d\n", a->registro);
     break;
 
   // ASIGNACIÓN
@@ -232,7 +232,7 @@ double eval(struct nodo *a)
     break;
 
   // ASIGNACIÓN y REEMPLAZAR
-  case 'R':
+  case 'R': 
     // Asigna el resultado de la operación que se encuentra en el nodo a->l al registro que tenia la variable originalmente
     v = eval(a->l);
     // Con la operación evaluada, se que en a->registro esta el registro con el resultado
@@ -243,9 +243,9 @@ double eval(struct nodo *a)
 
   // OPERACION SUMA
   case '+':
-    printf("-> suma\n");
+    //printf("-> suma\n");
     v = eval(a->l) + eval(a->r);
-    printf("-> Se ha hecho la suma\n");
+    printf("-> Se ha hecho la suma y se almacena en el registro $f%d\n", a->registro);
     // Ahora usamos solo registros tipo F para sumar el float
     fprintf(yyout, "  add.s $f%d, $f%d, $f%d\n", a->registro, a->l->registro, a->r->registro);
 
@@ -256,9 +256,9 @@ double eval(struct nodo *a)
 
   // OPERACIÓN RESTA
   case '-':
-    printf("-> resta\n");
+    //printf("-> resta\n");
     v = eval(a->l) - eval(a->r);
-
+    printf("-> Se ha hecho la resta y se almacena en el registro $f%d\n", a->registro);
     // Sentencia de la resta en ASM
     fprintf(yyout, "  sub.s $f%d, $f%d, $f%d\n", a->registro, a->l->registro, a->r->registro);
 
@@ -267,9 +267,9 @@ double eval(struct nodo *a)
     liberarRegistro(a->r);
     break;
   case '*':
-    printf("-> multiplicacion\n");
+    //printf("-> multiplicacion\n");
     v = eval(a->l) * eval(a->r);
-
+    printf("-> Se ha hecho la multiplicacion y se almacena en el registro $f%d\n", a->registro);
     // Sentencia de la multiplicación en ASM
     fprintf(yyout, "  mul.s $f%d, $f%d, $f%d\n", a->registro, a->l->registro, a->r->registro);
 
@@ -278,9 +278,9 @@ double eval(struct nodo *a)
     liberarRegistro(a->r);
     break;
   case '/':
-    printf("-> division\n");
+    //printf("-> division\n");
     v = pow(eval(a->l), eval(a->r)); // base l expon r devuelve l^r
-
+    printf("-> Se ha hecho la division y se almacena en el registro $f%d\n", a->registro);
     // Sentencia de la division en ASM
     fprintf(yyout, "  div.s $f%d, $f%d, $f%d\n", a->registro, a->l->registro, a->r->registro);
 
@@ -289,7 +289,7 @@ double eval(struct nodo *a)
     liberarRegistro(a->r);
     break;
   case '%': // Statement List
-    printf("-> modulo\n");
+    //printf("-> modulo\n");
     v = fmod(eval(a->l), eval(a->r));
 
     // Sentencia de la operación de módulo en ASM
@@ -308,7 +308,7 @@ double eval(struct nodo *a)
     liberarRegistro(a->r);
     break;
   case '^':
-    printf("-> exponente\n");
+    //printf("-> exponente\n");
     v = fmod(eval(a->l), eval(a->r));
 
     // Sentencia de la operación de exponente en ASM
@@ -414,14 +414,14 @@ double eval(struct nodo *a)
 
     break;
   case 'P': // Statement List
-    printf("-> Statement Imprimir\n");
+    //printf("-> Statement Imprimir\n");
     // Resuelve la operación evaluandola
     eval(a->l);
     // Imprime el resultado almacenado en al registro de
     imprimir(a->l);
     break;
   case 'SL': // Statement List
-    printf("-> Statement List\n");
+    //printf("-> Statement List\n");
     v = eval(a->l); // statement_list
     eval(a->r);     // staetment
     break;
@@ -445,7 +445,7 @@ double iniciar_evaluacion(struct nodo *a)
     // Si el espacio del array tiene algo
     if (array_variables[i][2] == 1)
     {
-      printf("%d\n", array_variables[i][0]);
+      //printf("%d\n", array_variables[i][0]);
       // Define la variable
       fprintf(yyout, "  variable%d: .float %f\n", (int)array_variables[i][1], array_variables[i][0]);
       // La elimina pues ya se ha declarado
