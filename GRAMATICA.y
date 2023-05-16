@@ -237,7 +237,7 @@ exp: exp MAS term {
         if (strcmp($1.tipo, "entero")==0 && strcmp($3.tipo, "entero")==0) { //Si ambos son enteros
             $$.a = new_node('+', $1.a,$3.a); 
             $$.tipo="entero";
-            printf(" operacion(entero+entero): resultado = %ld\n", $$.entero);
+            printf(" operacion(entero+entero): resultado = %ld\n", $1.entero+$3.entero);
         }
         else if (strcmp($1.tipo, "real")==0 && strcmp($3.tipo, "real")==0){  //Si los dos son float
             $$.a = new_node('+', $1.a,$3.a);
