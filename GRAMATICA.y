@@ -8,6 +8,7 @@
 #include <stdbool.h>
 
 FILE *yyout;
+extern FILE* yyin;
 
 //Variables
 int error_compilacion=0;
@@ -461,9 +462,19 @@ factor: ENT {$$.entero = $1;
     ;
 %%
 
-int main() {
+int main(int argc, char** argv) {
+    if (argc < 2) {
+        printf("Sin input. Introduce archivo input.\n");
+        return 1;
+    }
+    yyin = fopen(argv[1], "rt");
+    if (yyin == NULL) {
+        printf("No se puedo leer el input.\n");
+        return 1;
+    }
     yyout = fopen( "./prueba.asm", "wt" );
 	yyparse();
+    fclose(yyin);
     return 0;
 }
 

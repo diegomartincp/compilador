@@ -1,0 +1,1 @@
+si (3+2>=5) var1=3%3 var2=3/3 imprimir(var1+var2) fin
