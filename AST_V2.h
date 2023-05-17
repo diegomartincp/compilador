@@ -15,8 +15,8 @@ bool array_registros_t[10] = {true, true, true, true, true, true, true, true, tr
 
 // Hay 32 registros F, desde el 0 hasta el 31
 // El registro 32 está reservado por defecto para imprimir por pantalla
-bool array_registros_f[31] = {true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true};
-//bool array_registros_f[31] = {true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
+//bool array_registros_f[31] = {true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true};
+bool array_registros_f[31] = {true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
 
 // Usamos un array de 32 posiciones para almacenar las variables de .data
 float array_variables[32][3];        // En 0 el dato y en 1 el nombre de la variable y en el 2 si esta ocupado
