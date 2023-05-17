@@ -39,7 +39,7 @@ int table_size = 0;//Se usa para conocer el índice del array disponible para in
 
 
 /* Declarar tokens recogidos de FLEX*/
-%token MAS MENOS POR DIV LPAREN RPAREN CONCAT COMILLA IGUAL SI OSI SINO MIENTRAS FIN DOBLEAMPERSAN DOBLEBARRA IMPRIMIR 
+%token MAS MENOS POR DIV LPAREN RPAREN CONCAT COMILLA IGUAL SI OSI SINO MIENTRAS FIN DOBLEAMPERSAN DOBLEBARRA IMPRIMIR COMENTARIO
 %token EXCLAMACION MAYQUE MENQUE MODULO EXPON MAYORIGUAL IGUALIGUAL MENORIGUAL
 %token PUNTOCOMA
 
@@ -108,6 +108,10 @@ statement:
     }
     | imprimir_statement {
         $$.a=$1.a;
+    }
+    | COMENTARIO {
+        $$.a = new_node('CM',nodo_vacio(), nodo_vacio());
+        //No hace nada por que es un comentario :)
     }
     ;
 

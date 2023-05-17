@@ -8,6 +8,10 @@ int linea = 1; // Variable para almacenar el número de línea
 %}
 %%
 
+\/\/.* return COMENTARIO;;
+\#.*$ return COMENTARIO;
+\/\*([^\*\/]*)\*\/ return COMENTARIO;
+
 \&\& return DOBLEAMPERSAN;
 \|\| return DOBLEBARRA;
 \! return EXCLAMACION;
