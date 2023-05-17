@@ -39,7 +39,7 @@ struct nodo
 buscarRegistroLibreT()
 {
   int i = 0;
-  for (size_t i = 0; i <= 30; i++)  //Vamos de 0 a 30, pues el 31 está reservado para imprimir
+  for (size_t i = 0; i <= 9; i++)  //Vamos de 0 a 30, pues el 31 está reservado para imprimir
   {
     if (array_registros_t[i] == true){
       array_registros_t[i] = false; // Ocupamos el registro
