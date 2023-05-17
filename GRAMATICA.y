@@ -63,17 +63,21 @@ int table_size = 0;//Se usa para conocer el índice del array disponible para in
 
 program:
     statement_list  {
-        printf("-> SENTENCIA RECONOCIDA");
+        printf("------------------------\n");
+        printf("SENTENCIA RECONOCIDA\n");
         if(error_compilacion>=1){
             printf("\nHa habido %d error(es) de compilacion",error_compilacion);
         }
+        printf("CREANDO CÓDIGO .ASM\n");
+        printf("------------------------\n");
         double valor = iniciar_evaluacion($1.a); //$1.a->registro
         /*printf(">>>Resultado evaluado= %f\n",valor);
         printf("\n>>>Variables de la tabla de símbolos: %f\n",valor);
         for (int i = 0; i < 100; i++){
         printf("%s\n",table[i].name);
         }*/
-        printf("\nCodigo ASM generado correctamente");
+        printf("------------------------\n");
+        printf("\nCOMPILACION TERMINADA");
             
     }
     ;
