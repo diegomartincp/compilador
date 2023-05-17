@@ -212,7 +212,8 @@ OJO AQUI HAY QUE EVALUAR LAS DOS EXPRESIONES ANTES DE COMPARAR NADA, SINO NO TIE
 condicion: exp MAYQUE exp {
         printf("Condicion mayor que\n");
         if (strcmp($1.tipo, "texto")==0 || strcmp($3.tipo, "texto")==0) { 
-            printf("\nOperacion no reconocida.\n");
+            error_compilacion++;
+            printf("ERROR: Operacion no reconocida %d",linea);
         } else {
             $$.a = new_node('>', $1.a, $3.a);
             if($$.a->registro==-1){
@@ -226,7 +227,8 @@ condicion: exp MAYQUE exp {
     | exp MENQUE exp   {
         printf("Condicion menor que\n");
         if (strcmp($1.tipo, "texto")==0 || strcmp($3.tipo, "texto")==0) { 
-            printf("\nOperacion no reconocida.\n");
+            error_compilacion++;
+            printf("ERROR: Operacion no reconocida %d",linea);
         } else {
             $$.a = new_node('<', $1.a, $3.a);
             if($$.a->registro==-1){
@@ -239,7 +241,8 @@ condicion: exp MAYQUE exp {
     | exp MAYORIGUAL exp {
         printf("Condicion mayor o igual que\n");
         if (strcmp($1.tipo, "texto")==0 || strcmp($3.tipo, "texto")==0) { 
-            printf("\nOperacion no reconocida.\n");
+            error_compilacion++;
+            printf("ERROR: Operacion no reconocida %d",linea);
         } else {
             $$.a = new_node('>=', $1.a, $3.a);
             if($$.a->registro==-1){
@@ -252,7 +255,8 @@ condicion: exp MAYQUE exp {
     | exp MENORIGUAL exp {
         printf("Condicion menor o igual que\n");
         if (strcmp($1.tipo, "texto")==0 || strcmp($3.tipo, "texto")==0) { 
-            printf("\nOperacion no reconocida.\n");
+            error_compilacion++;
+            printf("ERROR: Operacion no reconocida %d",linea);
         } else {
             $$.a = new_node('<=', $1.a, $3.a);
             if($$.a->registro==-1){
@@ -265,7 +269,8 @@ condicion: exp MAYQUE exp {
     | exp IGUALIGUAL exp {
         printf("Condicion igual igual que\n");
         if (strcmp($1.tipo, "texto")==0 || strcmp($3.tipo, "texto")==0) { 
-            printf("\nOperacion no reconocida.\n");
+            error_compilacion++;
+            printf("ERROR: Operacion no reconocida %d",linea);
         } else {
             $$.a = new_node('==', $1.a, $3.a);
             if($$.a->registro==-1){
