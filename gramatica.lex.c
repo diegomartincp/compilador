@@ -383,14 +383,14 @@ struct yy_trans_info
 	};
 static yyconst flex_int16_t yy_accept[75] =
     {   0,
-       31,   31,   33,   32,    1,    4,   11,   20,   32,    9,
-       10,    7,    5,    6,   32,    8,   28,   18,   14,   12,
-       13,   31,   21,   31,   31,   31,   31,   31,   31,   31,
-       32,   30,    0,    2,   19,    0,   28,   31,   17,   15,
-       16,   31,   31,   31,   31,   31,   31,   22,    3,   29,
-       31,   26,   31,   31,   23,   31,   31,   31,   31,   31,
-       31,   24,   31,   31,   31,   27,   31,   31,   31,   31,
-       31,   31,   25,    0
+       30,   30,   33,   32,   31,    3,   10,   19,   32,    8,
+        9,    6,    4,    5,   32,    7,   27,   17,   13,   11,
+       12,   30,   20,   30,   30,   30,   30,   30,   30,   30,
+       32,   29,    0,    1,   18,    0,   27,   30,   16,   14,
+       15,   30,   30,   30,   30,   30,   30,   21,    2,   28,
+       30,   25,   30,   30,   22,   30,   30,   30,   30,   30,
+       30,   23,   30,   30,   30,   26,   30,   30,   30,   30,
+       30,   30,   24,    0
     } ;
 
 static yyconst flex_int32_t yy_ec[256] =
@@ -517,7 +517,9 @@ char *yytext;
 #line 4 "gramatica.flex"
 #include "gramatica.tab.h"
 extern YYSTYPE yylval;
-#line 521 "gramatica.lex.c"
+
+int linea = 1; // Variable para almacenar el número de línea
+#line 523 "gramatica.lex.c"
 
 #define INITIAL 0
 
@@ -704,9 +706,9 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 7 "gramatica.flex"
+#line 9 "gramatica.flex"
 
-#line 710 "gramatica.lex.c"
+#line 712 "gramatica.lex.c"
 
 	if ( !(yy_init) )
 		{
@@ -790,167 +792,167 @@ do_action:	/* This label is used only to access EOF actions. */
 			goto yy_find_action;
 
 case 1:
-/* rule 1 can match eol */
 YY_RULE_SETUP
-#line 8 "gramatica.flex"
-return(0);
+#line 10 "gramatica.flex"
+return DOBLEAMPERSAN;
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 9 "gramatica.flex"
-return DOBLEAMPERSAN;
+#line 11 "gramatica.flex"
+return DOBLEBARRA;
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 10 "gramatica.flex"
-return DOBLEBARRA;
+#line 12 "gramatica.flex"
+return EXCLAMACION;
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 11 "gramatica.flex"
-return EXCLAMACION;
+#line 13 "gramatica.flex"
+return MAS;
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 12 "gramatica.flex"
-return MAS;
+#line 14 "gramatica.flex"
+return MENOS;
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 13 "gramatica.flex"
-return MENOS;
+#line 15 "gramatica.flex"
+return POR;
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 14 "gramatica.flex"
-return POR;
+#line 16 "gramatica.flex"
+return DIV;
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 15 "gramatica.flex"
-return DIV;
+#line 17 "gramatica.flex"
+return LPAREN;
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 16 "gramatica.flex"
-return LPAREN;
+#line 18 "gramatica.flex"
+return RPAREN;
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 17 "gramatica.flex"
-return RPAREN;
+#line 19 "gramatica.flex"
+return COMILLA;
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 18 "gramatica.flex"
-return COMILLA;
+#line 20 "gramatica.flex"
+return IGUAL;
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 19 "gramatica.flex"
-return IGUAL;
+#line 21 "gramatica.flex"
+return MAYQUE;
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 20 "gramatica.flex"
-return MAYQUE;
+#line 22 "gramatica.flex"
+return MENQUE;
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 21 "gramatica.flex"
-return MENQUE;
+#line 23 "gramatica.flex"
+return IGUALIGUAL;
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 22 "gramatica.flex"
-return IGUALIGUAL;
+#line 24 "gramatica.flex"
+return MAYORIGUAL;
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 23 "gramatica.flex"
-return MAYORIGUAL;
+#line 25 "gramatica.flex"
+return MENORIGUAL;
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 24 "gramatica.flex"
-return MENORIGUAL;
+#line 26 "gramatica.flex"
+return PUNTOCOMA;
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 25 "gramatica.flex"
-return PUNTOCOMA;
+#line 27 "gramatica.flex"
+return CONCAT;
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 26 "gramatica.flex"
-return CONCAT;
+#line 28 "gramatica.flex"
+return MODULO;
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 27 "gramatica.flex"
-return MODULO;
+#line 29 "gramatica.flex"
+return EXPON;
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 28 "gramatica.flex"
-return EXPON;
+#line 30 "gramatica.flex"
+return SI;
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 29 "gramatica.flex"
-return SI;
+#line 31 "gramatica.flex"
+return OSI;
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 30 "gramatica.flex"
-return OSI;
+#line 32 "gramatica.flex"
+return SINO;
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 31 "gramatica.flex"
-return SINO;
+#line 33 "gramatica.flex"
+return MIENTRAS;
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 32 "gramatica.flex"
-return MIENTRAS;
+#line 34 "gramatica.flex"
+return FIN;
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 33 "gramatica.flex"
-return FIN;
+#line 35 "gramatica.flex"
+return IMPRIMIR;
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 34 "gramatica.flex"
-return IMPRIMIR;
+#line 38 "gramatica.flex"
+{yylval.intVal = atoi(yytext); return ENT;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 37 "gramatica.flex"
-{yylval.intVal = atoi(yytext); return ENT;}
+#line 39 "gramatica.flex"
+{yylval.floatVal = atof(yytext); return REAL;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 38 "gramatica.flex"
-{yylval.floatVal = atof(yytext); return REAL;}
+#line 40 "gramatica.flex"
+{yylval.stringVal=strdup(yytext); printf( yytext);return TEXT ;}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 39 "gramatica.flex"
-{yylval.stringVal=strdup(yytext); printf( yytext);return TEXT ;}
+#line 41 "gramatica.flex"
+{yylval.stringVal=strdup(yytext); printf( yytext);return ID ;}
 	YY_BREAK
 case 31:
+/* rule 31 can match eol */
 YY_RULE_SETUP
-#line 40 "gramatica.flex"
-{yylval.stringVal=strdup(yytext); printf( yytext);return ID ;}
+#line 43 "gramatica.flex"
+{linea++;}//
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 41 "gramatica.flex"
+#line 44 "gramatica.flex"
 ECHO;
 	YY_BREAK
-#line 954 "gramatica.lex.c"
+#line 956 "gramatica.lex.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1948,7 +1950,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 41 "gramatica.flex"
+#line 44 "gramatica.flex"
 
 
 
