@@ -5,6 +5,10 @@
 extern YYSTYPE yylval;
 %}
 %%
+
+"//".*
+"#".*
+"/*".*?"*/"
 \n	return(0);
 \&\& return DOBLEAMPERSAN;
 \|\| return DOBLEBARRA;
