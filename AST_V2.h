@@ -153,6 +153,21 @@ struct nodo *new_var_leaf_num(double value, int registro_)
   return a;
 }
 
+// Nodo HOJA que es un comentario
+struct nodo *new_leaf_comment()
+{                                               //, char* tipo_
+  struct nodo *a = malloc(sizeof(struct nodo)); // Asigna la dirección de memoria para un nuevo nodo del tipo struct
+  if (!a)
+  {
+    exit(0); // Si el nuevo nodo es NULL significa que hay un error de memoria insuficiente
+  }
+  a->nodetype = 'CM';
+  a->l = NULL;
+  a->r = NULL;
+  a->value = 1;
+  return a;
+}
+
 // Nodo hoja con string
 struct nodo *new_leaf_text(char *string, char *tipo_)
 {
@@ -427,7 +442,7 @@ double eval(struct nodo *a)
     eval(a->r);     // staetment
     break;
     case 'CM': // Comentario
-    v = 1;
+    v = 1;  //No hay que hacer nada por que es un comentario
     break;
   default:
     printf("Error: Nodo desconocido %c\n", a->nodetype);

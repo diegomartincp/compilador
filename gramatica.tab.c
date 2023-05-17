@@ -1550,7 +1550,7 @@ yyreduce:
 /* Line 1464 of yacc.c  */
 #line 112 "gramatica.y"
     {
-        (yyval.st).a = new_node('CM',nodo_vacio(), nodo_vacio());
+        (yyval.st).a = new_leaf_comment();
         //No hace nada por que es un comentario :)
     ;}
     break;

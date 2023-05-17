@@ -110,7 +110,7 @@ statement:
         $$.a=$1.a;
     }
     | COMENTARIO {
-        $$.a = new_node('CM',nodo_vacio(), nodo_vacio());
+        $$.a = new_leaf_comment();
         //No hace nada por que es un comentario :)
     }
     ;
