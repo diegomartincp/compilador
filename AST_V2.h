@@ -455,9 +455,9 @@ double iniciar_evaluacion(struct nodo *a)
   // Crea todas las variables necesarias en .data
   fprintf(yyout, "\n.data #Variables\n");
   // Variable que SIEMPRE se imprime para el salto de línea
-  fprintf(yyout, "newLine: .asciiz \"\\n\"\n");
+  fprintf(yyout, "  newLine: .asciiz \"\\n\"\n");
   // Variable que SIEMPRE se imprime para tener un zero float
-  fprintf(yyout, "zero_f: .float 0.0\n");
+  fprintf(yyout, "  zero_f: .float 0.0\n");
   // Recorremos el array de las variables que hay que definir
   for (int i = 0; i < 32; i++)
   {
