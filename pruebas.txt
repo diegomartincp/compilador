@@ -1,17 +1,18 @@
+(Añadido SI al final si estan en >pruebas>)
 pruebas bien
-	var=4 mientras(var<6) var=var+1 imprimir (var) fin			
-	si (3+2>=5) var2=6/3 si (1+3>=2) imprimir(var2) fin fin
-	var1 = 10 mientras (var1>5) var1=var1-1 fin imprimir(var1)
+	var=4 mientras(var<6) var=var+1 imprimir (var) fin SI		
+	si (3+2>=5) var2=6/3 si (1+3>=2) imprimir(var2) fin fin SI
+	var1 = 10 mientras (var1>5) var1=var1-1 fin imprimir(var1) SI
 	var1 = 5 mientras (var1<=10) var1=var1+1 fin imprimir(var1+10)
 	var1 = 5 mientras (var1<=10) var1=var1+1 si (var1 >= 7) imprimir(80) fin fin imprimir(var1+10)
 	si (80>=70) var1 = 5 mientras (var1<=10) var1=var1+1 fin imprimir(var1+10) fin
-	si (80>=70) var1 = 5 si (var1-5<=10) var1=var1+1 fin imprimir(var1+10) fin
-
+	si (80>=70) var1 = 5 si (var1-5<=10) var1=var1+1 fin imprimir(var1+10) fin SI
+ 
 
 pruebas mal
 no reconoce el == (error en MARS)
 	si(1+1==2) var1=5 imprimir(var1) fin 
 	si (3+2==5) imprimir(55) fin
-	var1 = 5 mientras (var1=5) var1=var1-1 fin imprimir(var1)
+	var1 = 5 mientras (var1=5) var1=var1-1 fin imprimir(var1) SI
 	var1 = 5 mientras (var1==5) var1=var1-1 fin imprimir(var1)
 	
