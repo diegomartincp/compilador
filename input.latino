@@ -1,11 +1,5 @@
-var1 = 5
-mientras (var1<=10) //Hola que tal
-    var1=var1+1
-    si (var1 >= 7)
-        imprimir(80)    #hola que tal
-    fin
-    /*
-    hola que tal
-    */
+var=9
+si(9<10)
+imprimir(10)
 fin
-imprimir(var1+10)
+imprimir(11)
