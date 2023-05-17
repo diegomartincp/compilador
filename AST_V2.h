@@ -31,6 +31,7 @@ struct nodo
   char *string;
   struct nodo *l;  // Nodo izquierdo
   struct nodo *r;  // Nodo derecho
+  struct nodo *x;  // Nodo EXTRA para si nodo específico del SI SINO
   int registro;    // Registro donde está el resultado
   int variableNum; // Indica el nombre de la variable "variableN" que se usa para declarar
 };
@@ -165,6 +166,26 @@ struct nodo *new_leaf_comment()
   a->l = NULL;
   a->r = NULL;
   a->value = 1;
+  return a;
+}
+//Nuevo nodo para un SI con un SINO
+struct nodo *new_node_sino(struct nodo *l, struct nodo *r, struct nodo *x)
+{                                               //, char* tipo_
+  struct nodo *a = malloc(sizeof(struct nodo)); // Crea un nuevo nodo
+  if (!a)
+  {
+    exit(0); // Si el nuevo nodo es NULL significa que hay un error de memoria insuficiente
+  }
+  // Le asigna al nuevo nodo sus características
+  a->nodetype = 'SN';
+  a->l = l;
+  a->r = r;
+  a->x = x;
+
+  // Asignar registro para float
+  a->registro = buscarRegistroLibreF();
+  printf("Se ha reservado el registro $f%d para almancear el SI con un SINO\n\n",a->registro);
+ 
   return a;
 }
 
@@ -405,9 +426,36 @@ double eval(struct nodo *a)
 
     // Etiqueta que se usa para saltar al resto si condicion=FALSE
     fprintf(yyout, "etiq%d:\n", etiquetaTemporal);
-    // Incrementar el número de etiqueta para usar una distinta más tarde
 
     break;
+
+  case 'SN': // SI SINO statement
+    etiquetaTemporal = numEtiqueta;
+    numEtiqueta += 2; //Reservamos dos etiquetas
+      //etiquetaTemporal es la etiqueta del SINO
+      //etiquetaTemporal+1 es la etiqueta para ir fuera del SI y SINO
+
+    v = eval(a->l); // condicion en a->l
+    printf("-> SI con un SINO donde su condicion es %f\n", v);
+    si_sino_statement(a->l, etiquetaTemporal);  //Le pasamos la etiqueta del sino, es decir, "si no se cumple la condicion vamos a.." (SINO)
+
+    // Generar el código del SI
+    eval(a->r); // el resto del codigo a->r
+
+    //Si hemos recorrido el SI, saltar al final
+    fprintf(yyout, "  j etiq%d\n", etiquetaTemporal+1);
+    // Etiqueta que se usa para saltar al  SINO
+    fprintf(yyout, "etiq%d:\n", etiquetaTemporal);
+
+    // Generar el código del ELSE
+    eval(a->x); // el resto del codigo a->x
+
+    // Etiqueta que se usa para saltar al final del SI y SINO
+    fprintf(yyout, "etiq%d:\n", etiquetaTemporal+1);
+
+
+    break;
+
   case 'M': // SI statement
 
     etiquetaTemporal = numEtiqueta;
@@ -500,6 +548,13 @@ void si_statement(struct nodo *a, int numEtiqueta)
   fprintf(yyout, "  bc1f etiq%d\n", numEtiqueta);
   // salto a etiqueta
   // fprintf(yyout, "Etiq%d:\n", numEtiqueta);
+}
+
+void si_sino_statement(struct nodo *a, int numEtiqueta)
+{
+  // Si no se cumple el SI hay que ir a la etiqueta del SINO
+  fprintf(yyout, "  bc1f etiq%d\n", numEtiqueta);
+
 }
 
 void mientras_statement(struct nodo *a, int numEtiqueta)

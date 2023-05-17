@@ -172,13 +172,21 @@ asignacion_statement:
 //Si
 si_statement: SI LPAREN condicion_list RPAREN statement_list osi_list FIN  {printf("Bucle SI con cadena de OSI\n");}
     | SI LPAREN condicion_list RPAREN statement_list FIN {
-        printf("Bucle SI\n");
+        printf("SI\n");
         $$.a = new_node('S',$3.a, $5.a);
         if($$.a->registro==-1){
             error_compilacion++;
             printf("ERROR LINEA %d: No quedan registros disponibles para realizar la sentencia SI\n",linea);
         }
         }
+    | SI LPAREN condicion_list RPAREN statement_list SINO statement_list FIN {
+        printf("SI con SINO\n");
+        $$.a = new_node_sino($3.a,$5.a, $7.a);
+        if($$.a->registro==-1){
+            error_compilacion++;
+            printf("ERROR LINEA %d: No quedan registros disponibles para realizar la sentencia SI\n",linea);
+        }
+    }
     ;
 //Varios osi encadenados
 osi_list:
