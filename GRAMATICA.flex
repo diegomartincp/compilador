@@ -7,6 +7,7 @@ extern YYSTYPE yylval;
 int linea = 1; // Variable para almacenar el número de línea
 %}
 %%
+
 \&\& return DOBLEAMPERSAN;
 \|\| return DOBLEBARRA;
 \! return EXCLAMACION;
