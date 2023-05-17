@@ -1,0 +1,1 @@
+si (80>=70) var1 = 5 si (var1-5<=10) var1=var1+1 fin imprimir(var1+10) fin
