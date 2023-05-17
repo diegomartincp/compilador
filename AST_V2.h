@@ -354,7 +354,7 @@ double eval(struct nodo *a)
     printf("-> MENOR IGUAL QUE\n");
     v = eval(a->l) <= eval(a->r);
 
-    // Comparación de punto flotante de $f1 > $f2
+    // Comparación de punto flotante de $f1 < $f2
     fprintf(yyout, "  c.lt.s $f%d, $f%d\n", a->l->registro, a->r->registro);
 
     // Liberar los registros de los nodos L y R
@@ -365,8 +365,10 @@ double eval(struct nodo *a)
     printf("-> IGUAL IGUAL QUE\n");
     v = eval(a->l) == eval(a->r);
 
-    // Comparación de punto flotante de $f1 > $f2
-    fprintf(yyout, "  seq $f%d, $f%d, $f%d\n", a->registro, a->l->registro, a->r->registro);
+    // Comparación de punto flotante de $f1 == $f2
+    fprintf(yyout, "  c.eq.s $f%d, $f%d\n", a->l->registro, a->r->registro);
+    fprintf(yyout, "  mov.s $f%d, $f%d\n", a->registro, a->l->registro);
+
 
     // Liberar los registros de los nodos L y R
     liberarRegistro(a->l);
