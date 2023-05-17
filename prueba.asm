@@ -1,7 +1,7 @@
                                    
 .data #Variables
-newLine: .asciiz "\n"
-zero_f: .float 0.0
+  newLine: .asciiz "\n"
+  zero_f: .float 0.0
   variable0: .float 5.000000
   variable1: .float 10.000000
   variable2: .float 1.000000
@@ -15,7 +15,7 @@ zero_f: .float 0.0
   lwc1 $f0, variable0
   etiq0:
   lwc1 $f2, variable1
-  c.lt.s $f0, $f2
+  c.le.s $f0, $f2
   bc1f etiq1
   lwc1 $f5, variable2
   add.s $f6, $f0, $f5

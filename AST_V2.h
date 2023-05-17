@@ -369,7 +369,7 @@ double eval(struct nodo *a)
     v = eval(a->l) <= eval(a->r);
 
     // Comparación de punto flotante de $f1 < $f2
-    fprintf(yyout, "  c.lt.s $f%d, $f%d\n", a->l->registro, a->r->registro);
+    fprintf(yyout, "  c.le.s $f%d, $f%d\n", a->l->registro, a->r->registro);
 
     // Liberar los registros de los nodos L y R
     liberarRegistro(a->l);
