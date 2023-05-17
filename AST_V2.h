@@ -14,7 +14,10 @@ int numEtiqueta = 0;
 bool array_registros_t[10] = {true, true, true, true, true, true, true, true, true, true};
 
 // Hay 32 registros F, desde el 0 hasta el 31
-bool array_registros_f[32] = {true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true};
+// El registro 32 está reservado por defecto para imprimir por pantalla
+bool array_registros_f[31] = {true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true};
+//bool array_registros_f[31] = {true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
+
 // Usamos un array de 32 posiciones para almacenar las variables de .data
 float array_variables[32][3];        // En 0 el dato y en 1 el nombre de la variable y en el 2 si esta ocupado
 int siguienteVariableDisponible = 0; // Apunta al siguiente número disponible para declarar una variable en .data
@@ -35,36 +38,32 @@ struct nodo
 // Ver que registros T están libres
 buscarRegistroLibreT()
 {
-  bool encontrado = false;
   int i = 0;
-  while (encontrado == false)
+  for (size_t i = 0; i <= 30; i++)  //Vamos de 0 a 30, pues el 31 está reservado para imprimir
   {
-    if (array_registros_t[i] == true)
-    {
-      encontrado = true;
+    if (array_registros_t[i] == true){
       array_registros_t[i] = false; // Ocupamos el registro
       return i;                     // Devuelve el registro que está libre
     }
-    i++;
+
   }
+  //Si sale del búcle for, significa que no hay ningún registro libre
   return -1;
 }
 
 // Ver que registros F están libres
 buscarRegistroLibreF()
 {
-  bool encontrado = false;
   int i = 0;
-  while (encontrado == false)
+  for (size_t i = 0; i <= 30; i++)  //Vamos de 0 a 30, pues el 31 está reservado para imprimir
   {
-    if (array_registros_f[i] == true)
-    {
-      encontrado = true;
+    if (array_registros_f[i] == true){
       array_registros_f[i] = false; // Ocupamos el registro
       return i;                     // Devuelve el registro que está libre
     }
-    i++;
+
   }
+  //Si sale del búcle for, significa que no hay ningún registro libre
   return -1;
 }
 // Recibe un nodo y libera el registro que usa tanto si es real como float
