@@ -85,9 +85,11 @@ program:
 //Varias cosas encadenadas
 statement_list:
     statement {
+        printf("-> STATEMENT\n");
         $$.a=$1.a;
     }
     | statement_list statement {
+        printf("-> STATEMENT LIST\n");
         $$.a = new_node('SL', $1.a, $2.a);
         if($$.a->registro==-1){
                 error_compilacion++;
@@ -124,6 +126,7 @@ imprimir_statement: IMPRIMIR LPAREN exp RPAREN{ //imprimir un identificador
             //double valor = iniciar_evaluacion($3.a); //Evaluar la exppresión para hacer la asignación
             //printf(">>>IMPRIMIR %f\n",valor);
             //Ya conocemos en que registro está el valor, que será float
+            printf("-> IMPRIMIR\n")
             $$.a = new_node('P',$3.a, nodo_vacio());
             if($$.a->registro==-1){
                 error_compilacion++;
@@ -135,17 +138,28 @@ imprimir_statement: IMPRIMIR LPAREN exp RPAREN{ //imprimir un identificador
 
 asignacion_statement:
     ID IGUAL exp {
-        printf("Asignacion con datos de tipo %s\n",$3.tipo);
-
+        printf("-> ASIGNACION\n");
         int i = lookup($1,table_size,table);
         if (i == -1) {  //Si no está en la tabla de símbolos, se crea uno nuevo
             if(strcmp($3.tipo, "entero")==0){
+                printf("Se asigna a la variable el resultado de la operacion con un %d\n",$3.entero);
+
                 table[table_size].name = $1;
                 table[table_size].tipo = "entero";
+                table[table_size].entero = $3.entero;
                 table[table_size].registro = $3.a->registro;
                 table_size++;
             }
-            //real string
+            else if(strcmp($3.tipo, "real")==0){
+                printf("Se asigna a la variable el resultado de la operacion con un %f\n",$3.real);
+
+                table[table_size].name = $1;
+                table[table_size].tipo = "real";
+                table[table_size].real = $3.real;
+                table[table_size].registro = $3.a->registro;
+                table_size++;
+            }
+
             $$.a=new_node('A',$3.a, nodo_vacio());
             if($$.a->registro==-1){
                 error_compilacion++;
@@ -153,13 +167,18 @@ asignacion_statement:
             }
 
         }else{  //Ya se encuentra en la tabla de símbolos y se conoce su posición
-            printf("Esta var se encuentra en el registro  $f%d\n",table[i].registro); 
+            printf("# Sobreescribir la varible -%s-, que se encuentra en el registro  $f%d\n",table[i].name ,table[i].registro); 
             //Si lo encuentra, tiene que coger el resultado de exp y moverlo al registro
             //que tiene asignada la variable
             if(strcmp($3.tipo, "entero")==0){
                 table[i].tipo = "entero";
+                table[i].entero = $3.entero;
             }
-            //real string
+            else if(strcmp($3.tipo, "real")==0){
+                table[i].tipo = "real";
+                table[i].real = $3.real;
+            }
+
             $$.a=new_node('R',$3.a, nodo_con_info_para_asignacion(table[i].registro));
             if($$.a->registro==-1){
                 error_compilacion++;
@@ -172,7 +191,7 @@ asignacion_statement:
 //Si
 si_statement: SI LPAREN condicion_list RPAREN statement_list osi_list FIN  {printf("Bucle SI con cadena de OSI\n");}
     | SI LPAREN condicion_list RPAREN statement_list FIN {
-        printf("SI\n");
+        printf("-> SI\n");
         $$.a = new_node('S',$3.a, $5.a);
         if($$.a->registro==-1){
             error_compilacion++;
@@ -180,7 +199,7 @@ si_statement: SI LPAREN condicion_list RPAREN statement_list osi_list FIN  {prin
         }
         }
     | SI LPAREN condicion_list RPAREN statement_list SINO statement_list FIN {
-        printf("SI con SINO\n");
+        printf("-> SI con SINO\n");
         $$.a = new_node_sino($3.a,$5.a, $7.a);
         if($$.a->registro==-1){
             error_compilacion++;
@@ -200,7 +219,7 @@ osi: OSI LPAREN condicion_list RPAREN statement_list {printf("OSI\n");}
 //mientras
 mientras_statement:
     MIENTRAS LPAREN condicion_list RPAREN statement_list FIN {
-        printf("Bucle MIENTRAS\n");
+        printf("-> MIENTRAS\n");
         $$.a = new_node('M',$3.a,$5.a);
         if($$.a->registro==-1){
             error_compilacion++;
@@ -215,7 +234,7 @@ condicion_list: condicion_list DOBLEAMPERSAN  condicion {printf("Condicion && co
     | EXCLAMACION condicion {printf("!condicion\n");}
     | condicion {
         $$.a = $1.a;
-        printf("\nCondicion\n");
+        printf("-> CONDICION\n");
         $$.a = new_node('C',$1.a, nodo_vacio());
         if($$.a->registro==-1){
             error_compilacion++;
@@ -230,7 +249,7 @@ condicion_list: condicion_list DOBLEAMPERSAN  condicion {printf("Condicion && co
 OJO AQUI HAY QUE EVALUAR LAS DOS EXPRESIONES ANTES DE COMPARAR NADA, SINO NO TIENES EL RESULTADO
 **/
 condicion: exp MAYQUE exp {
-        printf("Condicion mayor que\n");
+        printf("-> MAYOR QUEL\n");
         if (strcmp($1.tipo, "texto")==0 || strcmp($3.tipo, "texto")==0) { 
             error_compilacion++;
             printf("ERROR: Operacion no reconocida %d",linea);
@@ -245,7 +264,7 @@ condicion: exp MAYQUE exp {
         
     }
     | exp MENQUE exp   {
-        printf("Condicion menor que\n");
+        printf("-> MENOR QUE\n");
         if (strcmp($1.tipo, "texto")==0 || strcmp($3.tipo, "texto")==0) { 
             error_compilacion++;
             printf("ERROR LINEA %d: Operacion no reconocida",linea);
@@ -259,7 +278,7 @@ condicion: exp MAYQUE exp {
         }
     }
     | exp MAYORIGUAL exp {
-        printf("Condicion mayor o igual que\n");
+        printf("-> MAYOR O IGUAL\n");
         if (strcmp($1.tipo, "texto")==0 || strcmp($3.tipo, "texto")==0) { 
             error_compilacion++;
             printf("ERROR: Operacion no reconocida %d",linea);
@@ -273,7 +292,7 @@ condicion: exp MAYQUE exp {
         }
     }
     | exp MENORIGUAL exp {
-        printf("Condicion menor o igual que\n");
+        printf("-> MENOR O IGUAL\n");
         if (strcmp($1.tipo, "texto")==0 || strcmp($3.tipo, "texto")==0) { 
             error_compilacion++;
             printf("ERROR: Operacion no reconocida %d",linea);
@@ -287,7 +306,7 @@ condicion: exp MAYQUE exp {
         }
     }
     | exp IGUALIGUAL exp {
-        printf("Condicion igual igual que\n");
+        printf("-> IGUAL QUE\n");
         if (strcmp($1.tipo, "texto")==0 || strcmp($3.tipo, "texto")==0) { 
             error_compilacion++;
             printf("ERROR: Operacion no reconocida %d",linea);
@@ -309,7 +328,8 @@ exp: exp MAS term {
                 printf("ERROR LINEA %d: No quedan registros disponibles para realizar la operacion suma\n",linea);
             }
             $$.tipo="entero";
-            printf(" operacion(entero+entero): resultado = %ld\n", $1.entero+$3.entero);  
+            $$.entero=$1.entero+$3.entero;
+            printf("-> SUMA entero+entero\n");  
         }
         else if (strcmp($1.tipo, "real")==0 && strcmp($3.tipo, "real")==0){  //Si los dos son float
             $$.a = new_node('+', $1.a,$3.a);
@@ -318,7 +338,8 @@ exp: exp MAS term {
                 printf("ERROR LINEA %d: No quedan registros disponibles para realizar la operacion suma\n",linea);
             }
             $$.tipo="real";
-            printf(" operacion(real+real): resultado = %f\n", $1.real+$3.real);
+            $$.real=$1.real+$3.real;
+            printf("-> SUMA real+real\n");
         }
         else if (strcmp($1.tipo, "entero")==0 && strcmp($3.tipo, "real")==0){  // Entero y real
             $$.a = new_node('+', $1.a,$3.a);
@@ -327,7 +348,8 @@ exp: exp MAS term {
                 printf("ERROR LINEA %d: No quedan registros disponibles para realizar la operacion suma\n",linea);
             }
             $$.tipo="real";
-            printf("operacion(entero+real): resultado = %f\n", $1.entero+$3.real);
+            $$.real=$1.entero+$3.real;
+            printf("-> SUMA entero+real\n");
         }
         else if (strcmp($1.tipo, "real")==0 && strcmp($3.tipo, "entero")==0){  // Real y entero
             $$.a = new_node('+', $1.a,$3.a);
@@ -336,7 +358,8 @@ exp: exp MAS term {
                 printf("ERROR LINEA %d: No quedan registros disponibles para realizar la operacion suma\n",linea);
             }
             $$.tipo="real";
-            printf("operacion(real+entero): resultado = %f\n", $1.real+$3.entero);
+            $$.real=$1.real+$3.entero;
+            printf("-> SUMA real+entero\n");
         }
         else{
             error_compilacion++;
@@ -351,7 +374,8 @@ exp: exp MAS term {
                 printf("ERROR LINEA %d: No quedan registros disponibles para realizar la operacion resta\n",linea);
             }
             $$.tipo="entero";
-            printf("operacion(entero-entero): resultado =  %ld\n", $1.entero-$3.entero);
+            $$.entero=$1.entero+$3.entero;
+            printf("-> RESTA entero-entero\n");
         }
         else if (strcmp($1.tipo, "real")==0 && strcmp($3.tipo, "real")==0){  //Si los dos son float
             $$.a = new_node('-', $1.a,$3.a);
@@ -360,7 +384,8 @@ exp: exp MAS term {
                 printf("ERROR LINEA %d: No quedan registros disponibles para realizar la operacion suma\n",linea);
             }
             $$.tipo="real";
-            printf("operacion(real-real): resultado = %f\n", $1.real-$3.real);
+            $$.real=$1.real+$3.real;
+            printf("-> RESTA real-real\n");
         }
         else if (strcmp($1.tipo, "entero")==0 && strcmp($3.tipo, "real")==0){  // Entero y real
             $$.a = new_node('-', $1.a,$3.a);
@@ -369,7 +394,8 @@ exp: exp MAS term {
                 printf("ERROR LINEA %d: No quedan registros disponibles para realizar la operacion suma\n",linea);
             }
             $$.tipo="real";
-            printf("operacion(entero-real): resultado =	 %f\n", $1.entero-$3.real);
+            $$.real=$1.entero+$3.real;
+            printf("-> RESTA entero-real\n");
         }
         else if (strcmp($1.tipo, "real")==0 && strcmp($3.tipo, "entero")==0){  // Real y entero
             $$.a = new_node('-', $1.a,$3.a);
@@ -378,7 +404,7 @@ exp: exp MAS term {
                 printf("ERROR LINEA %d: No quedan registros disponibles para realizar la operacion suma\n",linea);
             }
             $$.tipo="real";
-            printf("operacion(real-entero): resultado =	 %f\n", $1.real-$3.entero);
+            printf("-> RESTA real-entero\n");
         }
         else{
                 error_compilacion++;
@@ -412,7 +438,8 @@ term: term POR factor {
                 printf("ERROR LINEA %d: No quedan registros disponibles para realizar la operacion multiplicar\n",linea);
             }
             $$.tipo="entero";
-            printf( "entero*entero = %ld\n", $$.entero);
+            $$.entero=$1.entero+$3.entero;
+            printf( "-> MULTIPLICACION entero*entero\n");
         }
         else if (strcmp($1.tipo, "real")==0 && strcmp($3.tipo, "real")==0){  //Si los dos son float
             $$.a = new_node('*', $1.a,$3.a);
@@ -421,7 +448,8 @@ term: term POR factor {
                 printf("ERROR LINEA %d: No quedan registros disponibles para realizar la operacion multiplicar\n",linea);
             }
             $$.tipo="real";
-            printf( "real*real = %f\n", $$.real);
+            $$.real=$1.real+$3.real;
+            printf( "-> MULTIPLICACION real*real\n");
         }
         else if (strcmp($1.tipo, "entero")==0 && strcmp($3.tipo, "real")==0){  // Entero y real
             $$.a = new_node('*', $1.a,$3.a);
@@ -430,7 +458,8 @@ term: term POR factor {
                 printf("ERROR LINEA %d: No quedan registros disponibles para realizar la operacion multiplicar\n",linea);
             }
             $$.tipo="real";
-            printf( "entero*real = %f\n", $$.real);
+            $$.real=$1.entero+$3.real;
+            printf( "-> MULTIPLICACION entero*real\n");
         }
         else if (strcmp($1.tipo, "real")==0 && strcmp($3.tipo, "entero")==0){  // Real y entero
             $$.a = new_node('*', $1.a,$3.a);
@@ -439,7 +468,8 @@ term: term POR factor {
                 printf("ERROR LINEA %d: No quedan registros disponibles para realizar la operacion multiplicar\n",linea);
             }
             $$.tipo="real";
-            printf( "real*entero = %f\n", $$.real);
+            $$.real=$1.real+$3.entero;
+            printf( "-> MULTIPLICACION real*entero\n");
         }
         else{
              error_compilacion++;
@@ -457,7 +487,8 @@ OJO HAY QUE CONTROLAR NO DIVIDIR ENTRE 0
                 printf("ERROR LINEA %d: No quedan registros disponibles para realizar la operacion dividir\n",linea);
             } 
             $$.tipo="entero";
-            printf( "entero/entero = %ld\n", $$.entero);
+            $$.entero=$1.entero+$3.entero;
+            printf( "-> DIVISION entero/entero\n");
         }
         else if (strcmp($1.tipo, "real")==0 && strcmp($3.tipo, "real")==0){  //Si los dos son float
             $$.a = new_node('/', $1.a,$3.a); 
@@ -466,7 +497,8 @@ OJO HAY QUE CONTROLAR NO DIVIDIR ENTRE 0
                 printf("ERROR LINEA %d: No quedan registros disponibles para realizar la operacion dividir\n",linea);
             } 
             $$.tipo="real";
-            printf( "real/real = %f\n", $$.real);
+            $$.real=$1.real+$3.real;
+            printf( "-> DIVISION real/real\n");
         }
         else if (strcmp($1.tipo, "entero")==0 && strcmp($3.tipo, "real")==0){  // Entero y real
             $$.a = new_node('/', $1.a,$3.a); 
@@ -475,7 +507,8 @@ OJO HAY QUE CONTROLAR NO DIVIDIR ENTRE 0
                 printf("ERROR LINEA %d: No quedan registros disponibles para realizar la operacion dividir\n",linea);
             } 
             $$.tipo="real";
-            printf( "entero/real = %f\n", $$.real);
+            $$.real=$1.entero+$3.real;
+            printf( "-> DIVISION entero/real\n");
         }
         else if (strcmp($1.tipo, "real")==0 && strcmp($3.tipo, "entero")==0){  // Real y entero
             $$.a = new_node('/', $1.a,$3.a); 
@@ -484,7 +517,8 @@ OJO HAY QUE CONTROLAR NO DIVIDIR ENTRE 0
                 printf("ERROR LINEA %d: No quedan registros disponibles para realizar la operacion dividir\n",linea);
             } 
             $$.tipo="real";
-            printf( "real/entero = %f\n", $$.real);
+            $$.real=$1.real+$3.entero;
+            printf( "-> DIVISION real/entero\n");
         }
         else{
              error_compilacion++;
@@ -496,6 +530,7 @@ OJO HAY QUE CONTROLAR NO DIVIDIR ENTRE 0
 OJO HAY QUE HACER ESTA OPERACIÓN EN EL AST Y ASM
 **/
     | term MODULO factor { //solo se puede hacer con enteros
+        printf("-> MODULO\n");
         if (strcmp($1.tipo, "entero")==0 && strcmp($3.tipo, "entero")==0) { //Si ambos son enteros
             $$.a = new_node('%', $1.a,$3.a); 
             if($$.a->registro==-1){
@@ -503,7 +538,7 @@ OJO HAY QUE HACER ESTA OPERACIÓN EN EL AST Y ASM
                 printf("ERROR LINEA %d: No quedan registros disponibles para realizar la operacion modulo\n",linea);
             } 
             $$.tipo="entero";
-            printf( "entero %% entero = %ld\n", $$.entero);
+            printf( "-> MODULO entero %% entero \n");
         } else{
              error_compilacion++;
              printf( "ERROR LINEA %d: No se puede operar",linea);
@@ -520,7 +555,7 @@ OJO HAY QUE HACER ESTA OPERACIÓN EN EL AST Y ASM
                 printf("ERROR LINEA %d: No quedan registros disponibles para realizar la operacion exponente\n",linea);
             } 
             $$.tipo="entero";
-            printf( "entero^entero = %ld\n", $$.entero);
+            printf( "-> EXPONENTE entero^entero\n");
         } else{
              error_compilacion++;
              printf( "ERROR: No se puede operar");
@@ -533,6 +568,7 @@ OJO HAY QUE HACER ESTA OPERACIÓN EN EL AST Y ASM
 OJO HAY QUE CONTROLAR EL USO DE VARIABLES EN EL AST
 **/
     | ID {
+            printf("-> ID %s\n",$1);
             //printf("Hemos encontrado un identificador");
             //Hemos encontrado un identificador, hay que ver si está en la tabla para recogerlo y sino devolver un error
             int i = lookup($1,table_size,table); //lo buscamos
@@ -543,13 +579,13 @@ OJO HAY QUE CONTROLAR EL USO DE VARIABLES EN EL AST
                 //Controlamos de que tipo es
                 if(table[i].tipo=="entero"){
                     $$.tipo = table[i].tipo;
-
+                    $$.entero=table[i].entero;
                     //Crear nodo hoja con números
                     $$.a = new_var_leaf_num(table[i].entero,table[i].registro);    
                 }
                 else if(table[i].tipo=="real"){
                     $$.tipo = table[i].tipo;      
-                    
+                    $$.real=table[i].real;
                     //Crear nodo hoja con números
                     $$.a = new_var_leaf_num(table[i].real,table[i].registro);        
                 }
@@ -571,7 +607,7 @@ factor: ENT {$$.entero = $1;
                 printf("ERROR LINEA %d: No quedan registros disponibles para asignar el entero %ld\n", linea,$$.entero);
             }  
             $$.tipo="entero"; 
-            printf( "Variable de tipo ENTERO: %ld\n", $$.entero);}   
+            printf( "-> ENTERO: %ld\n", $$.entero);}   
     | MENOS ENT {$$.entero = -$2;
             $$.a = new_leaf_num(-$2);
             if($$.a->registro==-1){
@@ -579,7 +615,7 @@ factor: ENT {$$.entero = $1;
                 printf("ERROR LINEA %d: No quedan registros disponibles para asignar el entero %ld\n", linea, $$.entero);
             }
             $$.tipo="entero";
-            printf( "Variable de tipo ENTERO NEGATIVO: %ld\n", $$.entero);}
+            printf( "-> ENTERO NEGATIVO: %ld\n", $$.entero);}
     | REAL {$$.real = $1;
             $$.a = new_leaf_num($1);
             if($$.a->registro==-1){
@@ -587,7 +623,7 @@ factor: ENT {$$.entero = $1;
                 printf("ERROR LINEA %d: No quedan registros disponibles para asignar el real %f\n",linea, $$.real);
             }
             $$.tipo="real";
-            printf( "Variable de tipo REAL: %f\n", $$.real);}
+            printf( "-> REAL: %f\n", $$.real);}
     | MENOS REAL {$$.real = -$2;
             $$.a = new_leaf_num(-$2);
             if($$.a->registro==-1){
@@ -595,7 +631,7 @@ factor: ENT {$$.entero = $1;
                 printf("ERROR LINEA %d: No quedan registros disponibles para asignar el real %f\n",linea,  $$.real);
             }
             $$.tipo="real";
-            printf( "Variable de tipo REAL NEGATIVO: %f\n", $$.real);}
+            printf( "-> REAL NEGATIVO: %f\n", $$.real);}
     | LPAREN exp RPAREN {
             $$ = $2;
             printf("PARENTESIS\n");}

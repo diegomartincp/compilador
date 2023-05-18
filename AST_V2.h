@@ -245,7 +245,7 @@ double eval(struct nodo *a)
   // NODO HOJA
   case 'L':
     v = a->value;
-    printf("Hoja con %f\n", v);
+    printf("-> HOJA donde se asigna %f (variable%d) al registro $f%d\n", v,a->variableNum, a->registro);
     // Cargar el valor en su registro asignado de tipo F
     fprintf(yyout, "  lwc1 $f%d, variable%d\n", a->registro, a->variableNum);
 
@@ -253,9 +253,9 @@ double eval(struct nodo *a)
 
   // NODO HOJA que es una variable
   case 'V':
-    // v = eval(a->l); //El valor ya lo conocíamos
+    v = a->value;
     // No volvemos hay que hacer nada xq ya está en un registro
-    printf("Esta variable esta en el registro $f%d\n", a->registro);
+    //printf("Esta variable esta en el registro $f%d\n", a->registro);
     break;
 
   // ASIGNACIÓN
@@ -263,7 +263,7 @@ double eval(struct nodo *a)
     // Asigna el resultado de la operación que se encuentra en el nodo a->l al registro que tenia la variable originalmente
     v = eval(a->l);
 
-    printf("Creada y resuelta una variable con un  $f%d\n", v);
+    printf("-> ASIGNACION y resolucion de una variable con un  $f%d\n", v);
     break;
 
   // ASIGNACIÓN y REEMPLAZAR
@@ -273,14 +273,14 @@ double eval(struct nodo *a)
     // Con la operación evaluada, se que en a->registro esta el registro con el resultado
     fprintf(yyout, "  mov.s $f%d, $f%d\n", a->r->registro, a->l->registro);
 
-    printf("Sobreescribe una variable que se encuentra en el registro  $f%d\n", a->r->registro);
+    printf("-> SOBREESCRIBIR VARIABLE tras una operacion, moviendo el registro $f%d, a la posicion original: $f%d \n", a->l->registro,a->r->registro);
     break;
 
   // OPERACION SUMA
   case '+':
     //printf("-> suma\n");
     v = eval(a->l) + eval(a->r);
-    printf("-> Se ha hecho la suma y se almacena en el registro $f%d\n", a->registro);
+    printf("-> SUMA (%f + %f) almacenada en $f%d y con resultado %f\n",a->l->value,a->r->value, a->registro,v);
     // Ahora usamos solo registros tipo F para sumar el float
     fprintf(yyout, "  add.s $f%d, $f%d, $f%d\n", a->registro, a->l->registro, a->r->registro);
 
@@ -293,7 +293,7 @@ double eval(struct nodo *a)
   case '-':
     //printf("-> resta\n");
     v = eval(a->l) - eval(a->r);
-    printf("-> Se ha hecho la resta y se almacena en el registro $f%d\n", a->registro);
+    printf("-> RESTA (%f - %f) almacenada en $f%d y con resultado %f\n",a->l->value,a->r->value, a->registro,v);
     // Sentencia de la resta en ASM
     fprintf(yyout, "  sub.s $f%d, $f%d, $f%d\n", a->registro, a->l->registro, a->r->registro);
 
@@ -304,7 +304,7 @@ double eval(struct nodo *a)
   case '*':
     //printf("-> multiplicacion\n");
     v = eval(a->l) * eval(a->r);
-    printf("-> Se ha hecho la multiplicacion y se almacena en el registro $f%d\n", a->registro);
+    printf("-> MULTIPLICACION (%f * %f) almacenada en $f%d y con resultado %f\n",a->l->value,a->r->value, a->registro,v);
     // Sentencia de la multiplicación en ASM
     fprintf(yyout, "  mul.s $f%d, $f%d, $f%d\n", a->registro, a->l->registro, a->r->registro);
 
@@ -315,7 +315,7 @@ double eval(struct nodo *a)
   case '/':
     //printf("-> division\n");
     v = pow(eval(a->l), eval(a->r)); // base l expon r devuelve l^r
-    printf("-> Se ha hecho la division y se almacena en el registro $f%d\n", a->registro);
+    printf("-> DIVISION (%f / %f) almacenada en $f%d y con resultado %f\n",a->l->value,a->r->value, a->registro,v);
     // Sentencia de la division en ASM
     fprintf(yyout, "  div.s $f%d, $f%d, $f%d\n", a->registro, a->l->registro, a->r->registro);
 
@@ -326,7 +326,7 @@ double eval(struct nodo *a)
   case '%': // Statement List
     //printf("-> modulo\n");
     v = fmod(eval(a->l), eval(a->r));
-
+    printf("-> MODULO (%f % %f) almacenada en $f%d y con resultado %f\n",a->l->value,a->r->value, a->registro,v);
     // Sentencia de la operación de módulo en ASM
     fprintf(yyout, "  cvt.w.s $f%d, $f%d\n", a->registro, a->l->registro); // convertir valores
     fprintf(yyout, "  cvt.w.s $f%d, $f%d\n", a->registro + 1, a->r->registro);
@@ -345,7 +345,7 @@ double eval(struct nodo *a)
   case '^':
     //printf("-> exponente\n");
     v = fmod(eval(a->l), eval(a->r));
-
+    printf("-> EXPONENTE almacenada en $f%d y con resultado %f\n", a->registro,v);
     // Sentencia de la operación de exponente en ASM
 
     // liberar los registros de los nodos L y R
@@ -353,8 +353,8 @@ double eval(struct nodo *a)
     liberarRegistro(a->r);
     break;
   case '>':
-    printf("-> MAYOR QUE\n");
     v = eval(a->l) > eval(a->r);
+    printf("-> MAYOR QUE (%f > %f) almacenada en $f%d y con resultado %f\n",a->l->value,a->r->value, a->registro,v);
 
     // Comparación de punto flotante de $f1 > $f2
     fprintf(yyout, "  c.lt.s $f%d, $f%d\n", a->r->registro, a->l->registro);
@@ -364,8 +364,8 @@ double eval(struct nodo *a)
     liberarRegistro(a->r);
     break;
   case '<':
-    printf("-> MENOR QUE\n");
     v = eval(a->l) < eval(a->r);
+    printf("-> MENOR QUE (%f < %f) almacenada en $f%d y con resultado %f\n",a->l->value,a->r->value, a->registro,v);
 
     // Comparación de punto flotante de $f1 > $f2
     fprintf(yyout, "  c.lt.s $f%d, $f%d\n", a->l->registro, a->r->registro); // MISMA OPERACIÓN QUE ARRIBA PERO INTERCAMBIADA PARA > --> <
@@ -375,8 +375,8 @@ double eval(struct nodo *a)
     liberarRegistro(a->r);
     break;
   case '>=':
-    printf("-> MAYOR IGUAL QUE\n");
     v = eval(a->l) >= eval(a->r);
+    printf("-> MAYOR IGUAL QUE (%f >= %f) almacenada en $f%d y con resultado %f\n",a->l->value,a->r->value, a->registro,v);
 
     // Comparación de punto flotante de $f1 > $f2
     fprintf(yyout, "  c.le.s $f%d, $f%d\n", a->r->registro, a->l->registro);
@@ -386,8 +386,8 @@ double eval(struct nodo *a)
     liberarRegistro(a->r);
     break;
   case '<=':
-    printf("-> MENOR IGUAL QUE\n");
     v = eval(a->l) <= eval(a->r);
+    printf("-> MENOR IGUAL QUE (%f <= %f) almacenada en $f%d y con resultado %f\n",a->l->value,a->r->value, a->registro,v);
 
     // Comparación de punto flotante de $f1 < $f2
     fprintf(yyout, "  c.le.s $f%d, $f%d\n", a->l->registro, a->r->registro);
@@ -397,8 +397,8 @@ double eval(struct nodo *a)
     liberarRegistro(a->r);
     break;
   case '==':
-    printf("-> IGUAL IGUAL QUE\n");
     v = eval(a->l) == eval(a->r);
+    printf("-> IGUAL QUE (%f == %f) almacenada en $f%d y con resultado %f\n",a->l->value,a->r->value, a->registro,v);
 
     // Comparación de punto flotante de $f1 == $f2
     fprintf(yyout, "  c.eq.s $f%d, $f%d\n", a->l->registro, a->r->registro);
