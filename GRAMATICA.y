@@ -126,7 +126,7 @@ imprimir_statement: IMPRIMIR LPAREN exp RPAREN{ //imprimir un identificador
             //double valor = iniciar_evaluacion($3.a); //Evaluar la exppresión para hacer la asignación
             //printf(">>>IMPRIMIR %f\n",valor);
             //Ya conocemos en que registro está el valor, que será float
-            printf("-> IMPRIMIR\n")
+            printf("-> IMPRIMIR\n");
             $$.a = new_node('P',$3.a, nodo_vacio());
             if($$.a->registro==-1){
                 error_compilacion++;
@@ -363,7 +363,7 @@ exp: exp MAS term {
         }
         else{
             error_compilacion++;
-            printf("ERROR LINEA %d: No se puede operar en línea",linea);
+            printf("ERROR LINEA %d: No se puede operar en línea\n",linea);
         }
     }
     | exp MENOS term {
@@ -408,7 +408,7 @@ exp: exp MAS term {
         }
         else{
                 error_compilacion++;
-                printf( "ERROR: No se puede operar");
+                printf( "ERROR: No se puede operar\n");
         }
     }
 /**
@@ -541,7 +541,7 @@ OJO HAY QUE HACER ESTA OPERACIÓN EN EL AST Y ASM
             printf( "-> MODULO entero %% entero \n");
         } else{
              error_compilacion++;
-             printf( "ERROR LINEA %d: No se puede operar",linea);
+             printf( "ERROR LINEA %d: No se puede operar con operadores no enteros\n",linea);
         }   
     }
 /**
@@ -558,7 +558,7 @@ OJO HAY QUE HACER ESTA OPERACIÓN EN EL AST Y ASM
             printf( "-> EXPONENTE entero^entero\n");
         } else{
              error_compilacion++;
-             printf( "ERROR: No se puede operar");
+             printf( "ERROR: No se puede operar\n");
         }
     }
     | factor {

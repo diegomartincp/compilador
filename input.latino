@@ -1,6 +1,2 @@
-var=9.1
-var=10.1
-var=5+var
-si(var<99.9)
-imprimir(var*100.5)
-fin
+imprimir(9/2)
+imprimir(9%2)

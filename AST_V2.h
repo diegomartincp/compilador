@@ -314,7 +314,7 @@ double eval(struct nodo *a)
     break;
   case '/':
     //printf("-> division\n");
-    v = pow(eval(a->l), eval(a->r)); // base l expon r devuelve l^r
+    v = eval(a->l) / eval(a->r); // base l expon r devuelve l^r
     printf("-> DIVISION (%f / %f) almacenada en $f%d y con resultado %f\n",a->l->value,a->r->value, a->registro,v);
     // Sentencia de la division en ASM
     fprintf(yyout, "  div.s $f%d, $f%d, $f%d\n", a->registro, a->l->registro, a->r->registro);
@@ -326,7 +326,7 @@ double eval(struct nodo *a)
   case '%': // Statement List
     //printf("-> modulo\n");
     v = fmod(eval(a->l), eval(a->r));
-    printf("-> MODULO (%f % %f) almacenada en $f%d y con resultado %f\n",a->l->value,a->r->value, a->registro,v);
+    printf("-> MODULO (%f mod %f) almacenada en $f%d y con resultado %f\n",a->l->value,a->r->value, a->registro,v);
     // Sentencia de la operación de módulo en ASM
     fprintf(yyout, "  cvt.w.s $f%d, $f%d\n", a->registro, a->l->registro); // convertir valores
     fprintf(yyout, "  cvt.w.s $f%d, $f%d\n", a->registro + 1, a->r->registro);

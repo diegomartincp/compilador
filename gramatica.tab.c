@@ -1573,7 +1573,7 @@ yyreduce:
             //double valor = iniciar_evaluacion($3.a); //Evaluar la exppresión para hacer la asignación
             //printf(">>>IMPRIMIR %f\n",valor);
             //Ya conocemos en que registro está el valor, que será float
-            printf("-> IMPRIMIR\n")
+            printf("-> IMPRIMIR\n");
             (yyval.st).a = new_node('P',(yyvsp[(3) - (4)].st).a, nodo_vacio());
             if((yyval.st).a->registro==-1){
                 error_compilacion++;
@@ -1894,7 +1894,7 @@ yyreduce:
         }
         else{
             error_compilacion++;
-            printf("ERROR LINEA %d: No se puede operar en línea",linea);
+            printf("ERROR LINEA %d: No se puede operar en línea\n",linea);
         }
     ;}
     break;
@@ -1945,7 +1945,7 @@ yyreduce:
         }
         else{
                 error_compilacion++;
-                printf( "ERROR: No se puede operar");
+                printf( "ERROR: No se puede operar\n");
         }
     ;}
     break;
@@ -2096,7 +2096,7 @@ yyreduce:
             printf( "-> MODULO entero %% entero \n");
         } else{
              error_compilacion++;
-             printf( "ERROR LINEA %d: No se puede operar",linea);
+             printf( "ERROR LINEA %d: No se puede operar con operadores no enteros\n",linea);
         }   
     ;}
     break;
@@ -2116,7 +2116,7 @@ yyreduce:
             printf( "-> EXPONENTE entero^entero\n");
         } else{
              error_compilacion++;
-             printf( "ERROR: No se puede operar");
+             printf( "ERROR: No se puede operar\n");
         }
     ;}
     break;
