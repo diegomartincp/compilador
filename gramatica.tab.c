@@ -2470,7 +2470,7 @@ int main(int argc, char** argv) {
         printf("No se puedo leer el input.\n");
         return 1;
     }
-    yyout = fopen( "./prueba.asm", "wt" );
+    yyout = fopen( "./maquina.asm", "wt" );
 	yyparse();
     fclose(yyin);
     return 0;
