@@ -34,6 +34,9 @@ struct nodo
   struct nodo *x;  // Nodo EXTRA para si nodo específico del SI SINO
   int registro;    // Registro donde está el resultado
   int variableNum; // Indica el nombre de la variable "variableN" que se usa para declarar
+  int id;           // Identificador del para
+  int inicio;       // Valor inicial del para
+  int fin;          // Valor final del para
 };
 
 // Ver que registros T están libres
@@ -188,6 +191,21 @@ struct nodo *new_node_sino(struct nodo *l, struct nodo *r, struct nodo *x)
  
   return a;
 }
+
+struct nodo* new_node_para(int id, int inicio, int fin) {
+    struct nodo* a = malloc(sizeof(struct nodo));
+    if (!a) {
+        exit(0); // Si el nuevo nodo es NULL significa que hay un error de memoria insuficiente
+    }
+    // Le asigna al nuevo nodo sus características
+    a->nodetype = 'PARA';
+    a->id = id;
+    a->inicio = inicio;
+    a->fin = fin;
+
+    return a;
+}
+
 
 // Nodo hoja con string
 struct nodo *new_leaf_text(char *string, char *tipo_)
@@ -489,9 +507,12 @@ double eval(struct nodo *a)
     v = eval(a->l); // statement_list
     eval(a->r);     // staetment
     break;
-    case 'CM': // Comentario
+  case 'CM': // Comentario
     v = 1;  //No hay que hacer nada por que es un comentario
     break;
+  case 'PARA':
+    printf("-> PARA AST checkeo\n");
+    break;      
   default:
     printf("Error: Nodo desconocido %c\n", a->nodetype);
   }

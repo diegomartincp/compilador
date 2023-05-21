@@ -41,11 +41,11 @@ int table_size = 0;//Se usa para conocer el índice del array disponible para in
 /* Declarar tokens recogidos de FLEX*/
 %token MAS MENOS POR DIV LPAREN RPAREN CONCAT COMILLA IGUAL SI OSI SINO MIENTRAS FIN DOBLEAMPERSAN DOBLEBARRA IMPRIMIR COMENTARIO
 %token EXCLAMACION MAYQUE MENQUE MODULO EXPON MAYORIGUAL IGUALIGUAL MENORIGUAL
-%token PUNTOCOMA
+%token PUNTOCOMA PARA EN RANGO COMA
 
 /* Los no terminales hacen uso de la estructura */
 %type <st> statement_list term factor statement exp asignacion_statement si_statement osi_list osi mientras_statement imprimir_statement
-%type <st> condicion_list condicion 
+%type <st> condicion_list condicion para_statement
 
 %token <intVal> ENT
 %token <floatVal> REAL
@@ -107,6 +107,8 @@ statement:
         $$.a=$1.a;
     }
     | mientras_statement {
+    }
+    | para_statement {
     }
     | imprimir_statement {
         $$.a=$1.a;
@@ -224,6 +226,17 @@ mientras_statement:
         if($$.a->registro==-1){
             error_compilacion++;
             printf("ERROR LINEA %d: No quedan registros disponibles para realizar la sentencia MIENTRAS\n",linea);
+        }
+    }
+    ;
+
+para_statement:
+    PARA ID EN RANGO LPAREN ENT COMA ENT RPAREN statement_list FIN {
+        printf("-> PARA\n");
+        $$.a = new_node_para($2, $6, $8);
+        if($$.a->registro==-1){
+            error_compilacion++;
+            printf("ERROR LINEA %d: No quedan registros disponibles para realizar la condicion\n",linea);
         }
     }
     ;

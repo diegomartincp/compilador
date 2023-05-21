@@ -37,6 +37,10 @@ int linea = 1; // Variable para almacenar el número de línea
 "sino" return SINO;
 "mientras"  return MIENTRAS;
 "fin" return FIN;
+"para" return PARA;
+"en" return EN;
+"rango" return RANGO;
+\, return COMA;
 escribir|imprimir|poner return IMPRIMIR;
 
 
