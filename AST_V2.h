@@ -16,7 +16,7 @@ bool array_registros_t[10] = {true, true, true, true, true, true, true, true, tr
 // Hay 32 registros F, desde el 0 hasta el 31
 // El registro 32 está reservado por defecto para imprimir por pantalla
 bool array_registros_f[31] = {true, true, true, true, true, true, true, true, true, true, true, true, false, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true};
-//bool array_registros_f[31] = {true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
+// bool array_registros_f[31] = {true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
 
 // Usamos un array de 32 posiciones para almacenar las variables de .data
 float array_variables[32][3];        // En 0 el dato y en 1 el nombre de la variable y en el 2 si esta ocupado
@@ -34,24 +34,24 @@ struct nodo
   struct nodo *x;  // Nodo EXTRA para si nodo específico del SI SINO
   int registro;    // Registro donde está el resultado
   int variableNum; // Indica el nombre de la variable "variableN" que se usa para declarar
-  int id;           // Identificador del para
-  int inicio;       // Valor inicial del para
-  int fin;          // Valor final del para
+  char *id;        // Identificador del para
+  int inicio;      // Valor inicial del para
+  int fin;         // Valor final del para
 };
 
 // Ver que registros T están libres
 buscarRegistroLibreT()
 {
   int i = 0;
-  for (size_t i = 0; i <= 9; i++)  //Vamos de 0 a 30, pues el 31 está reservado para imprimir
+  for (size_t i = 0; i <= 9; i++) // Vamos de 0 a 30, pues el 31 está reservado para imprimir
   {
-    if (array_registros_t[i] == true){
+    if (array_registros_t[i] == true)
+    {
       array_registros_t[i] = false; // Ocupamos el registro
       return i;                     // Devuelve el registro que está libre
     }
-
   }
-  //Si sale del búcle for, significa que no hay ningún registro libre
+  // Si sale del búcle for, significa que no hay ningún registro libre
   return -1;
 }
 
@@ -59,15 +59,15 @@ buscarRegistroLibreT()
 buscarRegistroLibreF()
 {
   int i = 0;
-  for (size_t i = 0; i <= 30; i++)  //Vamos de 0 a 30, pues el 31 está reservado para imprimir
+  for (size_t i = 0; i <= 30; i++) // Vamos de 0 a 30, pues el 31 está reservado para imprimir
   {
-    if (array_registros_f[i] == true){
+    if (array_registros_f[i] == true)
+    {
       array_registros_f[i] = false; // Ocupamos el registro
       return i;                     // Devuelve el registro que está libre
     }
-
   }
-  //Si sale del búcle for, significa que no hay ningún registro libre
+  // Si sale del búcle for, significa que no hay ningún registro libre
   return -1;
 }
 // Recibe un nodo y libera el registro que usa tanto si es real como float
@@ -92,8 +92,8 @@ struct nodo *new_node(int nodetype, struct nodo *l, struct nodo *r)
 
   // Asignar registro para float
   a->registro = buscarRegistroLibreF();
-  printf("Se ha reservado el registro $f%d para almancear el resultado de una operacion\n\n",a->registro);
- 
+  printf("Se ha reservado el registro $f%d para almancear el resultado de una operacion\n\n", a->registro);
+
   return a;
 }
 
@@ -118,7 +118,7 @@ struct nodo *new_leaf_num(double value)
   a->variableNum = siguienteVariableDisponible;
   siguienteVariableDisponible++; // Se incrementa
 
-  printf("La variable%d almacena el valor %f en el registro $f%d \n", a->variableNum,a->value,a->registro);
+  printf("La variable%d almacena el valor %f en el registro $f%d \n", a->variableNum, a->value, a->registro);
 
   // Registrar una nueva variable en .data con el valor
   // Guarda en la misma posición que registro utiliza: Para $f14 usa la posición 14
@@ -145,8 +145,7 @@ struct nodo *new_var_leaf_num(double value, int registro_)
 
   // Asignar registro para float
   a->registro = registro_;
-  printf("El identificador estaba almacenado en el registro f%d \n",a->registro);
-  
+  printf("El identificador estaba almacenado en el registro f%d \n", a->registro);
 
   /**
     //Guardar como se llama la variable de .data
@@ -171,7 +170,7 @@ struct nodo *new_leaf_comment()
   a->value = 1;
   return a;
 }
-//Nuevo nodo para un SI con un SINO
+// Nuevo nodo para un SI con un SINO
 struct nodo *new_node_sino(struct nodo *l, struct nodo *r, struct nodo *x)
 {                                               //, char* tipo_
   struct nodo *a = malloc(sizeof(struct nodo)); // Crea un nuevo nodo
@@ -187,25 +186,26 @@ struct nodo *new_node_sino(struct nodo *l, struct nodo *r, struct nodo *x)
 
   // Asignar registro para float
   a->registro = buscarRegistroLibreF();
-  printf("Se ha reservado el registro $f%d para almancear el SI con un SINO\n\n",a->registro);
- 
+  printf("Se ha reservado el registro $f%d para almancear el SI con un SINO\n\n", a->registro);
+
   return a;
 }
 
-struct nodo* new_node_para(int id, int inicio, int fin) {
-    struct nodo* a = malloc(sizeof(struct nodo));
-    if (!a) {
-        exit(0); // Si el nuevo nodo es NULL significa que hay un error de memoria insuficiente
-    }
-    // Le asigna al nuevo nodo sus características
-    a->nodetype = 'PARA';
-    a->id = id;
-    a->inicio = inicio;
-    a->fin = fin;
+struct nodo *new_node_para(char *id, int inicio, int fin)
+{
+  struct nodo *a = malloc(sizeof(struct nodo));
+  if (!a)
+  {
+    exit(0); // Si el nuevo nodo es NULL significa que hay un error de memoria insuficiente
+  }
+  // Le asigna al nuevo nodo sus características
+  a->nodetype = 'PARA';
+  a->id = id;
+  a->inicio = inicio;
+  a->fin = fin;
 
-    return a;
+  return a;
 }
-
 
 // Nodo hoja con string
 struct nodo *new_leaf_text(char *string, char *tipo_)
@@ -263,7 +263,7 @@ double eval(struct nodo *a)
   // NODO HOJA
   case 'L':
     v = a->value;
-    printf("-> HOJA donde se asigna %f (variable%d) al registro $f%d\n", v,a->variableNum, a->registro);
+    printf("-> HOJA donde se asigna %f (variable%d) al registro $f%d\n", v, a->variableNum, a->registro);
     // Cargar el valor en su registro asignado de tipo F
     fprintf(yyout, "  lwc1 $f%d, variable%d\n", a->registro, a->variableNum);
 
@@ -273,7 +273,7 @@ double eval(struct nodo *a)
   case 'V':
     v = a->value;
     // No volvemos hay que hacer nada xq ya está en un registro
-    //printf("Esta variable esta en el registro $f%d\n", a->registro);
+    // printf("Esta variable esta en el registro $f%d\n", a->registro);
     break;
 
   // ASIGNACIÓN
@@ -285,20 +285,20 @@ double eval(struct nodo *a)
     break;
 
   // ASIGNACIÓN y REEMPLAZAR
-  case 'R': 
+  case 'R':
     // Asigna el resultado de la operación que se encuentra en el nodo a->l al registro que tenia la variable originalmente
     v = eval(a->l);
     // Con la operación evaluada, se que en a->registro esta el registro con el resultado
     fprintf(yyout, "  mov.s $f%d, $f%d\n", a->r->registro, a->l->registro);
 
-    printf("-> SOBREESCRIBIR VARIABLE tras una operacion, moviendo el registro $f%d, a la posicion original: $f%d \n", a->l->registro,a->r->registro);
+    printf("-> SOBREESCRIBIR VARIABLE tras una operacion, moviendo el registro $f%d, a la posicion original: $f%d \n", a->l->registro, a->r->registro);
     break;
 
   // OPERACION SUMA
   case '+':
-    //printf("-> suma\n");
+    // printf("-> suma\n");
     v = eval(a->l) + eval(a->r);
-    printf("-> SUMA (%f + %f) almacenada en $f%d y con resultado %f\n",a->l->value,a->r->value, a->registro,v);
+    printf("-> SUMA (%f + %f) almacenada en $f%d y con resultado %f\n", a->l->value, a->r->value, a->registro, v);
     // Ahora usamos solo registros tipo F para sumar el float
     fprintf(yyout, "  add.s $f%d, $f%d, $f%d\n", a->registro, a->l->registro, a->r->registro);
 
@@ -309,9 +309,9 @@ double eval(struct nodo *a)
 
   // OPERACIÓN RESTA
   case '-':
-    //printf("-> resta\n");
+    // printf("-> resta\n");
     v = eval(a->l) - eval(a->r);
-    printf("-> RESTA (%f - %f) almacenada en $f%d y con resultado %f\n",a->l->value,a->r->value, a->registro,v);
+    printf("-> RESTA (%f - %f) almacenada en $f%d y con resultado %f\n", a->l->value, a->r->value, a->registro, v);
     // Sentencia de la resta en ASM
     fprintf(yyout, "  sub.s $f%d, $f%d, $f%d\n", a->registro, a->l->registro, a->r->registro);
 
@@ -320,9 +320,9 @@ double eval(struct nodo *a)
     liberarRegistro(a->r);
     break;
   case '*':
-    //printf("-> multiplicacion\n");
+    // printf("-> multiplicacion\n");
     v = eval(a->l) * eval(a->r);
-    printf("-> MULTIPLICACION (%f * %f) almacenada en $f%d y con resultado %f\n",a->l->value,a->r->value, a->registro,v);
+    printf("-> MULTIPLICACION (%f * %f) almacenada en $f%d y con resultado %f\n", a->l->value, a->r->value, a->registro, v);
     // Sentencia de la multiplicación en ASM
     fprintf(yyout, "  mul.s $f%d, $f%d, $f%d\n", a->registro, a->l->registro, a->r->registro);
 
@@ -331,9 +331,9 @@ double eval(struct nodo *a)
     liberarRegistro(a->r);
     break;
   case '/':
-    //printf("-> division\n");
+    // printf("-> division\n");
     v = eval(a->l) / eval(a->r); // base l expon r devuelve l^r
-    printf("-> DIVISION (%f / %f) almacenada en $f%d y con resultado %f\n",a->l->value,a->r->value, a->registro,v);
+    printf("-> DIVISION (%f / %f) almacenada en $f%d y con resultado %f\n", a->l->value, a->r->value, a->registro, v);
     // Sentencia de la division en ASM
     fprintf(yyout, "  div.s $f%d, $f%d, $f%d\n", a->registro, a->l->registro, a->r->registro);
 
@@ -342,9 +342,9 @@ double eval(struct nodo *a)
     liberarRegistro(a->r);
     break;
   case '%': // Statement List
-    //printf("-> modulo\n");
+    // printf("-> modulo\n");
     v = fmod(eval(a->l), eval(a->r));
-    printf("-> MODULO (%f mod %f) almacenada en $f%d y con resultado %f\n",a->l->value,a->r->value, a->registro,v);
+    printf("-> MODULO (%f mod %f) almacenada en $f%d y con resultado %f\n", a->l->value, a->r->value, a->registro, v);
     // Sentencia de la operación de módulo en ASM
     fprintf(yyout, "  cvt.w.s $f%d, $f%d\n", a->registro, a->l->registro); // convertir valores
     fprintf(yyout, "  cvt.w.s $f%d, $f%d\n", a->registro + 1, a->r->registro);
@@ -353,7 +353,7 @@ double eval(struct nodo *a)
     fprintf(yyout, "  div $t%d, $t%d\n", a->registro, a->registro + 1);
     fprintf(yyout, "  mfhi $t%d\n", a->registro); // obtenemos el residuo/modulo
     // el cociente se almacena en el registro especial LO Lower y el residuo se almacena en el registro especial HI Higher
-    fprintf(yyout, "  mtc1 $t%d, $f%d\n", a->registro, a->registro); // reconvertimos
+    fprintf(yyout, "  mtc1 $t%d, $f%d\n", a->registro, a->registro);    // reconvertimos
     fprintf(yyout, "  cvt.s.w $f%d, $f%d\n", a->registro, a->registro); // reconvertimos
 
     // liberar los registros de los nodos L y R
@@ -361,9 +361,9 @@ double eval(struct nodo *a)
     liberarRegistro(a->r);
     break;
   case '^':
-    //printf("-> exponente\n");
+    // printf("-> exponente\n");
     v = fmod(eval(a->l), eval(a->r));
-    printf("-> EXPONENTE almacenada en $f%d y con resultado %f\n", a->registro,v);
+    printf("-> EXPONENTE almacenada en $f%d y con resultado %f\n", a->registro, v);
     // Sentencia de la operación de exponente en ASM
 
     // liberar los registros de los nodos L y R
@@ -372,7 +372,7 @@ double eval(struct nodo *a)
     break;
   case '>':
     v = eval(a->l) > eval(a->r);
-    printf("-> MAYOR QUE (%f > %f) almacenada en $f%d y con resultado %f\n",a->l->value,a->r->value, a->registro,v);
+    printf("-> MAYOR QUE (%f > %f) almacenada en $f%d y con resultado %f\n", a->l->value, a->r->value, a->registro, v);
 
     // Comparación de punto flotante de $f1 > $f2
     fprintf(yyout, "  c.lt.s $f%d, $f%d\n", a->r->registro, a->l->registro);
@@ -383,7 +383,7 @@ double eval(struct nodo *a)
     break;
   case '<':
     v = eval(a->l) < eval(a->r);
-    printf("-> MENOR QUE (%f < %f) almacenada en $f%d y con resultado %f\n",a->l->value,a->r->value, a->registro,v);
+    printf("-> MENOR QUE (%f < %f) almacenada en $f%d y con resultado %f\n", a->l->value, a->r->value, a->registro, v);
 
     // Comparación de punto flotante de $f1 > $f2
     fprintf(yyout, "  c.lt.s $f%d, $f%d\n", a->l->registro, a->r->registro); // MISMA OPERACIÓN QUE ARRIBA PERO INTERCAMBIADA PARA > --> <
@@ -394,7 +394,7 @@ double eval(struct nodo *a)
     break;
   case '>=':
     v = eval(a->l) >= eval(a->r);
-    printf("-> MAYOR IGUAL QUE (%f >= %f) almacenada en $f%d y con resultado %f\n",a->l->value,a->r->value, a->registro,v);
+    printf("-> MAYOR IGUAL QUE (%f >= %f) almacenada en $f%d y con resultado %f\n", a->l->value, a->r->value, a->registro, v);
 
     // Comparación de punto flotante de $f1 > $f2
     fprintf(yyout, "  c.le.s $f%d, $f%d\n", a->r->registro, a->l->registro);
@@ -405,7 +405,7 @@ double eval(struct nodo *a)
     break;
   case '<=':
     v = eval(a->l) <= eval(a->r);
-    printf("-> MENOR IGUAL QUE (%f <= %f) almacenada en $f%d y con resultado %f\n",a->l->value,a->r->value, a->registro,v);
+    printf("-> MENOR IGUAL QUE (%f <= %f) almacenada en $f%d y con resultado %f\n", a->l->value, a->r->value, a->registro, v);
 
     // Comparación de punto flotante de $f1 < $f2
     fprintf(yyout, "  c.le.s $f%d, $f%d\n", a->l->registro, a->r->registro);
@@ -416,12 +416,11 @@ double eval(struct nodo *a)
     break;
   case '==':
     v = eval(a->l) == eval(a->r);
-    printf("-> IGUAL QUE (%f == %f) almacenada en $f%d y con resultado %f\n",a->l->value,a->r->value, a->registro,v);
+    printf("-> IGUAL QUE (%f == %f) almacenada en $f%d y con resultado %f\n", a->l->value, a->r->value, a->registro, v);
 
     // Comparación de punto flotante de $f1 == $f2
     fprintf(yyout, "  c.eq.s $f%d, $f%d\n", a->l->registro, a->r->registro);
     fprintf(yyout, "  mov.s $f%d, $f%d\n", a->registro, a->l->registro);
-
 
     // Liberar los registros de los nodos L y R
     liberarRegistro(a->l);
@@ -449,19 +448,19 @@ double eval(struct nodo *a)
 
   case 'SN': // SI SINO statement
     etiquetaTemporal = numEtiqueta;
-    numEtiqueta += 2; //Reservamos dos etiquetas
-      //etiquetaTemporal es la etiqueta del SINO
-      //etiquetaTemporal+1 es la etiqueta para ir fuera del SI y SINO
+    numEtiqueta += 2; // Reservamos dos etiquetas
+                      // etiquetaTemporal es la etiqueta del SINO
+                      // etiquetaTemporal+1 es la etiqueta para ir fuera del SI y SINO
 
     v = eval(a->l); // condicion en a->l
     printf("-> SI con un SINO donde su condicion es %f\n", v);
-    si_sino_statement(a->l, etiquetaTemporal);  //Le pasamos la etiqueta del sino, es decir, "si no se cumple la condicion vamos a.." (SINO)
+    si_sino_statement(a->l, etiquetaTemporal); // Le pasamos la etiqueta del sino, es decir, "si no se cumple la condicion vamos a.." (SINO)
 
     // Generar el código del SI
     eval(a->r); // el resto del codigo a->r
 
-    //Si hemos recorrido el SI, saltar al final
-    fprintf(yyout, "  j etiq%d\n", etiquetaTemporal+1);
+    // Si hemos recorrido el SI, saltar al final
+    fprintf(yyout, "  j etiq%d\n", etiquetaTemporal + 1);
     // Etiqueta que se usa para saltar al  SINO
     fprintf(yyout, "etiq%d:\n", etiquetaTemporal);
 
@@ -469,12 +468,11 @@ double eval(struct nodo *a)
     eval(a->x); // el resto del codigo a->x
 
     // Etiqueta que se usa para saltar al final del SI y SINO
-    fprintf(yyout, "etiq%d:\n", etiquetaTemporal+1);
-
+    fprintf(yyout, "etiq%d:\n", etiquetaTemporal + 1);
 
     break;
 
-  case 'M': // SI statement
+  case 'M': // Mientras statement
 
     etiquetaTemporal = numEtiqueta;
     numEtiqueta += 2;
@@ -495,24 +493,35 @@ double eval(struct nodo *a)
     // Incrementar el número de etiqueta para usar una distinta más tarde
 
     break;
-  case 'P': // Statement List
-    //printf("-> Statement Imprimir\n");
-    // Resuelve la operación evaluandola
+  case 'P': // Imprimir
+    // printf("-> Statement Imprimir\n");
+    //  Resuelve la operación evaluandola
     eval(a->l);
     // Imprime el resultado almacenado en al registro de
     imprimir(a->l);
     break;
   case 'SL': // Statement List
-    //printf("-> Statement List\n");
+    // printf("-> Statement List\n");
     v = eval(a->l); // statement_list
     eval(a->r);     // staetment
     break;
   case 'CM': // Comentario
-    v = 1;  //No hay que hacer nada por que es un comentario
+    v = 1;   // No hay que hacer nada por que es un comentario
     break;
   case 'PARA':
     printf("-> PARA AST checkeo\n");
-    break;      
+    printf("ID: %s\n", a->id);
+    printf("Inicio: %d\n", a->inicio);
+    printf("Fin: %d\n", a->fin);
+
+    etiquetaTemporal = numEtiqueta;
+    numEtiqueta++;
+
+    v = eval(a->l); // condicion en a->l
+    printf("-> Nodo izq %f\n", v);
+    si_statement(a->l, etiquetaTemporal);
+
+    break;
   default:
     printf("Error: Nodo desconocido %c\n", a->nodetype);
   }
@@ -533,8 +542,8 @@ double iniciar_evaluacion(struct nodo *a)
     // Si el espacio del array tiene algo
     if (array_variables[i][2] == 1)
     {
-      //printf("%d\n", array_variables[i][0]);
-      // Define la variable
+      // printf("%d\n", array_variables[i][0]);
+      //  Define la variable
       fprintf(yyout, "  variable%d: .float %f\n", (int)array_variables[i][1], array_variables[i][0]);
       // La elimina pues ya se ha declarado
       array_variables[i][2] = 0;
@@ -575,7 +584,6 @@ void si_sino_statement(struct nodo *a, int numEtiqueta)
 {
   // Si no se cumple el SI hay que ir a la etiqueta del SINO
   fprintf(yyout, "  bc1f etiq%d\n", numEtiqueta);
-
 }
 
 void mientras_statement(struct nodo *a, int numEtiqueta)
