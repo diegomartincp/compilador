@@ -233,7 +233,7 @@ mientras_statement:
 para_statement:
     PARA ID EN RANGO LPAREN ENT COMA ENT RPAREN statement_list FIN {
         printf("-> PARA\n");
-        $$.a = new_node_para(strdup($2), $6, $8);
+        $$.a = new_node_para(strdup($2), $6, $8, $10.a);
         if($$.a->registro==-1){
             error_compilacion++;
             printf("ERROR LINEA %d: No quedan registros disponibles para realizar la condicion\n",linea);

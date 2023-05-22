@@ -191,7 +191,7 @@ struct nodo *new_node_sino(struct nodo *l, struct nodo *r, struct nodo *x)
   return a;
 }
 
-struct nodo *new_node_para(char *id, int inicio, int fin)
+struct nodo *new_node_para(char *id, int inicio, int fin, struct nodo *x)
 {
   struct nodo *a = malloc(sizeof(struct nodo));
   if (!a)
@@ -203,6 +203,7 @@ struct nodo *new_node_para(char *id, int inicio, int fin)
   a->id = id;
   a->inicio = inicio;
   a->fin = fin;
+  a->x = x;
 
   return a;
 }
@@ -514,12 +515,54 @@ double eval(struct nodo *a)
     printf("Inicio: %d\n", a->inicio);
     printf("Fin: %d\n", a->fin);
 
-    etiquetaTemporal = numEtiqueta;
-    numEtiqueta++;
+    // crear codigo asm
+    /*
+    Ejemplo asm:
+    .data
+  var1: .word 1
+  msg: .asciiz "\nEl valor de var1 es: "
 
-    v = eval(a->l); // condicion en a->l
-    printf("-> Nodo izq %f\n", v);
-    si_statement(a->l, etiquetaTemporal);
+.text
+main:
+  # Inicializar var1 a 1
+  li $t0, 1
+  sw $t0, var1
+
+  # Salto a la etiqueta 'inicio_para'
+  j inicio_para
+
+# Bucle 'para'
+inicio_para:
+  # Cuerpo del bucle
+  # Aquí debes agregar el código correspondiente al cuerpo del bucle
+
+  # Imprimir el valor de var1
+  la $a0, msg
+  li $v0, 4
+  syscall
+
+  lw $a0, var1
+  li $v0, 1
+  syscall
+
+  # Incrementar var1 en 1
+  lw $t0, var1
+  addi $t0, $t0, 1
+  sw $t0, var1
+
+  # Comprobar la condición de finalización
+  lw $t0, var1
+  li $t1, 11   # Se cambió el límite a 11 para ejecutar el bucle 10 veces
+  bne $t0, $t1, inicio_para
+
+  # Terminar el programa
+  li $v0, 10
+  syscall
+
+
+
+
+    */
 
     break;
   default:
