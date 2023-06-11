@@ -1,2 +1,1 @@
-var1=10 var2=15 mientras(var2>var1) var3=2 
-para i en rango(10) var3=var3+5 fin var1=var3 fin imprimir(var1)
+var1=10 var2=15 mientras(var2>var1) var3=2 para i en rango(10) var3=var3+5 fin var1=var3 fin imprimir(var1)

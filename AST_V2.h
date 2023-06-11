@@ -210,6 +210,7 @@ struct nodo *new_node_para(char *id, int inicio, int fin, struct nodo *r)
   a->r = r;
   a->registroIni = buscarRegistroLibreT();
   a->registroFin = buscarRegistroLibreT();
+  a->registroInc = buscarRegistroLibreT();
 
   return a;
 }
@@ -228,6 +229,7 @@ struct nodo *new_node_para2(char *id, int fin, struct nodo *r)
   a->r = r;
   a->registroIni = buscarRegistroLibreT();
   a->registroFin = buscarRegistroLibreT();
+  a->registroInc = buscarRegistroLibreT();
 
   return a;
 }
@@ -552,14 +554,19 @@ double eval(struct nodo *a)
     
     //Iniciar el bucle
     fprintf(yyout, "  etiq%d:\n", etiquetaTemporal);
+
+    //comparamos la condicion
+    fprintf(yyout, "  slt $t%d, $t%d, $t%d\n", a->registroInc, a->registroFin, a->registroIni);
+    fprintf(yyout, "  beq $t%d, 1, etiq%d\n", a->registroInc, etiquetaTemporal+1);
    
     //cuerpo del bucle
     eval(a->r);
 
     //Incrementar el contador
     fprintf(yyout, "  addi $t%d, $t%d, 1\n", a->registroIni, a->registroIni);
+    fprintf(yyout, "  j etiq%d\n", etiquetaTemporal);
     //Comparacion para finalizar el bucle
-    fprintf(yyout, "  bne $t%d, $t%d, etiq%d\n", a->registroIni, a->registroFin, etiquetaTemporal);
+    //fprintf(yyout, "  bne $t%d, $t%d, etiq%d\n", a->registroIni, a->registroFin, etiquetaTemporal);
     
     fprintf(yyout, "  etiq%d:\n", etiquetaTemporal+1);
 
@@ -578,13 +585,17 @@ double eval(struct nodo *a)
     //inicio bucle
     fprintf(yyout, "  etiq%d:\n", etiquetaTemporal);
    
+    //comparamos la condicion
+    fprintf(yyout, "  slt $t%d, $t%d, $t%d\n", a->registroInc, a->registroFin, a->registroIni);
+    fprintf(yyout, "  beq $t%d, 1, etiq%d\n", a->registroInc, etiquetaTemporal+1);
+
     //cuerpo del bucle
     eval(a->r);
 
     //Incrementar el contador
     fprintf(yyout, "  addi $t%d, $t%d, 1\n", a->registroIni, a->registroIni);
-    //Comparacion para finalizar el bucle
-    fprintf(yyout, "  bne $t%d, $t%d, etiq%d\n", a->registroIni, a->registroFin, etiquetaTemporal);
+
+    fprintf(yyout, "  j etiq%d\n", etiquetaTemporal);
 
     fprintf(yyout, "  etiq%d:\n", etiquetaTemporal+1);
 

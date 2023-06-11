@@ -12,6 +12,8 @@
   li  $t0, 1
   li  $t1, 10
   etiq0:
+  slt $t2, $t1, $t0
+  beq $t2, 1, etiq1
   lwc1 $f2, variable1
   add.s $f3, $f0, $f2
   mov.s $f0, $f3
@@ -22,5 +24,5 @@
   la $a0, newLine
   syscall
   addi $t0, $t0, 1
-  bne $t0, $t1, etiq0
+  j etiq0
   etiq1:

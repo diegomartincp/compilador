@@ -16,11 +16,13 @@
   li  $t0, 1
   li  $t1, 10
   etiq1:
+  slt $t2, $t1, $t0
+  beq $t2, 1, etiq2
   lwc1 $f7, variable2
   add.s $f8, $f0, $f7
   mov.s $f0, $f8
   addi $t0, $t0, 1
-  bne $t0, $t1, etiq1
+  j etiq1
   etiq2:
 etiq0:
   li $v0, 2

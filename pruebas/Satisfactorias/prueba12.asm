@@ -5,7 +5,7 @@
   variable0: .float 0.000000
   variable1: .float 100.000000
   variable2: .float 10.000000
-  variable3: .float 5.000000
+  variable3: .float 2.000000
 
 .text #Operaciones
   lwc1 $f31, zero_f
@@ -15,6 +15,8 @@
   li  $t3, 1
   li  $t4, 5
   etiq0:
+  slt $t5, $t4, $t3
+  beq $t5, 1, etiq1
   lwc1 $f5, variable2
   add.s $f6, $f0, $f5
   mov.s $f0, $f6
@@ -31,7 +33,7 @@
   beq $t2, 1, etiq2
   etiq3:
   addi $t3, $t3, 1
-  bne $t3, $t4, etiq0
+  j etiq0
   etiq1:
   li $v0, 2
   add.s $f12, $f31, $f0
@@ -45,4 +47,3 @@
   li $v0, 4
   la $a0, newLine
   syscall
-

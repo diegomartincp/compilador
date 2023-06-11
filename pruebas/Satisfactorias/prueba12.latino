@@ -1,6 +1,6 @@
 var1=0 var2=100 
 para i en rango (1,5) var1=var1+10 
-    para j en rango (1,10,3) var2=var2-5 fin 
+    para j en rango (1,10,3) var2=var2-2 fin 
 fin 
 imprimir(var1) imprimir(var2)
 
