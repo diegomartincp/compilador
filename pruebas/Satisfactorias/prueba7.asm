@@ -2,14 +2,14 @@
 .data #Variables
   newLine: .asciiz "\n"
   zero_f: .float 0.0
-  variable0: .float 3.000000
-  variable1: .float 5.000000
+  variable0: .float 1.000000
+  variable1: .float 2.000000
 
 .text #Operaciones
   lwc1 $f31, zero_f
 
   lwc1 $f0, variable0
-  li  $t0, 0
+  li  $t0, 1
   li  $t1, 10
   etiq0:
   lwc1 $f2, variable1

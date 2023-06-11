@@ -33,10 +33,14 @@ struct nodo
   struct nodo *r;  // Nodo derecho
   struct nodo *x;  // Nodo EXTRA para si nodo específico del SI SINO
   int registro;    // Registro donde está el resultado
+  int registroIni; //inicio del for
+  int registroFin; //fin del for
   int variableNum; // Indica el nombre de la variable "variableN" que se usa para declarar
   char *id;        // Identificador del para
   int inicio;      // Valor inicial del para
   int fin;         // Valor final del para
+  int incremento;  // Valor para incrementar el for
+  int registroInc; // Valor para comparaciones del for
 };
 
 // Ver que registros T están libres
@@ -191,7 +195,7 @@ struct nodo *new_node_sino(struct nodo *l, struct nodo *r, struct nodo *x)
   return a;
 }
 
-struct nodo *new_node_para(char *id, int inicio, int fin, struct nodo *x)
+struct nodo *new_node_para(char *id, int inicio, int fin, struct nodo *r)
 {
   struct nodo *a = malloc(sizeof(struct nodo));
   if (!a)
@@ -203,7 +207,48 @@ struct nodo *new_node_para(char *id, int inicio, int fin, struct nodo *x)
   a->id = id;
   a->inicio = inicio;
   a->fin = fin;
-  a->x = x;
+  a->r = r;
+  a->registroIni = buscarRegistroLibreT();
+  a->registroFin = buscarRegistroLibreT();
+
+  return a;
+}
+
+struct nodo *new_node_para2(char *id, int fin, struct nodo *r)
+{
+  struct nodo *a = malloc(sizeof(struct nodo));
+  if (!a)
+  {
+    exit(0); // Si el nuevo nodo es NULL significa que hay un error de memoria insuficiente
+  }
+  // Le asigna al nuevo nodo sus características
+  a->nodetype = 'PARA2';
+  a->id = id;
+  a->fin = fin;
+  a->r = r;
+  a->registroIni = buscarRegistroLibreT();
+  a->registroFin = buscarRegistroLibreT();
+
+  return a;
+}
+
+struct nodo *new_node_para3(char *id, int inicio, int fin, int incremento, struct nodo *r)
+{
+  struct nodo *a = malloc(sizeof(struct nodo));
+  if (!a)
+  {
+    exit(0); // Si el nuevo nodo es NULL significa que hay un error de memoria insuficiente
+  }
+  // Le asigna al nuevo nodo sus características
+  a->nodetype = 'PARA3';
+  a->id = id;
+  a->inicio = inicio;
+  a->fin = fin;
+  a->incremento = incremento;
+  a->r = r;
+  a->registroIni = buscarRegistroLibreT();
+  a->registroFin = buscarRegistroLibreT();
+  a->registroInc = buscarRegistroLibreT();
 
   return a;
 }
@@ -494,6 +539,86 @@ double eval(struct nodo *a)
     // Incrementar el número de etiqueta para usar una distinta más tarde
 
     break;
+
+  case 'PARA':
+    printf("-> PARA AST checkeo\n");
+
+    etiquetaTemporal = numEtiqueta;     //primera etiqueta
+    numEtiqueta += 2;                   //para la segunda etiqueta
+
+    //declarar variables de inicio y fin
+    fprintf(yyout, "  li  $t%d, %d\n", a->registroIni, a->inicio);
+    fprintf(yyout, "  li  $t%d, %d\n", a->registroFin, a->fin);
+    
+    //Iniciar el bucle
+    fprintf(yyout, "  etiq%d:\n", etiquetaTemporal);
+   
+    //cuerpo del bucle
+    eval(a->r);
+
+    //Incrementar el contador
+    fprintf(yyout, "  addi $t%d, $t%d, 1\n", a->registroIni, a->registroIni);
+    //Comparacion para finalizar el bucle
+    fprintf(yyout, "  bne $t%d, $t%d, etiq%d\n", a->registroIni, a->registroFin, etiquetaTemporal);
+    
+    fprintf(yyout, "  etiq%d:\n", etiquetaTemporal+1);
+
+    break;
+
+  case 'PARA2':
+    printf("-> PARA2 AST checkeo\n");
+
+    etiquetaTemporal = numEtiqueta;     //primera etiqueta
+    numEtiqueta += 2;                   //para la segunda etiqueta
+
+    //declarar variables de inicio y fin
+    fprintf(yyout, "  li  $t%d, 0\n", a->registroIni);
+    fprintf(yyout, "  li  $t%d, %d\n", a->registroFin, a->fin);
+
+    //inicio bucle
+    fprintf(yyout, "  etiq%d:\n", etiquetaTemporal);
+   
+    //cuerpo del bucle
+    eval(a->r);
+
+    //Incrementar el contador
+    fprintf(yyout, "  addi $t%d, $t%d, 1\n", a->registroIni, a->registroIni);
+    //Comparacion para finalizar el bucle
+    fprintf(yyout, "  bne $t%d, $t%d, etiq%d\n", a->registroIni, a->registroFin, etiquetaTemporal);
+
+    fprintf(yyout, "  etiq%d:\n", etiquetaTemporal+1);
+
+    break;
+
+  case 'PARA3':
+    printf("-> PARA3 AST checkeo\n");
+
+    etiquetaTemporal = numEtiqueta;     //primera etiqueta
+    numEtiqueta += 2;                   //para la segunda etiqueta
+
+    //declarar variables de inicio y fin
+    fprintf(yyout, "  li  $t%d, %d\n", a->registroIni, a->inicio);
+    fprintf(yyout, "  li  $t%d, %d\n", a->registroFin, a->fin);
+
+    //inicio bucle
+    fprintf(yyout, "  etiq%d:\n", etiquetaTemporal);
+
+    //cuerpo del bucle
+    eval(a->r);
+
+    //Incrementar el contador
+    fprintf(yyout, "  addi $t%d, $t%d, %d\n", a->registroIni, a->registroIni, a->incremento);   //incrementamos el contador
+    
+    //Comparacion para finalizar el bucle
+    fprintf(yyout, "  slt $t%d, $t%d, $t%d\n", a->registroInc, a->registroIni, a->registroFin);
+    fprintf(yyout, "  beq $t%d, $t%d, etiq%d\n", a->registroIni, a->registroFin, etiquetaTemporal);
+    fprintf(yyout, "  beq $t%d, $zero, etiq%d\n", a->registroInc, etiquetaTemporal+1);
+    fprintf(yyout, "  beq $t%d, 1, etiq%d\n", a->registroInc, etiquetaTemporal);
+
+    fprintf(yyout, "  etiq%d:\n", etiquetaTemporal+1);
+
+    break;
+
   case 'P': // Imprimir
     // printf("-> Statement Imprimir\n");
     //  Resuelve la operación evaluandola
@@ -501,70 +626,17 @@ double eval(struct nodo *a)
     // Imprime el resultado almacenado en al registro de
     imprimir(a->l);
     break;
+
   case 'SL': // Statement List
     // printf("-> Statement List\n");
     v = eval(a->l); // statement_list
     eval(a->r);     // staetment
     break;
+    
   case 'CM': // Comentario
     v = 1;   // No hay que hacer nada por que es un comentario
     break;
-  case 'PARA':
-    printf("-> PARA AST checkeo\n");
-    printf("ID: %s\n", a->id);
-    printf("Inicio: %d\n", a->inicio);
-    printf("Fin: %d\n", a->fin);
-
-    // crear codigo asm
-    /*
-    Ejemplo asm:
-    .data
-  var1: .word 1
-  msg: .asciiz "\nEl valor de var1 es: "
-
-.text
-main:
-  # Inicializar var1 a 1
-  li $t0, 1
-  sw $t0, var1
-
-  # Salto a la etiqueta 'inicio_para'
-  j inicio_para
-
-# Bucle 'para'
-inicio_para:
-  # Cuerpo del bucle
-  # Aquí debes agregar el código correspondiente al cuerpo del bucle
-
-  # Imprimir el valor de var1
-  la $a0, msg
-  li $v0, 4
-  syscall
-
-  lw $a0, var1
-  li $v0, 1
-  syscall
-
-  # Incrementar var1 en 1
-  lw $t0, var1
-  addi $t0, $t0, 1
-  sw $t0, var1
-
-  # Comprobar la condición de finalización
-  lw $t0, var1
-  li $t1, 11   # Se cambió el límite a 11 para ejecutar el bucle 10 veces
-  bne $t0, $t1, inicio_para
-
-  # Terminar el programa
-  li $v0, 10
-  syscall
-
-
-
-
-    */
-
-    break;
+  
   default:
     printf("Error: Nodo desconocido %c\n", a->nodetype);
   }

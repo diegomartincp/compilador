@@ -65,10 +65,14 @@
      IGUALIGUAL = 282,
      MENORIGUAL = 283,
      PUNTOCOMA = 284,
-     ENT = 285,
-     REAL = 286,
-     TEXT = 287,
-     ID = 288
+     PARA = 285,
+     EN = 286,
+     RANGO = 287,
+     COMA = 288,
+     ENT = 289,
+     REAL = 290,
+     TEXT = 291,
+     ID = 292
    };
 #endif
 
@@ -95,7 +99,7 @@ typedef union YYSTYPE
 
 
 /* Line 1685 of yacc.c  */
-#line 99 "gramatica.tab.h"
+#line 103 "gramatica.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

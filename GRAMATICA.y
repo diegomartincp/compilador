@@ -119,7 +119,8 @@ statement:
     }
     ;
 
-imprimir_statement: IMPRIMIR LPAREN exp RPAREN{ //imprimir un identificador
+imprimir_statement: 
+    IMPRIMIR LPAREN exp RPAREN{ //imprimir un identificador
            /*if(variableGlobalFaltaEtiqueta==true){  //Hay que imprimir una etiqueta
                 printf(yyout, "Etiqueta%d",numEtiqueta);
                 numEtiqueta++;
@@ -191,7 +192,8 @@ asignacion_statement:
     ;
 
 //Si
-si_statement: SI LPAREN condicion_list RPAREN statement_list osi_list FIN  {printf("Bucle SI con cadena de OSI\n");}
+si_statement: 
+    SI LPAREN condicion_list RPAREN statement_list osi_list FIN  {printf("Bucle SI con cadena de OSI\n");}
     | SI LPAREN condicion_list RPAREN statement_list FIN {
         printf("-> SI\n");
         $$.a = new_node('S',$3.a, $5.a);
@@ -239,6 +241,22 @@ para_statement:
             printf("ERROR LINEA %d: No quedan registros disponibles para realizar la condicion\n",linea);
         }
     }
+    |PARA ID EN RANGO LPAREN ENT RPAREN statement_list FIN {
+        printf("-> PARA2\n");
+        $$.a = new_node_para2(strdup($2), $6, $8.a);
+        if($$.a->registro==-1){
+            error_compilacion++;
+            printf("ERROR LINEA %d: No quedan registros disponibles para realizar la condicion\n",linea);
+        }
+    }
+    | PARA ID EN RANGO LPAREN ENT COMA ENT COMA ENT RPAREN statement_list FIN {
+        printf("-> PARA3\n");
+        $$.a = new_node_para3(strdup($2), $6, $8, $10, $12.a);
+        if($$.a->registro==-1){
+            error_compilacion++;
+            printf("ERROR LINEA %d: No quedan registros disponibles para realizar la condicion\n",linea);
+        }
+    }
     ;
 
 //Lista de condiciones
@@ -261,7 +279,8 @@ condicion_list: condicion_list DOBLEAMPERSAN  condicion {printf("Condicion && co
 /**
 OJO AQUI HAY QUE EVALUAR LAS DOS EXPRESIONES ANTES DE COMPARAR NADA, SINO NO TIENES EL RESULTADO
 **/
-condicion: exp MAYQUE exp {
+condicion: 
+    exp MAYQUE exp {
         printf("-> MAYOR QUEL\n");
         if (strcmp($1.tipo, "texto")==0 || strcmp($3.tipo, "texto")==0) { 
             error_compilacion++;
@@ -333,7 +352,8 @@ condicion: exp MAYQUE exp {
         }
     }
 
-exp: exp MAS term {
+exp: 
+    exp MAS term {
         if (strcmp($1.tipo, "entero")==0 && strcmp($3.tipo, "entero")==0) { //Si ambos son enteros
             $$.a = new_node('+', $1.a,$3.a); 
             if($$.a->registro==-1){
@@ -443,7 +463,8 @@ FALTA POR HACER LA CONCATENACIÓN
         $$ = $1; }   //Se hace una copia
     ;
 
-term: term POR factor {
+term: 
+    term POR factor {
         if (strcmp($1.tipo, "entero")==0 && strcmp($3.tipo, "entero")==0) { //Si ambos son enteros
             $$.a = new_node('*', $1.a,$3.a);
             if($$.a->registro==-1){
@@ -605,7 +626,7 @@ OJO HAY QUE CONTROLAR EL USO DE VARIABLES EN EL AST
                 else if(table[i].tipo=="texto"){
                     $$.tipo = table[i].tipo;
 
-   //CREAR NODO TEXTO             
+            //CREAR NODO TEXTO             
                 }
                 else{printf("ERROR LINEA %d: Variable de tipo desconocido",linea);}
 
@@ -613,7 +634,8 @@ OJO HAY QUE CONTROLAR EL USO DE VARIABLES EN EL AST
         }
     ;
 
-factor: ENT {$$.entero = $1;
+factor: 
+    ENT {$$.entero = $1;
             $$.a = new_leaf_num($1);
             if($$.a->registro==-1){
                 error_compilacion++;

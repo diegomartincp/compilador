@@ -1,0 +1,1 @@
+mientras(var<6) var=var+1 imprimir (var) fin
